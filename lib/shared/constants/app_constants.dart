@@ -1,6 +1,5 @@
 class AppConstants {
-  static const String apiBaseUrl =
-      'https://vikashyadavarya007.pythonanywhere.com/api/v1/';
+  static const String apiBaseUrl = '';
 }
 
 class Currency {

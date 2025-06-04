@@ -49,20 +49,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
 
-    // ref.listen<AuthState>(authProvider, (previous, current) {
-    //   print("this calls");
-    //   current.maybeWhen(
-    //       completed: (userEntity) {
-    //         print("this also comes here");
-    //         WidgetsBinding.instance.addPersistentFrameCallback((_) {
-    //           print("thsi also comes here 33");
-    //           if (mounted) {
-    //             context.goNamed(AppPath.home.name);
-    //           }
-    //         });
-    //       },
-    //       orElse: () {});
-    // });
     return Form(
       key: _formKey,
       child: Column(
@@ -127,15 +113,14 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 _onLogin();
               },
               child: authState.maybeWhen(
-                orElse:
-                    () => const Text(
-                      "Sign In",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                orElse: () => const Text(
+                  "Sign In",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 loggingIn: () => const CustomCircularProgress(),
               ),
             ),
