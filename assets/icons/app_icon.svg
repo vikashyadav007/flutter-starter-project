@@ -1,0 +1,7 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background rounded square -->
+  <rect x="5" y="5" width="90" height="90" rx="20" fill="#3366FF"/>
+  
+  <!-- Lightning bolt -->
+  <polygon points="65,20 30,50 45,50 35,80 70,45 55,45 65,20" fill="white"/>
+</svg>

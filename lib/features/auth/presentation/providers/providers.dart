@@ -1,0 +1,50 @@
+import 'package:starter_project/core/api/api_provider.dart';
+import 'package:starter_project/features/auth/data/data_sources/auth_local_data_source.dart';
+import 'package:starter_project/features/auth/data/data_sources/auth_remote_data_source.dart';
+import 'package:starter_project/features/auth/data/repositories/auth_repositories_impl.dart';
+import 'package:starter_project/features/auth/domain/repositories/auth_repositories.dart';
+import 'package:starter_project/features/auth/domain/use_cases/clear_token_use_case.dart';
+import 'package:starter_project/features/auth/domain/use_cases/get_token_use_case.dart';
+import 'package:starter_project/features/auth/domain/use_cases/login_use_case.dart';
+import 'package:starter_project/features/auth/domain/use_cases/save_auth_data_use_case.dart';
+import 'package:starter_project/features/auth/domain/use_cases/save_token_use_case.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+final authLocalDataSourceProvider = Provider<AuthLocalDataSource>((ref) {
+  return AuthLocalDataSource(const FlutterSecureStorage());
+});
+
+final authRepositoryProvider = Provider<AuthRepository>((ref) {
+  final apiClient = ref.watch(apiClientProvider);
+  final authRemoteDataSource = AuthRemoteDataSource(apiClient);
+  final authLocalDataSource = ref.watch(authLocalDataSourceProvider);
+
+  return AuthRepositoriesImpl(authRemoteDataSource, authLocalDataSource);
+});
+
+final loginUseCaseProvider = Provider<LoginUseCase>((ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return LoginUseCase(repository);
+});
+
+final getTokenUseCaseProvider = Provider<GetTokenUseCase>((ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return GetTokenUseCase(repository);
+});
+
+final saveAuthDataUseCaseProvider = Provider<SaveAuthDataUseCase>((ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return SaveAuthDataUseCase(repository);
+});
+
+final clearTokenUseCaseProvider = Provider<ClearTokenUseCase>((ref) {
+  final repository = ref.watch(authRepositoryProvider);
+
+  return ClearTokenUseCase(repository);
+});
+
+final saveTokenUseCaseProvider = Provider<SaveTokenUseCase>((ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return SaveTokenUseCase(repository: repository);
+});

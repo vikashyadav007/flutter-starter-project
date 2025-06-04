@@ -1,0 +1,342 @@
+{
+  "@@locale": "en",
+  "login": "Login",
+  "@login": {
+    "description": "Login button title shown in login screen"
+  },
+  "loggingIn": "Logging in",
+  "@loggingIn": {
+    "description": "Login button logging in state title shown in login screen"
+  },
+  "fetchingProfile": "Fetching profile",
+  "@fetchingProfile": {
+    "description": "Login button fetching profile state title shown in login screen"
+  },
+  "loggedIn": "Logged in",
+  "@loggedIn": {
+    "description": "Login button logged in state title shown in login screen"
+  },
+  "username": "Username",
+  "@username": {
+    "description": "Username title shown on top of the username form text field in login screen"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email title shown on top of the email form text field in login screen"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password title shown on top of the password form text field in login screen"
+  },
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Forgot password text button shown on top of the password form text field in login screen"
+  },
+  "rememberMe": "Remember me",
+  "@rememberMe": {
+    "description": "Remember me text shown beside the checkbox in login screen"
+  },
+  "emptyPasswordError": "Please enter password",
+  "@emptyPasswordError": {
+    "description": "Error message shown when password field is empty"
+  },
+  "emptyUsernameError": "Please enter username",
+  "@emptyUsernameError": {
+    "description": "Error message shown when username field is empty"
+  },
+  "success": "Success",
+  "@success": {
+    "description": "Success message shown for a successful network request"
+  },
+  "noContent": "Success, but no content available.",
+  "@noContent": {
+    "description": "Message shown when operation succeeded but returned no content"
+  },
+  "badRequestError": "Bad request. Please try again later.",
+  "@badRequestError": {
+    "description": "Error message shown when the request is invalid"
+  },
+  "forbiddenError": "Access forbidden. Please try again later.",
+  "@forbiddenError": {
+    "description": "Error message shown when access is forbidden"
+  },
+  "unauthorizedError": "User unauthorized. Please sign in and try again.",
+  "@unauthorizedError": {
+    "description": "Error message shown when user is not authorized"
+  },
+  "notFoundError": "Resource not found. Please try again later.",
+  "@notFoundError": {
+    "description": "Error message shown when requested resource is not found"
+  },
+  "internalServerError": "Something went wrong on our end. Please try again later.",
+  "@internalServerError": {
+    "description": "Error message shown when server encounters an error"
+  },
+  "timeoutError": "Request timed out. Please try again later.",
+  "@timeoutError": {
+    "description": "Error message shown when request times out"
+  },
+  "cacheError": "Cache error occurred. Please try again later.",
+  "@cacheError": {
+    "description": "Error message shown when there is a cache error"
+  },
+  "defaultError": "Something went wrong. Please try again later.",
+  "@defaultError": {
+    "description": "Default error message for unhandled errors"
+  },
+  "noInternetError": "No internet connection. Please check your connection and try again.",
+  "@noInternetError": {
+    "description": "Error message shown when there is no internet connection"
+  },
+  "products": "Products",
+  "@products": {
+    "description": "Products label"
+  },
+  "clear": "Clear",
+  "@clear": {
+    "description": "Clear labels"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel labels"
+  },
+  "search": "Search",
+  "@search": {
+    "description": "Search labels"
+  },
+  "messageHint": "Write a message",
+  "@messageHint": {
+    "description": "Message box hint text"
+  },
+  "loadMore": "Load more",
+  "@loadMore": {
+    "description": "Load more labels"
+  },
+  "lastUpdatedAt": "Last updated at: {when}",
+  "@lastUpdatedAt": {
+    "description": "Last updated string in listing pages",
+    "placeholders": {
+      "when": {
+        "type": "String",
+        "example": "Nov 09, 2024 04:00"
+      }
+    }
+  },
+  "addMessage": "Add message",
+  "@addMessage": {
+    "description": "Add message button label"
+  },
+  "close": "Close",
+  "@close": {
+      "description": "Close button label"
+  },
+  "message": "Message",
+  "@message": {
+      "description": "Message button label"
+  },
+  "applied": "Applied:",
+  "@applied": {
+      "description": "Applied label in listing pages filter"
+  },
+  "owners": "Owner(s)",
+  "@owners": {
+      "description": "Owner label in the activity card"
+  },
+  "tnaName": "Tna Name",
+  "@tnaName": {
+      "description": "Tna name label in the activity card"
+  },
+  "due": "Due",
+  "@due": {
+      "description": "Due label in the activity card"
+  },
+  "closingActivities": "Closing {count, plural, =1{{count} activity} other{{count} activities}}",
+  "@closingActivities": {
+    "description": "Closing activities count message in close activities modal",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "messagingActivities": "Message for {count, plural, =1{{count} activity} other{{count} activities}}",
+  "@messagingActivities": {
+    "description": "Closing activities count message in close activities modal",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "closeMessageHelper": "Enter message",
+  "@closeMessageHelper": {
+      "description": "Helper text in message box of close activities modal"
+  },
+  "noProductsFound": "No Products Found",
+  "@noProductsFound": {
+    "description": "Title shown when no products are available"
+  },
+  "noProductsMessage": "Products list is empty.",
+  "@noProductsMessage": {
+    "description": "Message shown when no products are available"
+  },
+  "noActivitiesFound": "No Activities Found",
+  "@noActivitiesFound": {
+    "description": "Title shown when no activities are available"
+  },
+  "noActivitiesMessage": "Your activity list is empty. New activities will appear here when they're assigned to you.",
+  "@noActivitiesMessage": {
+    "description": "Message shown when no activities are available"
+  },
+  "noMatchingActivities": "No Matching Activities",
+  "@noMatchingActivities": {
+    "description": "Title shown when no activities match the search criteria"
+  },
+  "noMatchingActivitiesMessage": "No activities match your search criteria. Try adjusting your filters or search terms.",
+  "@noMatchingActivitiesMessage": {
+    "description": "Message shown when no activities match the search criteria"
+  },
+  "clearFilters": "Clear Filters",
+  "@clearFilters": {
+    "description": "Button label to clear search filters"
+  },
+  "refresh": "Refresh",
+  "@refresh": {
+    "description": "Button label to refresh the activity list"
+  },
+  "myActivities": "My activities",
+  "@myActivities": {
+    "description": "Title shown in the app bar of My Activities page"
+  },
+  "activityStatusDue": "Due",
+  "@activityStatusDue": {
+    "description": "Status label shown when activity is due"
+  },
+  "activityStatusOverdue": "Overdue",
+  "@activityStatusOverdue": {
+    "description": "Status label shown when activity is overdue"
+  },
+  "activityStatusOverdueExtended": "Overdue by >7 days",
+  "@activityStatusOverdueExtended": {
+    "description": "Status label shown when activity is overdue by more than 7 days"
+  },
+  "changePassword": "Change Password",
+  "@changePassword": {
+    "description": "Label for change password option in user menu"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Label for logout option in user menu"
+  },
+  "noTnasFound": "No Tnas Found",
+  "@noTnasFound": {
+    "description": "Title shown when no tnas are available"
+  },
+  "noTnasMessage": "Your tna list is empty. New tnas will appear here when they're assigned to you.",
+  "@noTnasMessage": {
+    "description": "Message shown when no tnas are available"
+  },
+  "noMatchingTnas": "No Matching Tnas",
+  "@noMatchingTnas": {
+    "description": "Title shown when no tnas match the search criteria"
+  },
+  "noMatchingTnasMessage": "No tnas match your search criteria. Try adjusting your filters or search terms.",
+  "@noMatchingTnasMessage": {
+    "description": "Message shown when no tnas match the search criteria"
+  },
+  "targetDate": "Target date",
+  "@targetDate": {
+      "description": "Target date label"
+  },
+  "projectedDate": "Projected date",
+  "@projectedDate": {
+      "description": "Projected date label"
+  },
+  "chatScreenTitle": "Chats",
+  "@chatScreenTitle": {
+    "description": "Title displayed in the app bar of the chat list screen"
+  },
+  "imageLoadErrorMessage": "Could not load image.",
+  "@imageLoadErrorMessage": {
+    "description": "Message shown when the image could not be loaded"
+  },
+  "aboutUs": "About us",
+    "@aboutUs": {
+        "description": "Text for About us link in footer"
+    },
+  "customers": "Customers",
+  "@customers": {
+      "description": "Text for Customers link in footer"
+  },
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+      "description": "Text for Privacy Policy link in footer"
+  },
+  "termsOfService": "Terms of Service",
+  "@termsOfService": {
+      "description": "Text for Terms of Service link in footer"
+  },
+  "copyright": "© AXIND Software B.V. All right reserved",
+  "@copyright": {
+      "description": "Copyright text shown in footer"
+  },
+  "launchUrlErrorMessage": "Failed to open {link}",
+  "@launchUrlErrorMessage": {
+    "description": "Error message when a URL fails to open",
+    "placeholders": {
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "noChatsFound": "No Chats Found",
+  "@noChatsFound": {
+    "description": "Title shown when no chats are available"
+  },
+  "noChatsMessage": "Your chat list is empty. When you receive messages, they'll show up right here.",
+  "@noChatsMessage": {
+    "description": "Message shown when no chats are available"
+  },
+  "noMatchingChats": "No Matching Chats",
+  "@noMatchingChats": {
+    "description": "Message shown when no chats match the search criteria"
+  },
+  "noMatchingChatsMessage": "No chats match your search criteria. Try adjusting your search terms.",
+  "@noMatchingChatsMessage": {
+    "description": "Message shown when no chats match the search criteria"
+  },
+  "imagePickerNoImageSelected": "No image selected",
+  "@imagePickerNoImageSelected": {
+    "description": "Error message to show when no image is selected from the image picker"
+  },
+  "imagePickerError": "Error picking image: {message}",
+  "@imagePickerError": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "imagePickerPermissionDenied": "Permission denied to access gallery",
+  "@imagePickerPermissionDenied": {
+      "description": "Error message to show when the user has not granted gallery permission"
+  },
+  "businessUnit": "Business unit",
+  "@businessUnit": {
+      "description": "Business unit label"
+  },
+  "season": "Season",
+  "@season": {
+      "description": "Season label"
+  },
+  "subcategoory": "Subcategory",
+  "@subcategoory": {
+      "description": "Sub category label"
+  },
+  "sizeRange": "Size-range",
+  "@sizeRange": {
+      "description": "Size range label"
+  }
+}
