@@ -1,12 +1,12 @@
 import 'package:starter_project/features/auth/domain/repositories/auth_repositories.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SaveAuthDataUseCase {
+class GetSessionUseCase {
   final AuthRepository repository;
 
-  SaveAuthDataUseCase(this.repository);
+  GetSessionUseCase(this.repository);
 
-  Future<void> execute(AuthResponse authResponse) async {
-    return await repository.saveAuthData(authResponse);
+  Future<Session?> execute() async {
+    return await repository.getSession();
   }
 }

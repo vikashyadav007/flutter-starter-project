@@ -3,9 +3,9 @@ import 'package:starter_project/core/api/error_handler.dart';
 import 'package:starter_project/core/api/failure.dart';
 import 'package:starter_project/features/auth/data/data_sources/auth_local_data_source.dart';
 import 'package:starter_project/features/auth/data/data_sources/auth_remote_data_source.dart';
-import 'package:starter_project/features/auth/domain/entity/login_response_entity.dart';
 import 'package:starter_project/features/auth/domain/entity/user_entity.dart';
 import 'package:starter_project/features/auth/domain/repositories/auth_repositories.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepositoriesImpl implements AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;
@@ -43,26 +43,27 @@ class AuthRepositoriesImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, LoginResponseEntity>> login(
+  Future<Either<Failure, AuthResponse>> login(
     String username,
     String password,
   ) async {
     try {
-      final loginResponse = await _remoteDataSource.login(username, password);
-      return Right(loginResponse.toEntity());
+      final authResponse = await _remoteDataSource.login(username, password);
+      return Right(authResponse);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
 
   @override
-  Future<void> saveAuthData(LoginResponseEntity loginEntity) async {
-    await _localDataSource.cache(loginEntity.access, loginEntity.refresh);
+  Future<void> saveAuthData(AuthResponse authResponse) async {
+    await _localDataSource.cache(authResponse.session?.accessToken ?? "",
+        authResponse.session?.refreshToken ?? "");
   }
 
   @override
-  Future<LoginResponseEntity?> getAllToken() async {
-    return await _localDataSource.getAll();
+  Future<Session?> getSession() async {
+    return await _remoteDataSource.getSession();
   }
 
   @override

@@ -1,5 +1,5 @@
 import 'package:starter_project/core/api/api_client.dart';
-import 'package:starter_project/features/auth/data/models/login_response/login_response_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRemoteDataSource {
   final ApiClient _apiClient;
@@ -10,12 +10,31 @@ class AuthRemoteDataSource {
     return await _apiClient.getLoginUrl();
   }
 
-  Future<LoginResponseModel> login(String username, String password) async {
-    final response = await _apiClient.login({
-      'email': username,
-      'password': password,
-    });
+  Future<AuthResponse> login(String username, String password) async {
+    AuthResponse authResponse;
+    try {
+      authResponse = await Supabase.instance.client.auth.signInWithPassword(
+        email: username,
+        password: password,
+      );
+      print("result is ${authResponse.session?.accessToken}");
+    } catch (e) {
+      print("Error during login: $e");
+      // Handle the error appropriately, maybe throw a custom exception
+      throw Exception("Login failed: $e");
+    }
 
-    return response;
+    return authResponse;
+  }
+
+  Future<Session?> getSession() async {
+    Session? session;
+    try {
+      session = Supabase.instance.client.auth.currentSession;
+    } catch (e) {
+      print(e);
+    }
+
+    return session;
   }
 }

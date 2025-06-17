@@ -30,9 +30,8 @@ class AuthPage extends ConsumerWidget {
                 const SizedBox(height: 60),
 
                 Image.asset(
-                  AppAssets.appIconPng,
-                  height: 80,
-                  width: 80,
+                  AppAssets.fuel_pro_360_logo,
+                  height: 60,
                 ),
                 const SizedBox(height: 16),
 
@@ -40,13 +39,14 @@ class AuthPage extends ConsumerWidget {
                 const Text(
                   "Welcome Back",
                   style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 24,
+                    color: UiColors.titleBlack,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const Text(
-                  "Sign in to continue",
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                  "Enter your credentials to access your account",
+                  style: TextStyle(fontSize: 14, color: UiColors.grey),
                 ),
 
                 const SizedBox(height: 20),

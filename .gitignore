@@ -48,4 +48,6 @@ app.*.map.json
 /android/app/release
 .cxx
 
+env.dart
+
 DerivedData/

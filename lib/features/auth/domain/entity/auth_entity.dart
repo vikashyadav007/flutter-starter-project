@@ -1,14 +1,12 @@
-import 'package:starter_project/features/auth/domain/entity/login_response_entity.dart';
-import 'package:starter_project/features/auth/domain/entity/user_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'auth_entity.freezed.dart';
 
 @freezed
 class AuthEntity with _$AuthEntity {
   const factory AuthEntity({
-    LoginResponseEntity? loginResponse,
-    UserEntity? user,
+    Session? session,
     @Default(false) bool isAuthenticated,
   }) = _AuthEntity;
 }

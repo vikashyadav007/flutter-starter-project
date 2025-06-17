@@ -48,8 +48,9 @@ class UiConstants {
 class UiColors {
   static const Color cardShadow = Color(0x44000000);
 
-  static const Color blue = Color(0xff3366FF);
-  static const Color grey = Color(0xff7D7D7D);
+  static const Color blue = Color(0xff0A6EA4);
+  static const Color titleBlack = Color(0xff0F1729);
+  static const Color grey = Color(0xff344256);
   static const Color backgroundGrey = Color(0xffF3F4F6);
   static const Color blueLight = Color(0xffDCE9FD);
   static const Color paidGreen = Color(0xff249669);

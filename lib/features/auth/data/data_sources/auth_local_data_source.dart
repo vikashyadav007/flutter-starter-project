@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:starter_project/features/auth/domain/entity/login_response_entity.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthLocalDataSource {
   final FlutterSecureStorage _storage;
@@ -42,14 +42,14 @@ class AuthLocalDataSource {
     return token;
   }
 
-  Future<LoginResponseEntity?> getAll() async {
+  Future<AuthResponse?> getAll() async {
     final tokenStr = await _storage.read(key: _token);
     final refreshTokenStr = await _storage.read(key: _refreshToken);
     if (tokenStr != null && refreshTokenStr != null) {
       final token = json.decode(tokenStr);
       final refreshToken = json.decode(refreshTokenStr);
 
-      return LoginResponseEntity(refresh: refreshToken, access: token);
+      return AuthResponse();
     }
 
     return null;

@@ -1,7 +1,6 @@
 import 'package:starter_project/features/auth/domain/entity/auth_entity.dart';
-import 'package:starter_project/features/auth/domain/entity/login_response_entity.dart';
-import 'package:starter_project/features/auth/domain/entity/user_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'global_auth_provider.g.dart';
 
@@ -12,12 +11,8 @@ class GlobalAuth extends _$GlobalAuth {
     return const AuthEntity();
   }
 
-  void setUser(UserEntity user) {
-    state = state.copyWith(user: user, isAuthenticated: true);
-  }
-
-  void setToken(LoginResponseEntity loginResponse) {
-    state = state.copyWith(loginResponse: loginResponse, isAuthenticated: true);
+  void setToken(Session session) {
+    state = state.copyWith(session: session, isAuthenticated: true);
   }
 
   void clearAuth() {

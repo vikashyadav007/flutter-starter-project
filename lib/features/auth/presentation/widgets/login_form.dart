@@ -21,8 +21,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   @override
   void initState() {
     super.initState();
-    _usernameController = TextEditingController();
-    _passwordController = TextEditingController();
+    _usernameController = TextEditingController(text: "admin@example.com");
+    _passwordController = TextEditingController(text: "admin123");
   }
 
   @override

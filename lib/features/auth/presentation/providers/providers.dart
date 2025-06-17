@@ -4,7 +4,7 @@ import 'package:starter_project/features/auth/data/data_sources/auth_remote_data
 import 'package:starter_project/features/auth/data/repositories/auth_repositories_impl.dart';
 import 'package:starter_project/features/auth/domain/repositories/auth_repositories.dart';
 import 'package:starter_project/features/auth/domain/use_cases/clear_token_use_case.dart';
-import 'package:starter_project/features/auth/domain/use_cases/get_token_use_case.dart';
+import 'package:starter_project/features/auth/domain/use_cases/get_session.dart';
 import 'package:starter_project/features/auth/domain/use_cases/login_use_case.dart';
 import 'package:starter_project/features/auth/domain/use_cases/save_auth_data_use_case.dart';
 import 'package:starter_project/features/auth/domain/use_cases/save_token_use_case.dart';
@@ -28,9 +28,9 @@ final loginUseCaseProvider = Provider<LoginUseCase>((ref) {
   return LoginUseCase(repository);
 });
 
-final getTokenUseCaseProvider = Provider<GetTokenUseCase>((ref) {
+final getSessionUseCaseProvider = Provider<GetSessionUseCase>((ref) {
   final repository = ref.watch(authRepositoryProvider);
-  return GetTokenUseCase(repository);
+  return GetSessionUseCase(repository);
 });
 
 final saveAuthDataUseCaseProvider = Provider<SaveAuthDataUseCase>((ref) {
