@@ -75,28 +75,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           ),
           const SizedBox(height: 12),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Checkbox(value: false, onChanged: (value) {}),
-                  const Text("Remember me"),
-                ],
-              ),
-              TextButton(
-                onPressed: () {},
-                child: Text(
-                  "Forgot Password?",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-
           const SizedBox(height: 16),
           // Sign In Button
           SizedBox(
@@ -125,8 +103,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               ),
             ),
           ),
-
-          const SizedBox(height: 16),
         ],
       ),
     );
@@ -163,19 +139,15 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             fillColor: Colors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: UiColors.grey, width: 0.5),
+              borderSide: BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                color: Theme.of(context).colorScheme.primary,
-                width: 2,
-              ),
-            ),
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.primary, width: 2)),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.grey, width: 1),
-            ),
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none),
           ),
         ),
       ],

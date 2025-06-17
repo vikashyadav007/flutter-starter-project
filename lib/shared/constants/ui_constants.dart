@@ -78,4 +78,6 @@ class UiColors {
   static const Color sugarCane = Color(0xFFF8FFF8);
   static const Color twilightBlue = Color(0xFFF5FDFF);
   static const Color green = Color(0xFF00DF00);
+
+  static const Color loginBgColor = Color.fromRGBO(210, 229, 213, 1);
 }

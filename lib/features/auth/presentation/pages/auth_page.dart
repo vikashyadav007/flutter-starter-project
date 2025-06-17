@@ -20,128 +20,70 @@ class AuthPage extends ConsumerWidget {
       body: Container(
         height: double.infinity,
         width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.white,
+              UiColors.loginBgColor,
+            ], // Start and end colors
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         padding: const EdgeInsets.all(20),
         child: authState.maybeWhen(
           checkingSavedAuth: () => const WholeScreenCircularProgress(),
           orElse: () => SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 60),
-
-                Image.asset(
-                  AppAssets.fuel_pro_360_logo,
-                  height: 60,
-                ),
-                const SizedBox(height: 16),
-
-                // Welcome Text
-                const Text(
-                  "Welcome Back",
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: UiColors.titleBlack,
-                    fontWeight: FontWeight.bold,
+            child: Container(
+              margin: const EdgeInsets.only(top: 90),
+              child: Material(
+                elevation: 3,
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        UiColors.loginBgColor,
+                        Colors.white,
+                      ], // Start and end colors
+                      begin: Alignment.bottomRight,
+                      end: Alignment.topLeft,
+                    ),
+                    // borderRadius: BorderRadius.circular(12),
                   ),
-                ),
-                const Text(
-                  "Enter your credentials to access your account",
-                  style: TextStyle(fontSize: 14, color: UiColors.grey),
-                ),
-
-                const SizedBox(height: 20),
-
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.03),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              "Sign In",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
+                      Image.asset(
+                        AppAssets.fuel_pro_360_logo,
+                        height: 60,
                       ),
-                      const Expanded(
-                        child: Center(
-                          child: Text(
-                            "Sign Up",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                      const SizedBox(height: 16),
 
-                const SizedBox(height: 20),
-
-                LoginForm(),
-
-                // OR continue with
-                const Row(
-                  children: [
-                    Expanded(child: Divider()),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text("Or continue with"),
-                    ),
-                    Expanded(child: Divider()),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                // Google & Apple Sign-in Buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildSocialButton(
-                      FontAwesomeIcons.google,
-                      "Google",
-                      Colors.red,
-                    ),
-                    const SizedBox(width: 16),
-                    _buildSocialButton(
-                      FontAwesomeIcons.apple,
-                      "Apple",
-                      Colors.black,
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                // Sign Up Text
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Don't have an account? "),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Text(
-                        "Sign up",
+                      // Welcome Text
+                      const Text(
+                        "Welcome Back",
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 24,
+                          color: UiColors.titleBlack,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  ],
+                      const Text(
+                        "Enter your credentials to access your account",
+                        style: TextStyle(fontSize: 14, color: UiColors.grey),
+                      ),
+
+                      const SizedBox(height: 30),
+
+                      LoginForm(),
+
+                      const SizedBox(height: 16),
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ),
           ),
         ),
