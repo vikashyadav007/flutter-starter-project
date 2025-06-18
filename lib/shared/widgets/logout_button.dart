@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:starter_project/features/auth/presentation/providers/auth_provider.dart';
 import 'package:starter_project/shared/constants/ui_constants.dart';
