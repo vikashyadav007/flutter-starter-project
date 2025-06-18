@@ -37,4 +37,15 @@ class AuthRemoteDataSource {
 
     return session;
   }
+
+  Future<Session?> logout() async {
+    Session? session;
+    try {
+      await Supabase.instance.client.auth.signOut();
+    } catch (e) {
+      print(e);
+    }
+
+    return session;
+  }
 }

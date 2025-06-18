@@ -1,3 +1,4 @@
+import 'package:starter_project/core/routing/app_router.dart';
 import 'package:starter_project/features/home/presentation/widgets/home_header.dart';
 import 'package:starter_project/features/home/presentation/widgets/home_info_text.dart';
 import 'package:starter_project/features/home/presentation/widgets/home_item_tile.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.read(routerProvider);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -28,11 +30,15 @@ class HomeScreen extends ConsumerWidget {
                     icon: Icons.credit_card,
                     title: "Indent",
                     subtitle: "Record",
+                    onTap: () {
+                      router.goNamed(AppPath.recordIndent.name);
+                    },
                     iconColor: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 10),
                   HomeItemTile(
                     icon: Icons.calendar_today,
+                    onTap: () {},
                     title: "Shift",
                     subtitle: "Log",
                     iconColor: Colors.lightGreen,
@@ -47,6 +53,7 @@ class HomeScreen extends ConsumerWidget {
                     title: "Client",
                     subtitle: "View",
                     iconColor: UiColors.orange,
+                    onTap: () {},
                   ),
                   const SizedBox(width: 10),
                   HomeItemTile(
@@ -54,6 +61,7 @@ class HomeScreen extends ConsumerWidget {
                     title: "Sales",
                     subtitle: "Record",
                     iconColor: Colors.blueAccent,
+                    onTap: () {},
                   ),
                 ],
               )

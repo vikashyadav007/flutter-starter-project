@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:starter_project/features/record_indent/presentation/pages/record_indent.dart';
 
 part 'app_router.g.dart';
 
 GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
 
-enum AppPath { login, home, upcomingPayments, editUpcomingPayment, cardEmi }
+enum AppPath { login, home, recordIndent }
 
 @riverpod
 String? routerRedirect(Ref ref) {
@@ -93,6 +94,11 @@ GoRouter router(Ref ref) {
         path: '/${AppPath.home.name}',
         name: AppPath.home.name,
         builder: (context, state) => HomeScreen(),
+      ),
+      GoRoute(
+        path: '/${AppPath.recordIndent.name}',
+        name: AppPath.recordIndent.name,
+        builder: (context, state) => RecordIndent(),
       ),
     ],
     redirect: (context, state) {
