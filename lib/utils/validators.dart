@@ -19,4 +19,28 @@ class Validators {
 
     return null;
   }
+
+  static String? validateIndent(String? value) {
+    if (value!.isEmpty) {
+      return "Enter Indent Number";
+    }
+
+    return null;
+  }
+
+  static String? validateAmount(String? value) {
+    if (value!.isEmpty) {
+      return "Enter Amount";
+    }
+
+    return null;
+  }
+
+  static String? validateQuantity(String? value) {
+    if (value!.isEmpty) {
+      return "Enter Quantity";
+    }
+
+    return null;
+  }
 }

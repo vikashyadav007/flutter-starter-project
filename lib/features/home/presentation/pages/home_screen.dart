@@ -1,4 +1,5 @@
 import 'package:starter_project/core/routing/app_router.dart';
+import 'package:starter_project/features/home/presentation/providers/home_provider.dart';
 import 'package:starter_project/features/home/presentation/widgets/home_header.dart';
 import 'package:starter_project/features/home/presentation/widgets/home_info_text.dart';
 import 'package:starter_project/features/home/presentation/widgets/home_item_tile.dart';
@@ -10,6 +11,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.read(routerProvider);
+    final homeState = ref.watch(homeProvider);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,

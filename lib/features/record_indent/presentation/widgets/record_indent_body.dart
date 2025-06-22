@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:starter_project/features/record_indent/presentation/providers/record_indent_provider.dart';
+import 'package:starter_project/features/record_indent/presentation/widgets/indent_content.dart';
+import 'package:starter_project/features/record_indent/presentation/widgets/indent_tab.dart';
+import 'package:starter_project/features/record_indent/presentation/widgets/search_by_customer.dart';
+import 'package:starter_project/features/record_indent/presentation/widgets/search_by_indent.dart';
 import 'package:starter_project/shared/constants/ui_constants.dart';
 
-class RecordIndentBody extends StatelessWidget {
+class RecordIndentBody extends ConsumerStatefulWidget {
+  const RecordIndentBody({super.key});
+
+  @override
+  _RecordIndentBodyState createState() => _RecordIndentBodyState();
+}
+
+class _RecordIndentBodyState extends ConsumerState<RecordIndentBody> {
+  TextEditingController indentNumberController = TextEditingController();
+  TextEditingController customerNameController = TextEditingController();
+  int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final recordIndentState = ref.watch(recordIndentProvider);
+
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -11,7 +29,7 @@ class RecordIndentBody extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: UiColors.lightGray, width: 1.5),
       ),
-      child: Column(
+      child: ListView(
         children: [
           Row(
             children: [
@@ -52,68 +70,47 @@ class RecordIndentBody extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        "Indent Number",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: UiColors.black),
-                      ),
-                    ),
+                IndentTab(
+                  label: "Indent Number",
+                  index: 0,
+                  selectedIndex: selectedIndex,
+                  onTap: () => setState(
+                    () {
+                      selectedIndex = 0;
+                    },
                   ),
                 ),
-                const Expanded(
-                  child: Center(
-                    child: Text(
-                      "Customer",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-                    ),
+                IndentTab(
+                  label: "Customer",
+                  index: 1,
+                  selectedIndex: selectedIndex,
+                  onTap: () => setState(
+                    () {
+                      selectedIndex = 1;
+                    },
                   ),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: UiColors.backgroundGrey,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Text(
-              "Mobile indents require approval from the web system before being processed.",
-            ),
-          ),
+          selectedIndex == 0
+              ? SearchByIndent(
+                  controller: indentNumberController,
+                )
+              : SearchIndentByCustomer(
+                  controller: customerNameController,
+                ),
           const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            height: 38,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              onPressed: () {},
-              child: const Text(
-                "Submit for Approval",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+          recordIndentState.maybeWhen(
+            orElse: () => const SizedBox.shrink(),
+            verifiedRecordIndents: (verified) {
+              if (verified) {
+                return IndentContent();
+              } else {
+                return const SizedBox();
+              }
+            },
           ),
         ],
       ),

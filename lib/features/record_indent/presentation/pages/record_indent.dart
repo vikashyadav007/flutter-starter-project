@@ -9,15 +9,15 @@ class RecordIndent extends StatelessWidget {
       child: Scaffold(
           backgroundColor: Colors.white,
           body: Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             height: double.infinity,
             width: double.infinity,
             color: Colors.white,
-            child: Column(
+            child: const Column(
               children: [
                 TitleHeader(title: 'Record Indent'),
-                const SizedBox(height: 20),
-                RecordIndentBody(),
+                SizedBox(height: 20),
+                Expanded(child: RecordIndentBody()),
 
                 // Add your content here
               ],
