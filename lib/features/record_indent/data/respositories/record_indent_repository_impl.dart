@@ -8,6 +8,7 @@ import 'package:starter_project/features/record_indent/domain/entity/indent_book
 import 'package:starter_project/features/record_indent/domain/entity/indent_entity.dart';
 import 'package:starter_project/features/record_indent/domain/entity/vehicle_entity.dart';
 import 'package:starter_project/features/record_indent/domain/repositories/record_indent_repository.dart';
+import 'package:starter_project/features/shift_management/domain/entity/staff_entity.dart';
 
 class RecordIndentRepositoryImpl extends RecordIndentRepository {
   final RecordIndentDataSource _recordIndentDataSource;
@@ -18,10 +19,13 @@ class RecordIndentRepositoryImpl extends RecordIndentRepository {
 
   @override
   Future<Either<Failure, List<IndentBookletEntity>>> getCustomerIndentBooklets(
-      {required String customerId, required String fuelPumpId}) async {
+      {String? customerId, String? fuelPumpId, String? id}) async {
     try {
       final fuelData = await _recordIndentDataSource.getCustomerIndentBooklets(
-          customerId: customerId, fuelPumpId: fuelPumpId);
+        customerId: customerId,
+        fuelPumpId: fuelPumpId,
+        id: id,
+      );
       return Right(
           fuelData.map<IndentBookletEntity>((e) => e.toEntity()).toList());
     } catch (e) {
@@ -102,6 +106,29 @@ class RecordIndentRepositoryImpl extends RecordIndentRepository {
           customerId: customerId, fuelPumpId: fuelPumpId);
       return Right(
           indentBooklets.map<CustomerEntity>((e) => e.toEntity()).toList());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<StaffEntity>>> getStaffs(
+      {required String fuelPumpId}) async {
+    try {
+      final indentBooklets =
+          await _recordIndentDataSource.getStaffs(fuelPumpId: fuelPumpId);
+      return Right(
+          indentBooklets.map<StaffEntity>((e) => e.toEntity()).toList());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> createIndent(
+      {required Map<String, dynamic> body}) async {
+    try {
+      return Right(await _recordIndentDataSource.createIndent(body: body));
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

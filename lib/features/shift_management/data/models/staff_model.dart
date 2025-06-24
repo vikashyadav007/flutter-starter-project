@@ -9,9 +9,9 @@ part 'staff_model.g.dart';
 abstract class StaffModel with _$StaffModel {
   const StaffModel._();
   const factory StaffModel({
-    @JsonKey(name: "id") required String id,
-    @JsonKey(name: "name") required String name,
-    @JsonKey(name: "staff_numeric_id") required String staffNumericId,
+    @JsonKey(name: "id") String? id,
+    @JsonKey(name: "name") String? name,
+    @JsonKey(name: "staff_numeric_id") String? staffNumericId,
   }) = _StaffModel;
 
   factory StaffModel.fromJson(Map<String, dynamic> json) =>

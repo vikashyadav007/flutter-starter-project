@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/selected_customer_provider.dart';
+import 'package:starter_project/features/record_indent/presentation/providers/submit_indent_provider.dart';
 import 'package:starter_project/features/record_indent/presentation/widgets/amount_quantity_row.dart';
 import 'package:starter_project/features/record_indent/presentation/widgets/fuel_type_droopdown.dart';
 import 'package:starter_project/features/record_indent/presentation/widgets/indent_dropdown.dart';
@@ -11,7 +12,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class IndentContent extends ConsumerWidget {
   TextEditingController amountController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
+  TextEditingController indentNumberController = TextEditingController();
   final GlobalKey<FormFieldState> _dropdownKey = GlobalKey<FormFieldState>();
+
+  IndentContent({super.key, required this.indentNumberController});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,21 +62,11 @@ class IndentContent extends ConsumerWidget {
               ),
             ),
             onPressed: () async {
-              final result = await Supabase.instance.client
-                  .from('transactions')
-                  .insert({
-                    'customer_id': selectedCustomer?.id,
-                    'vehicle_id': ref.read(vehicleProvider).id,
-                    'indent_booklet_id': ref.read(indentBookletProvider).id,
-                    'fuel_type_id': ref.read(selectedFuelTypeProvider).id,
-                    'amount': double.tryParse(amountController.text) ?? 0.0,
-                    'quantity': double.tryParse(quantityController.text) ?? 0.0,
-                    'status': 'pending',
-                  })
-                  .select()
-                  .single();
-
-              print("result: $result");
+              ref.read(submitIndentProvider.notifier).submitIndent(
+                    amount: amountController.text,
+                    quantity: quantityController.text,
+                    indentNumber: indentNumberController.text,
+                  );
             },
             child: const Text(
               "Submit for Approval",

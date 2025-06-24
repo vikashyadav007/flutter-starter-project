@@ -9,8 +9,8 @@ class GetCustomerIndentUsecase {
   GetCustomerIndentUsecase(this._repository);
 
   Future<Either<Failure, List<IndentBookletEntity>>> execute(
-      {required String customerId, required String fuelPumpId}) async {
+      {String? customerId, String? fuelPumpId, String? id}) async {
     return await _repository.getCustomerIndentBooklets(
-        customerId: customerId, fuelPumpId: fuelPumpId);
+        customerId: customerId, fuelPumpId: fuelPumpId, id: id);
   }
 }

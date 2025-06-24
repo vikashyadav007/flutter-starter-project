@@ -5,12 +5,13 @@ import 'package:starter_project/features/record_indent/domain/entity/fuel_entity
 import 'package:starter_project/features/record_indent/domain/entity/indent_booklet_entity.dart';
 import 'package:starter_project/features/record_indent/domain/entity/indent_entity.dart';
 import 'package:starter_project/features/record_indent/domain/entity/vehicle_entity.dart';
+import 'package:starter_project/features/shift_management/domain/entity/staff_entity.dart';
 
 abstract class RecordIndentRepository {
   Future<Either<Failure, List<VehicleEntity>>> getCustomerVehicles(
       {required String customerId, required String fuelPumpId});
   Future<Either<Failure, List<IndentBookletEntity>>> getCustomerIndentBooklets(
-      {required String customerId, required String fuelPumpId});
+      {String? customerId, String? fuelPumpId, String? id});
   Future<Either<Failure, List<FuelEntity>>> getFuelTypes(
       {required String fuelPumpId});
   Future<Either<Failure, List<IndentEntity>>> verifyCustomerIndentNumber(
@@ -23,4 +24,10 @@ abstract class RecordIndentRepository {
 
   Future<Either<Failure, List<CustomerEntity>>> getCustomer(
       {required String customerId, required String fuelPumpId});
+
+  Future<Either<Failure, List<StaffEntity>>> getStaffs(
+      {required String fuelPumpId});
+
+  Future<Either<Failure, void>> createIndent(
+      {required Map<String, dynamic> body});
 }

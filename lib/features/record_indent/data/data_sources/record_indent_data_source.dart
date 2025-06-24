@@ -3,6 +3,7 @@ import 'package:starter_project/features/record_indent/data/models/fuel_model.da
 import 'package:starter_project/features/record_indent/data/models/indent_booklet_model.dart';
 import 'package:starter_project/features/record_indent/data/models/indent_model.dart';
 import 'package:starter_project/features/record_indent/data/models/vehicle_model.dart';
+import 'package:starter_project/features/shift_management/data/models/staff_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RecordIndentDataSource {
@@ -17,37 +18,44 @@ class RecordIndentDataSource {
           .select("id,customer_id,number,type,capacity,created_at,fuel_pump_id")
           .eq("customer_id", customerId)
           .eq('fuel_pump_id', fuelPumpId);
-      return response != null
-          ? (response as List)
-              .map((item) => VehicleModel.fromJson(item))
-              .toList()
-          : [];
+      return (response as List)
+          .map((item) => VehicleModel.fromJson(item))
+          .toList();
     } catch (e) {
-      print("Error fetching Vehicles: $e");
-      throw Exception("Failed to fetch fuel data");
+      throw Exception("Failed to customer vehicles");
     }
   }
 
-  Future<List<IndentBookletModel>> getCustomerIndentBooklets({
-    required String customerId,
-    required String fuelPumpId,
-  }) async {
+  Future<List<IndentBookletModel>> getCustomerIndentBooklets(
+      {String? customerId, String? fuelPumpId, String? id}) async {
     try {
-      //TODO add order created_at desc
-      var response = await client
-          .from('indent_booklets')
-          .select(
-              "id,start_number,end_number,used_indents,total_indents,status")
-          .eq("customer_id", customerId)
-          .eq('fuel_pump_id', fuelPumpId);
-      return response != null
-          ? (response as List)
-              .map((item) => IndentBookletModel.fromJson(item))
-              .toList()
-          : [];
+      print("fetching customer indent booklets with customerId: $customerId, "
+          "fuelPumpId: $fuelPumpId, id: $id");
+
+      String table = 'indent_booklets';
+      String columns =
+          'id,start_number,end_number,used_indents,total_indents,status';
+
+      var response = [];
+      if (id != null && id.isNotEmpty) {
+        response = await client.from(table).select(columns).eq("id", id);
+      } else if (customerId != null &&
+          customerId.isNotEmpty &&
+          fuelPumpId != null &&
+          fuelPumpId.isNotEmpty) {
+        response = await client
+            .from(table)
+            .select(columns)
+            .eq("customer_id", customerId)
+            .eq('fuel_pump_id', fuelPumpId);
+      }
+
+      return (response as List)
+          .map((item) => IndentBookletModel.fromJson(item))
+          .toList();
     } catch (e) {
-      print("Error fetching Vehicles: $e");
-      throw Exception("Failed to fetch fuel data");
+      print("error in fetching cutomer indent booklets: $e");
+      throw Exception("Failed to fetch customer indent booklets");
     }
   }
 
@@ -57,11 +65,10 @@ class RecordIndentDataSource {
           .from('fuel_settings')
           .select("fuel_type,current_price")
           .eq('fuel_pump_id', fuelPumpId);
-      return response != null
-          ? (response as List).map((item) => FuelModel.fromJson(item)).toList()
-          : [];
+      return (response as List)
+          .map((item) => FuelModel.fromJson(item))
+          .toList();
     } catch (e) {
-      print("Error fetching Vehicles: $e");
       throw Exception("Failed to fetch fuel data");
     }
   }
@@ -69,24 +76,20 @@ class RecordIndentDataSource {
   Future<List<IndentModel>> verifyCustomerIndentNumber(
       {required String indentNumber, required String bookletId}) async {
     try {
-      print("this comes hererer $indentNumber");
       var response = await client
           .from('indents')
           .select("id")
           .eq('indent_number', indentNumber)
           .eq('booklet_id', bookletId);
-      print("response: $response");
-      return response != null
-          ? (response as List)
-              .map((item) => IndentModel.fromJson(item))
-              .toList()
-          : [];
+      return (response as List)
+          .map((item) => IndentModel.fromJson(item))
+          .toList();
     } catch (e) {
-      print("Error fetching Vehicles: $e");
-      throw Exception("Failed to fetch fuel data");
+      throw Exception("Failed to verify customer indent");
     }
   }
 
+//TODO implement this
   Future<List<CustomerModel>> searchCustomer(
       {required String searchKey}) async {
     try {
@@ -99,26 +102,22 @@ class RecordIndentDataSource {
               .toList()
           : [];
     } catch (e) {
-      print("Error fetching Vehicles: $e");
       throw Exception("Failed to fetch fuel data");
     }
   }
 
+//TODO wherever this is calling replace this with getCustomerIndentBooklets
   Future<List<IndentBookletModel>> getIndentBooklets(
       {required String fuelPumpId}) async {
     try {
-      print("this comes here $fuelPumpId");
-      print("Fuel Pump ID: $fuelPumpId");
       var response = await client
           .from('indent_booklets')
           .select("id,customer_id,start_number,end_number")
           .eq('fuel_pump_id', fuelPumpId);
 
-      return response != null
-          ? (response as List)
-              .map((item) => IndentBookletModel.fromJson(item))
-              .toList()
-          : [];
+      return (response as List)
+          .map((item) => IndentBookletModel.fromJson(item))
+          .toList();
     } catch (e) {
       print("Error fetching Vehicles: $e");
       throw Exception("Failed to fetch fuel data");
@@ -128,23 +127,75 @@ class RecordIndentDataSource {
   Future<List<CustomerModel>> getCustomer(
       {required String customerId, required String fuelPumpId}) async {
     try {
-      print("this comes here to get customer $customerId");
-      print("Fuel Pump ID: $fuelPumpId");
       var response = await client
           .from('customers')
-          .select("id,name")
+          .select("id,name,balance")
           .eq("id", customerId)
           .eq('fuel_pump_id', fuelPumpId);
 
-      print("response: $response");
-      return response != null
-          ? (response as List)
-              .map((item) => CustomerModel.fromJson(item))
-              .toList()
-          : [];
+      return (response as List)
+          .map((item) => CustomerModel.fromJson(item))
+          .toList();
     } catch (e) {
-      print("Error fetching Customers: $e");
       throw Exception("Failed to fetch Custome");
+    }
+  }
+
+  Future<List<StaffModel>> getStaffs({required String fuelPumpId}) async {
+    try {
+      var response = await client
+          .from('staff')
+          .select("id,name")
+          .eq('fuel_pump_id', fuelPumpId)
+          .order('name', ascending: false);
+
+      return (response as List)
+          .map((item) => StaffModel.fromJson(item))
+          .toList();
+    } catch (e) {
+      throw Exception("Failed to fetch Staffs");
+    }
+  }
+
+  Future<void> createIndent({required Map<String, dynamic> body}) async {
+    try {
+      print("create indent body: $body");
+      return await client.from('indents').insert(body);
+    } catch (e) {
+      print("error in creating indent: $e");
+      throw Exception("Failed to Create Indent");
+    }
+  }
+
+  Future<void> updateCustomerIndentBooklet(
+      {required Map<String, dynamic> body, required String bookletId}) async {
+    try {
+      print("update customer indent booklet body: $body");
+      return await client
+          .from('indent_booklets')
+          .update(body)
+          .eq("id", bookletId);
+    } catch (e) {
+      throw Exception("Failed to Update Customer Indent Booklet");
+    }
+  }
+
+  Future<void> createTransactions({required Map<String, dynamic> body}) async {
+    try {
+      print("create transaction body: $body");
+      return await client.from('transactions').insert(body);
+    } catch (e) {
+      print("error in creating transaction: $e");
+      throw Exception("Failed to Transactions");
+    }
+  }
+
+  Future<void> updateCustomerBalance(
+      {required Map<String, dynamic> body, required String customerId}) async {
+    try {
+      return await client.from('customers').update(body).eq("id", customerId);
+    } catch (e) {
+      throw Exception("Failed to Update Customer Indent Booklet");
     }
   }
 }

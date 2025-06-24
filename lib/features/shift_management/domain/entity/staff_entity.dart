@@ -6,8 +6,8 @@ part 'staff_entity.freezed.dart';
 @freezed
 class StaffEntity with _$StaffEntity {
   const factory StaffEntity({
-    required String id,
-    required String name,
-    required String staffNumericId,
+    String? id,
+    String? name,
+    String? staffNumericId,
   }) = _StaffEntity;
 }

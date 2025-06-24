@@ -106,7 +106,9 @@ class _RecordIndentBodyState extends ConsumerState<RecordIndentBody> {
             orElse: () => const SizedBox.shrink(),
             verifiedRecordIndents: (verified) {
               if (verified) {
-                return IndentContent();
+                return IndentContent(
+                  indentNumberController: indentNumberController,
+                );
               } else {
                 return const SizedBox();
               }
