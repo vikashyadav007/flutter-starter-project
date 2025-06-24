@@ -30,8 +30,12 @@ class AuthRemoteDataSource {
   Future<Session?> getSession() async {
     Session? session;
     try {
+      print("get session called");
+      // Ensure the Supabase client is initialized and has a session
       session = Supabase.instance.client.auth.currentSession;
+      print("Session retrieved: ${session?.accessToken}");
     } catch (e) {
+      print("Error retrieving session: $e");
       print(e);
     }
 

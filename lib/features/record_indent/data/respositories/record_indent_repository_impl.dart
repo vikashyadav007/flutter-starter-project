@@ -133,4 +133,17 @@ class RecordIndentRepositoryImpl extends RecordIndentRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
+
+  @override
+  Future<Either<Failure, List<CustomerEntity>>> getAllCustomers(
+      {required String fuelPumpId}) async {
+    try {
+      final indentBooklets =
+          await _recordIndentDataSource.getAllCustomers(fuelPumpId: fuelPumpId);
+      return Right(
+          indentBooklets.map<CustomerEntity>((e) => e.toEntity()).toList());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
 }

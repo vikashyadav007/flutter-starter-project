@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:starter_project/core/api/failure.dart';
+import 'package:starter_project/features/customers/domain/entity/customer_entity.dart';
 import 'package:starter_project/features/home/domain/entity/fuel_pump_entity.dart';
 import 'package:starter_project/features/record_indent/domain/entity/indent_booklet_entity.dart';
 import 'package:starter_project/features/record_indent/domain/entity/indent_entity.dart';
@@ -14,6 +15,8 @@ import 'package:starter_project/features/record_indent/presentation/providers/cu
 import 'package:starter_project/features/record_indent/presentation/providers/fuel_types_provider.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/selected_customer_provider.dart';
+import 'package:starter_project/features/record_indent/presentation/providers/selected_customer_vehicle_provider.dart';
+import 'package:starter_project/features/record_indent/presentation/providers/selected_indent_booklet.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/vehicles_list_provider.dart';
 import 'package:starter_project/shared/providers/selected_fuel_pump.dart';
 
@@ -22,16 +25,16 @@ part 'record_indent_provider.freezed.dart';
 @freezed
 class RecordIndentState with _$RecordIndentState {
   const factory RecordIndentState.initial() = _Initial;
-  const factory RecordIndentState.verifyingReocrdIndent() =
-      _VerifyingReocrdIndent;
+  const factory RecordIndentState.loading() = _LoadingRecordIndentState;
   const factory RecordIndentState.verifiedRecordIndents(bool verified) =
       _VerifiedRecordIndents;
+  const factory RecordIndentState.customerSelected(bool selected) =
+      _CustomerSelected;
   const factory RecordIndentState.error(Failure error) = _Error;
 }
 
 final recordIndentProvider =
-    StateNotifierProvider<RecordIndentByNumberNotifier, RecordIndentState>(
-        (ref) {
+    StateNotifierProvider<RecordIndentNotifier, RecordIndentState>((ref) {
   final getIndentBookletsUsecase = ref.watch(getIndentBookletUsecaseProvider);
   final verifyCustomerIndentUsecase =
       ref.watch(verifyCustomerIndentUsecaseProvider);
@@ -55,7 +58,17 @@ final recordIndentProvider =
 
   final fuelTypesNotifier = ref.watch(fuelTypesProvider.notifier);
 
-  return RecordIndentByNumberNotifier(
+  final selectedCustomerVehicleNotifier =
+      ref.watch(selectedCustomerVehicleProvider.notifier);
+
+  final selectedIndentBookletNotifier =
+      ref.watch(selectedIndentBookletProvider.notifier);
+
+  final selectedFuelPumpNotifier = ref.watch(selectedFuelPumpProvider.notifier);
+
+  print("StateNotifierProvider Calleddd");
+
+  return RecordIndentNotifier(
     verifyCustomerIndentUsecase: verifyCustomerIndentUsecase,
     getIndentBookletsUsecase: getIndentBookletsUsecase,
     selectedFuelPump: selectedPump,
@@ -67,10 +80,13 @@ final recordIndentProvider =
     customerIndentsNotifier: customerIndentsNotifier,
     customerVehicleNotifier: customerVehicleNotifier,
     fuelTypesNotifier: fuelTypesNotifier,
+    selectedCustomerVehicleNotifier: selectedCustomerVehicleNotifier,
+    selectedIndentBookletNotifier: selectedIndentBookletNotifier,
+    selectedFuelPumpNotifier: selectedFuelPumpNotifier,
   );
 });
 
-class RecordIndentByNumberNotifier extends StateNotifier<RecordIndentState> {
+class RecordIndentNotifier extends StateNotifier<RecordIndentState> {
   final VerifyCustomerIndentUsecase verifyCustomerIndentUsecase;
   final GetIndentBookletsUsecase getIndentBookletsUsecase;
   final FuelPumpEntity? selectedFuelPump;
@@ -86,7 +102,11 @@ class RecordIndentByNumberNotifier extends StateNotifier<RecordIndentState> {
 
   IndentBookletEntity? indentBookletEntity;
 
-  RecordIndentByNumberNotifier({
+  SelectedCustomerVehicleNotifier selectedCustomerVehicleNotifier;
+  SelectedIndentBookletNotifier selectedIndentBookletNotifier;
+  SelectedFuelPumpNotifier selectedFuelPumpNotifier;
+
+  RecordIndentNotifier({
     required this.verifyCustomerIndentUsecase,
     required this.getIndentBookletsUsecase,
     required this.selectedFuelPump,
@@ -98,6 +118,9 @@ class RecordIndentByNumberNotifier extends StateNotifier<RecordIndentState> {
     required this.customerIndentsNotifier,
     required this.customerVehicleNotifier,
     required this.fuelTypesNotifier,
+    required this.selectedCustomerVehicleNotifier,
+    required this.selectedIndentBookletNotifier,
+    required this.selectedFuelPumpNotifier,
   }) : super(const RecordIndentState.initial());
 
   Future<List<IndentBookletEntity>> getAllIndentBooklets() async {
@@ -111,29 +134,64 @@ class RecordIndentByNumberNotifier extends StateNotifier<RecordIndentState> {
     );
   }
 
-  Future<void> verifyRecordIndent({required String indentNumber}) async {
-    verifyingRecordIndent();
+  Future<void> verifyRecordIndent(
+      {required String indentNumber, required int selectedTabIndex}) async {
+    print(
+        "this one called againnnnnnnnnnnnnnnnnnnn with indent number: $indentNumber");
+    if (selectedTabIndex == 0) {
+      loading();
 
-    List<IndentBookletEntity> booklets = await getAllIndentBooklets();
+      List<IndentBookletEntity> booklets = await getAllIndentBooklets();
 
-    for (IndentBookletEntity booklet in booklets) {
-      if (int.parse(indentNumber) >= int.parse(booklet.startNumber ?? "0") &&
-          int.parse(indentNumber) <= int.parse(booklet.endNumber ?? "0")) {
-        indentBookletEntity = booklet;
-        break;
+      for (IndentBookletEntity booklet in booklets) {
+        if (int.parse(indentNumber) >= int.parse(booklet.startNumber ?? "0") &&
+            int.parse(indentNumber) <= int.parse(booklet.endNumber ?? "0")) {
+          indentBookletEntity = booklet;
+          break;
+        }
       }
-    }
 
-    if (indentBookletEntity != null) {
+      if (indentBookletEntity != null) {
+        final result = await verifyCustomerIndentUsecase.execute(
+          indentNumber: indentNumber.toString(),
+          bookletId: indentBookletEntity?.id ?? "",
+        );
+
+        result.fold(
+          (failure) => error(failure),
+          (indentList) {
+            handleIndentSearch(indents: indentList);
+          },
+        );
+      }
+    } else {
+      loading();
+      IndentBookletEntity? indentBookletEntity =
+          selectedIndentBookletNotifier.indentBooklet;
+
+      if (!(int.parse(indentNumber) >=
+              int.parse(indentBookletEntity?.startNumber ?? "0") &&
+          int.parse(indentNumber) <=
+              int.parse(indentBookletEntity?.endNumber ?? "0"))) {
+        error(Failure(
+            code: 1,
+            message: "This indent number not belongs to this booklet."));
+      }
       final result = await verifyCustomerIndentUsecase.execute(
         indentNumber: indentNumber.toString(),
         bookletId: indentBookletEntity?.id ?? "",
       );
-
+      print("verifyCustomerIndentUsecase result: $result");
+      print(result);
       result.fold(
         (failure) => error(failure),
         (indentList) {
-          handleIndentSearch(indents: indentList);
+          if (indentList.isNotEmpty) {
+            error(Failure(
+                code: 1, message: "This indent number has already been used."));
+          } else {
+            state = RecordIndentState.verifiedRecordIndents(true);
+          }
         },
       );
     }
@@ -145,13 +203,34 @@ class RecordIndentByNumberNotifier extends StateNotifier<RecordIndentState> {
           code: 1, message: "This indent number has already been used."));
     } else {
       final result1 = fetchCustomer();
-      final result2 = fetchCustomerIndentBooklets();
-      final result3 = fetchCustomerVehicles();
-      final result4 = fetchFuelTypes();
+      final result2 = fetchAllData(
+        customerId: indentBookletEntity?.customerId ?? "",
+      );
 
-      await Future.wait([result1, result2, result3, result4]);
+      await Future.wait([result1, result2]);
+
       verifiedRecordIndents(true);
     }
+  }
+
+  Future<void> handleCustomerSelect(CustomerEntity customerEntity) async {
+    await fetchAllData(
+      customerId: customerEntity.id ?? "",
+    );
+    customerSelected(true);
+  }
+
+  Future<void> fetchAllData({
+    required String customerId,
+  }) async {
+    final result2 = fetchCustomerIndentBooklets(
+      customerId: customerId,
+    );
+    final result3 = fetchCustomerVehicles(customerId: customerId);
+    final result4 = fetchFuelTypes();
+
+    await Future.wait([result2, result3, result4]);
+    verifiedRecordIndents(true);
   }
 
   Future<void> fetchCustomer() async {
@@ -162,7 +241,6 @@ class RecordIndentByNumberNotifier extends StateNotifier<RecordIndentState> {
     result.fold(
       (failure) => error(failure),
       (customers) {
-        print("customers2121212: $customers");
         if (customers.isNotEmpty) {
           selectedCustomerNotifier.setCustomer(customers.first);
         } else {
@@ -172,15 +250,14 @@ class RecordIndentByNumberNotifier extends StateNotifier<RecordIndentState> {
     );
   }
 
-  Future<void> fetchCustomerIndentBooklets() async {
+  Future<void> fetchCustomerIndentBooklets({required String customerId}) async {
     final result = await getCustomerIndentUsecase.execute(
-      customerId: indentBookletEntity?.customerId ?? "",
+      customerId: customerId,
       fuelPumpId: selectedFuelPump?.id ?? "",
     );
     result.fold(
       (failure) => error(failure),
       (booklets) {
-        print("customer bookeletsssss111111: $booklets");
         if (booklets.isNotEmpty) {
           customerIndentsNotifier.setCustomerBookletIndent(booklets);
         } else {
@@ -190,15 +267,14 @@ class RecordIndentByNumberNotifier extends StateNotifier<RecordIndentState> {
     );
   }
 
-  Future<void> fetchCustomerVehicles() async {
+  Future<void> fetchCustomerVehicles({required String customerId}) async {
     final result = await getCustomerVehicleUsecase.execute(
-      customerId: indentBookletEntity?.customerId ?? "",
+      customerId: customerId,
       fuelPumpId: selectedFuelPump?.id ?? "",
     );
     result.fold(
       (failure) => error(failure),
       (vehicles) {
-        print("vehicles90900909: $vehicles");
         if (vehicles.isNotEmpty) {
           customerVehicleNotifier.setVehicles(vehicles);
         } else {
@@ -225,15 +301,31 @@ class RecordIndentByNumberNotifier extends StateNotifier<RecordIndentState> {
     );
   }
 
-  void verifyingRecordIndent() {
-    state = const RecordIndentState.verifyingReocrdIndent();
+  void loading() {
+    state = const RecordIndentState.loading();
   }
 
   void verifiedRecordIndents(bool verified) {
     state = RecordIndentState.verifiedRecordIndents(verified);
   }
 
+  void customerSelected(bool selected) {
+    state = RecordIndentState.customerSelected(selected);
+  }
+
   void error(Failure error) {
     state = RecordIndentState.error(error);
+  }
+
+  void clearAll() {
+    customerVehicleNotifier.clearVehicles();
+    customerIndentsNotifier.clearIndents();
+    fuelTypesNotifier.clearFuels();
+    selectedCustomerNotifier.clearCustomer();
+    selectedCustomerVehicleNotifier.clearVehicle();
+    selectedIndentBookletNotifier.clearIndentBooklet();
+
+    indentBookletEntity = null;
+    state = const RecordIndentState.initial();
   }
 }

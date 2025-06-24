@@ -166,4 +166,25 @@ class RecordIndentDataSource {
       throw Exception("Failed to Create Indent");
     }
   }
+
+  Future<List<CustomerModel>> getAllCustomers(
+      {required String fuelPumpId}) async {
+    try {
+      print("fetching all customers for fuelPumpId: $fuelPumpId");
+      var response = await client
+          .from('customers')
+          .select("*")
+          .eq('fuel_pump_id', fuelPumpId)
+          .order('name', ascending: true);
+
+      print("response from getAllCustomers: $response");
+
+      return (response as List)
+          .map((item) => CustomerModel.fromJson(item))
+          .toList();
+    } catch (e) {
+      print("Error fetching Customers: $e");
+      throw Exception("Failed to fetch Customers");
+    }
+  }
 }

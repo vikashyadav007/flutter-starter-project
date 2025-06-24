@@ -13,11 +13,13 @@ class RecordIndent extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
             color: Colors.white,
-            child: const Column(
+            child: Column(
               children: [
-                TitleHeader(title: 'Record Indent'),
-                SizedBox(height: 20),
-                Expanded(child: RecordIndentBody()),
+                const TitleHeader(title: 'Record Indent'),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: RecordIndentBody(),
+                ),
 
                 // Add your content here
               ],

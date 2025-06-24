@@ -3,6 +3,7 @@ import 'package:starter_project/features/record_indent/data/data_sources/record_
 import 'package:starter_project/features/record_indent/data/respositories/record_indent_repository_impl.dart';
 import 'package:starter_project/features/record_indent/domain/repositories/record_indent_repository.dart';
 import 'package:starter_project/features/record_indent/domain/use_cases/create_indent_usecase.dart';
+import 'package:starter_project/features/record_indent/domain/use_cases/get_all_customer_usecase.dart';
 import 'package:starter_project/features/record_indent/domain/use_cases/get_customer_indent_booklet_usecase.dart';
 import 'package:starter_project/features/record_indent/domain/use_cases/get_customer_usecase.dart';
 import 'package:starter_project/features/record_indent/domain/use_cases/get_customer_vehicle_usecase.dart';
@@ -66,3 +67,13 @@ final createIndentUsecaseProvider = Provider<CreateIndentUsecase>((ref) {
   final recordIndentRepository = ref.watch(RecordsProvider);
   return CreateIndentUsecase(recordIndentRepository);
 });
+
+final getAllCustomersUsecaseProvider = Provider<GetAllCustomersUsecase>((ref) {
+  final recordIndentRepository = ref.watch(RecordsProvider);
+  return GetAllCustomersUsecase(recordIndentRepository);
+});
+
+final indentNumberProvider = StateProvider<String>((ref) => '');
+final amountProvider = StateProvider<String>((ref) => '');
+final quantityProvider = StateProvider<String>((ref) => '');
+final selectedTabIndexProvider = StateProvider<int>((ref) => 0);

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/selected_fuel_type.dart';
 import 'package:starter_project/shared/constants/app_constants.dart';
 import 'package:starter_project/shared/widgets/custom_text_field.dart';
@@ -7,24 +8,29 @@ import 'package:starter_project/shared/widgets/text_field_label.dart';
 import 'package:starter_project/utils/validators.dart';
 
 class AmountQuantityRow extends ConsumerWidget {
-  TextEditingController amountController;
-  TextEditingController quantityController;
-  AmountQuantityRow({
-    super.key,
-    required this.amountController,
-    required this.quantityController,
-  });
+  AmountQuantityRow({super.key});
 
-  onAmountChanged(double fuelPrice, String value) {
+  final TextEditingController amountController = TextEditingController();
+  final TextEditingController quantityController = TextEditingController();
+
+  onAmountChanged(double fuelPrice, String value, WidgetRef ref) {
     double amount = double.tryParse(value) ?? 0.0;
 
-    quantityController.text = (amount / fuelPrice).toStringAsFixed(2);
+    var quantity = (amount / fuelPrice).toStringAsFixed(2);
+
+    ref.read(quantityProvider.notifier).state = quantity;
+    ref.read(amountProvider.notifier).state = value;
+    quantityController.text = quantity;
   }
 
-  onQuantityChanged(double fuelPrice, String value) {
+  onQuantityChanged(double fuelPrice, String value, WidgetRef ref) {
     double quantity = double.tryParse(value) ?? 0.0;
 
-    amountController.text = (quantity * fuelPrice).toStringAsFixed(2);
+    var amount = (quantity * fuelPrice).toStringAsFixed(2);
+
+    ref.read(amountProvider.notifier).state = amount;
+    ref.read(quantityProvider.notifier).state = value;
+    amountController.text = amount;
   }
 
   @override
@@ -49,6 +55,7 @@ class AmountQuantityRow extends ConsumerWidget {
                     onChanged: (value) => onAmountChanged(
                       selectedFuel?.currentPrice ?? 0,
                       value,
+                      ref,
                     ),
                   ),
                 ],
@@ -66,7 +73,11 @@ class AmountQuantityRow extends ConsumerWidget {
                     controller: quantityController,
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
-                      onQuantityChanged(selectedFuel?.currentPrice ?? 0, value);
+                      onQuantityChanged(
+                        selectedFuel?.currentPrice ?? 0,
+                        value,
+                        ref,
+                      );
                     },
                   ),
                 ],

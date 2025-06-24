@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/record_indent_provider.dart';
 import 'package:starter_project/features/record_indent/presentation/widgets/indent_content.dart';
 import 'package:starter_project/features/record_indent/presentation/widgets/indent_tab.dart';
@@ -7,20 +8,13 @@ import 'package:starter_project/features/record_indent/presentation/widgets/sear
 import 'package:starter_project/features/record_indent/presentation/widgets/search_by_indent.dart';
 import 'package:starter_project/shared/constants/ui_constants.dart';
 
-class RecordIndentBody extends ConsumerStatefulWidget {
-  const RecordIndentBody({super.key});
-
+class RecordIndentBody extends ConsumerWidget {
   @override
-  _RecordIndentBodyState createState() => _RecordIndentBodyState();
-}
-
-class _RecordIndentBodyState extends ConsumerState<RecordIndentBody> {
-  TextEditingController indentNumberController = TextEditingController();
-  TextEditingController customerNameController = TextEditingController();
-  int selectedIndex = 0;
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final recordIndentState = ref.watch(recordIndentProvider);
+    final selectedTabIndex = ref.watch(selectedTabIndexProvider);
+
+    print("RecordIndentBody rebuilds");
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -71,49 +65,51 @@ class _RecordIndentBodyState extends ConsumerState<RecordIndentBody> {
             child: Row(
               children: [
                 IndentTab(
-                  label: "Indent Number",
-                  index: 0,
-                  selectedIndex: selectedIndex,
-                  onTap: () => setState(
-                    () {
-                      selectedIndex = 0;
-                    },
-                  ),
-                ),
+                    label: "Indent Number",
+                    index: 0,
+                    selectedIndex: selectedTabIndex,
+                    onTap: () {
+                      ref.read(selectedTabIndexProvider.notifier).state = 0;
+                    }),
                 IndentTab(
-                  label: "Customer",
-                  index: 1,
-                  selectedIndex: selectedIndex,
-                  onTap: () => setState(
-                    () {
-                      selectedIndex = 1;
-                    },
-                  ),
-                ),
+                    label: "Customer",
+                    index: 1,
+                    selectedIndex: selectedTabIndex,
+                    onTap: () {
+                      ref.read(selectedTabIndexProvider.notifier).state = 1;
+                      ref.read(indentNumberProvider.notifier).state = '';
+                      ref.read(recordIndentProvider.notifier).clearAll();
+                    }),
               ],
             ),
           ),
           const SizedBox(height: 20),
-          selectedIndex == 0
-              ? SearchByIndent(
-                  controller: indentNumberController,
-                )
-              : SearchIndentByCustomer(
-                  controller: customerNameController,
-                ),
+          selectedTabIndex == 0 ? SearchByIndent() : SearchIndentByCustomer(),
           const SizedBox(height: 20),
-          recordIndentState.maybeWhen(
-            orElse: () => const SizedBox.shrink(),
-            verifiedRecordIndents: (verified) {
-              if (verified) {
-                return IndentContent(
-                  indentNumberController: indentNumberController,
-                );
-              } else {
-                return const SizedBox();
-              }
-            },
-          ),
+          selectedTabIndex == 0
+              ? recordIndentState.maybeWhen(
+                  orElse: () => const SizedBox.shrink(),
+                  verifiedRecordIndents: (verified) {
+                    if (verified) {
+                      return IndentContent();
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                )
+              : recordIndentState.maybeWhen(
+                  orElse: () => IndentContent(),
+                  loading: () {
+                    return const SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  },
+                ),
         ],
       ),
     );

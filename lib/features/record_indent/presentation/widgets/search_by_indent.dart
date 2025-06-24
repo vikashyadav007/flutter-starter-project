@@ -1,30 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/record_indent_provider.dart';
 import 'package:starter_project/shared/widgets/custom_text_field.dart';
 import 'package:starter_project/shared/widgets/text_field_label.dart';
 import 'package:starter_project/utils/validators.dart';
 
-class SearchByIndent extends ConsumerStatefulWidget {
-  final TextEditingController controller;
-  SearchByIndent({super.key, required this.controller});
-
-  @override
-  ConsumerState<SearchByIndent> createState() => _SearchByIndentState();
-}
-
-class _SearchByIndentState extends ConsumerState<SearchByIndent> {
-  void _onSearch() async {
-    if (widget.controller.text.isNotEmpty) {
-      final result = await ref
-          .read(recordIndentProvider.notifier)
-          .verifyRecordIndent(indentNumber: widget.controller.text);
+class SearchByIndent extends ConsumerWidget {
+  void onSearch(WidgetRef ref) async {
+    if (ref.read(indentNumberProvider).isNotEmpty) {
+      await ref.read(recordIndentProvider.notifier).verifyRecordIndent(
+            indentNumber: ref.read(indentNumberProvider),
+            selectedTabIndex: ref.read(selectedTabIndexProvider),
+          );
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final recordIndentState = ref.watch(recordIndentProvider);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -38,9 +33,13 @@ class _SearchByIndentState extends ConsumerState<SearchByIndent> {
               flex: 13,
               child: CustomTextField(
                 hintText: 'Enter indent number to search',
+                controller:
+                    TextEditingController(text: ref.read(indentNumberProvider)),
                 validator: Validators.validatePassword,
-                controller: widget.controller,
                 keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  ref.read(indentNumberProvider.notifier).state = value;
+                },
               ),
             ),
             const SizedBox(width: 10),
@@ -58,7 +57,7 @@ class _SearchByIndentState extends ConsumerState<SearchByIndent> {
                         const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                   ),
                   onPressed: () {
-                    _onSearch();
+                    onSearch(ref);
                   },
                   child: recordIndentState.maybeWhen(
                     orElse: () => const Row(
@@ -80,8 +79,17 @@ class _SearchByIndentState extends ConsumerState<SearchByIndent> {
                         ),
                       ],
                     ),
-                    verifyingReocrdIndent: () =>
-                        const CircularProgressIndicator(),
+                    loading: () => const SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -89,7 +97,7 @@ class _SearchByIndentState extends ConsumerState<SearchByIndent> {
           ],
         ),
         recordIndentState.maybeWhen(
-          orElse: () => SizedBox(),
+          orElse: () => const SizedBox(),
           error: (error) {
             return Padding(
               padding: const EdgeInsets.only(top: 10),

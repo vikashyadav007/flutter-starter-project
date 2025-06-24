@@ -38,6 +38,10 @@ final submitIndentProvider =
   final createIndentUsecase = ref.watch(createIndentUsecaseProvider);
   final getCustomerIndentUsecase = ref.watch(getCustomerIndentUsecaseProvider);
 
+  final quantity = ref.watch(quantityProvider);
+  final amount = ref.watch(amountProvider);
+  final indentNumber = ref.watch(indentNumberProvider);
+
   return SubmitIndentNotifier(
     getStaffsUsecase: getStaffsUsecase,
     selectedFuelPump: selectedPump,
@@ -47,6 +51,9 @@ final submitIndentProvider =
     selectedIndentBooklet: selectedIndentBooklet,
     createIndentUsecase: createIndentUsecase,
     getCustomerIndentUsecase: getCustomerIndentUsecase,
+    quantity: quantity,
+    amount: amount,
+    indentNumber: indentNumber,
   );
 });
 
@@ -59,6 +66,9 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
   final IndentBookletEntity? selectedIndentBooklet;
   final CreateIndentUsecase createIndentUsecase;
   final GetCustomerIndentUsecase getCustomerIndentUsecase;
+  final String quantity;
+  final String amount;
+  final String indentNumber;
 
   SubmitIndentNotifier({
     required this.getStaffsUsecase,
@@ -69,21 +79,14 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
     required this.selectedIndentBooklet,
     required this.createIndentUsecase,
     required this.getCustomerIndentUsecase,
+    required this.quantity,
+    required this.amount,
+    required this.indentNumber,
   }) : super(const SubmitIndentState.initial());
 
   StaffEntity? staffEntity;
-  String _quantity = "";
-  String _amount = "";
-  String _indentNumber = "";
 
-  Future<void> submitIndent({
-    required String amount,
-    required String quantity,
-    required String indentNumber,
-  }) async {
-    _amount = amount;
-    _quantity = quantity;
-    _indentNumber = indentNumber;
+  Future<void> submitIndent() async {
     state = const SubmitIndentState.submitting();
     final result =
         await getStaffsUsecase.execute(fuelPumpId: selectedFuelPump?.id ?? "");
@@ -106,10 +109,10 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
       "customer_id": selectedCustomer?.id ?? "",
       "vehicle_id": selectedVehicle?.id ?? "",
       "fuel_type": selectedFuelType?.fuelType ?? "",
-      "amount": _amount,
-      "quantity": _quantity,
+      "amount": amount,
+      "quantity": quantity,
       "discount_amount": 0,
-      "indent_number": _indentNumber,
+      "indent_number": indentNumber,
       "booklet_id": selectedIndentBooklet?.id ?? "",
       "date": DateTime.now().toIso8601String(),
       "status": "Pending Approval",

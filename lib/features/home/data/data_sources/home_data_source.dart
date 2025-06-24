@@ -13,6 +13,7 @@ class HomeDataSource {
           .rpc('get_fuel_pump_by_email', params: {
         'email_param': Supabase.instance.client.auth.currentUser?.email
       });
+      print("Response from get_fuel_pump_by_email: $response");
       return response != null
           ? (response as List)
               .map((item) => FuelPumpModel.fromJson(item))

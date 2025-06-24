@@ -30,4 +30,7 @@ abstract class RecordIndentRepository {
 
   Future<Either<Failure, void>> createIndent(
       {required Map<String, dynamic> body});
+
+  Future<Either<Failure, List<CustomerEntity>>> getAllCustomers(
+      {required String fuelPumpId});
 }
