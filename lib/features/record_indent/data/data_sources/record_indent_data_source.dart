@@ -166,36 +166,4 @@ class RecordIndentDataSource {
       throw Exception("Failed to Create Indent");
     }
   }
-
-  Future<void> updateCustomerIndentBooklet(
-      {required Map<String, dynamic> body, required String bookletId}) async {
-    try {
-      print("update customer indent booklet body: $body");
-      return await client
-          .from('indent_booklets')
-          .update(body)
-          .eq("id", bookletId);
-    } catch (e) {
-      throw Exception("Failed to Update Customer Indent Booklet");
-    }
-  }
-
-  Future<void> createTransactions({required Map<String, dynamic> body}) async {
-    try {
-      print("create transaction body: $body");
-      return await client.from('transactions').insert(body);
-    } catch (e) {
-      print("error in creating transaction: $e");
-      throw Exception("Failed to Transactions");
-    }
-  }
-
-  Future<void> updateCustomerBalance(
-      {required Map<String, dynamic> body, required String customerId}) async {
-    try {
-      return await client.from('customers').update(body).eq("id", customerId);
-    } catch (e) {
-      throw Exception("Failed to Update Customer Indent Booklet");
-    }
-  }
 }
