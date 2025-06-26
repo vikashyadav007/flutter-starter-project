@@ -1,17 +1,19 @@
 import 'package:starter_project/features/auth/presentation/pages/auth_page.dart';
 import 'package:starter_project/features/auth/presentation/providers/global_auth_provider.dart';
+import 'package:starter_project/features/customers/presentation/pages/customer_screen.dart';
 import 'package:starter_project/features/home/presentation/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:starter_project/features/record_indent/presentation/pages/record_indent.dart';
+import 'package:starter_project/features/shift_management/presentation/pages/shift_management_screen.dart';
 
 part 'app_router.g.dart';
 
 GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
 
-enum AppPath { login, home, recordIndent }
+enum AppPath { login, home, recordIndent, customers, shiftManagement }
 
 @riverpod
 String? routerRedirect(Ref ref) {
@@ -99,6 +101,16 @@ GoRouter router(Ref ref) {
         path: '/${AppPath.recordIndent.name}',
         name: AppPath.recordIndent.name,
         builder: (context, state) => RecordIndent(),
+      ),
+      GoRoute(
+        path: '/${AppPath.customers.name}',
+        name: AppPath.customers.name,
+        builder: (context, state) => CustomerScreen(),
+      ),
+      GoRoute(
+        path: '/${AppPath.shiftManagement.name}',
+        name: AppPath.shiftManagement.name,
+        builder: (context, state) => ShiftManagementScreen(),
       ),
     ],
     redirect: (context, state) {

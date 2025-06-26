@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:starter_project/core/routing/app_router.dart';
 import 'package:starter_project/features/home/presentation/providers/home_provider.dart';
 import 'package:starter_project/features/home/presentation/widgets/home_header.dart';
@@ -33,14 +34,16 @@ class HomeScreen extends ConsumerWidget {
                     title: "Indent",
                     subtitle: "Record",
                     onTap: () {
-                      router.goNamed(AppPath.recordIndent.name);
+                      context.push('/${AppPath.recordIndent.name}');
                     },
                     iconColor: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 10),
                   HomeItemTile(
                     icon: Icons.calendar_today,
-                    onTap: () {},
+                    onTap: () {
+                      context.push('/${AppPath.shiftManagement.name}');
+                    },
                     title: "Shift",
                     subtitle: "Log",
                     iconColor: Colors.lightGreen,
@@ -55,7 +58,9 @@ class HomeScreen extends ConsumerWidget {
                     title: "Client",
                     subtitle: "View",
                     iconColor: UiColors.orange,
-                    onTap: () {},
+                    onTap: () {
+                      context.push('/${AppPath.customers.name}');
+                    },
                   ),
                   const SizedBox(width: 10),
                   HomeItemTile(
