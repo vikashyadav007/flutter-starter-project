@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/all_customers_provider.dart';
 import 'package:starter_project/shared/constants/app_constants.dart';
 import 'package:starter_project/shared/constants/ui_constants.dart';
+import 'package:starter_project/shared/utils/utils.dart';
 import 'package:starter_project/shared/widgets/title_header.dart';
 
 class CustomerScreen extends ConsumerWidget {
@@ -131,7 +132,7 @@ class CustomerScreen extends ConsumerWidget {
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
-                                  '${Currency.rupee}${customer.balance}',
+                                  '${Currency.rupee}${getCommaSeperatedNumberDouble(number: customer.balance ?? 0)}',
                                   style: const TextStyle(
                                     color: UiColors.brownColor,
                                     fontWeight: FontWeight.bold,

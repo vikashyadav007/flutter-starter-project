@@ -1,45 +1,45 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/all_customers_provider.dart';
-import 'package:starter_project/shared/constants/app_constants.dart';
+import 'package:starter_project/features/shift_management/presentation/widgets/active_shifts.dart';
 import 'package:starter_project/shared/constants/ui_constants.dart';
 import 'package:starter_project/shared/widgets/title_header.dart';
 
-class ShiftManagementScreen extends ConsumerWidget {
+class ShiftManagementScreen extends StatelessWidget {
   const ShiftManagementScreen({super.key});
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    Widget header({
-      required IconData iconData,
-      required String title,
-    }) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Icon(
-                iconData,
-                size: 24,
-                color: Theme.of(context).colorScheme.primary,
+  Widget header({
+    required BuildContext context,
+    required IconData iconData,
+    required String title,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Icon(
+              iconData,
+              size: 24,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 24,
+                color: UiColors.titleBlack,
+                fontWeight: FontWeight.w800,
               ),
-              const SizedBox(width: 10),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: UiColors.titleBlack,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
-          ),
-        ],
-      );
-    }
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
       backgroundColor: Colors.white,
@@ -69,6 +69,7 @@ class ShiftManagementScreen extends ConsumerWidget {
                     child: Column(
                       children: [
                         header(
+                          context: context,
                           iconData: Icons.calendar_month_rounded,
                           title: 'Start New Shift',
                         ),
@@ -107,8 +108,8 @@ class ShiftManagementScreen extends ConsumerWidget {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(20),
-                    margin: EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.all(20),
+                    margin: const EdgeInsets.only(bottom: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8),
@@ -120,9 +121,12 @@ class ShiftManagementScreen extends ConsumerWidget {
                     child: Column(
                       children: [
                         header(
+                          context: context,
                           iconData: Icons.person_outline_rounded,
                           title: 'Active Shifts',
                         ),
+                        const SizedBox(height: 20),
+                        ActiveShifts(),
                       ],
                     ),
                   )
