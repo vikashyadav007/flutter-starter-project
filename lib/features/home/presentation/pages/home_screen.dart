@@ -64,11 +64,13 @@ class HomeScreen extends ConsumerWidget {
                   ),
                   const SizedBox(width: 10),
                   HomeItemTile(
-                    icon: Icons.water_drop,
-                    title: "Sales",
-                    subtitle: "Record",
+                    icon: Icons.note_sharp,
+                    title: "Draft",
+                    subtitle: "Indents",
                     iconColor: Colors.blueAccent,
-                    onTap: () {},
+                    onTap: () {
+                      context.push('/${AppPath.draftIndents.name}');
+                    },
                   ),
                 ],
               )

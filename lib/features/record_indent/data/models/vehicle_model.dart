@@ -10,13 +10,13 @@ part 'vehicle_model.g.dart';
 abstract class VehicleModel with _$VehicleModel {
   const VehicleModel._();
   const factory VehicleModel({
-    @JsonKey(name: "id") required String id,
-    @JsonKey(name: "customer_id") required String customerId,
-    @JsonKey(name: "number") required String number,
-    @JsonKey(name: "type") required String type,
-    @JsonKey(name: "capacity") required String capacity,
-    @JsonKey(name: "created_at") required DateTime createdAt,
-    @JsonKey(name: "fuel_pump_id") required String fuelPumpId,
+    @JsonKey(name: "id") String? id,
+    @JsonKey(name: "customer_id") String? customerId,
+    @JsonKey(name: "number") String? number,
+    @JsonKey(name: "type") String? type,
+    @JsonKey(name: "capacity") String? capacity,
+    @JsonKey(name: "created_at") DateTime? createdAt,
+    @JsonKey(name: "fuel_pump_id") String? fuelPumpId,
   }) = _VehicleModel;
 
   factory VehicleModel.fromJson(Map<String, dynamic> json) =>

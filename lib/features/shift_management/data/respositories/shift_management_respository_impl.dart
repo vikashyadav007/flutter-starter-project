@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:starter_project/core/api/error_handler.dart';
 import 'package:starter_project/core/api/failure.dart';
 import 'package:starter_project/features/shift_management/data/data_sources/shift_management_data_source.dart';
-import 'package:starter_project/features/shift_management/data/models/reading_model.dart';
 import 'package:starter_project/features/shift_management/domain/entity/reading_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/shift_entity.dart';
 import 'package:starter_project/features/shift_management/domain/repositories/shift_management_repository.dart';

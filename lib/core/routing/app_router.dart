@@ -1,6 +1,7 @@
 import 'package:starter_project/features/auth/presentation/pages/auth_page.dart';
 import 'package:starter_project/features/auth/presentation/providers/global_auth_provider.dart';
 import 'package:starter_project/features/customers/presentation/pages/customer_screen.dart';
+import 'package:starter_project/features/draft_indents/presentation/pages/draft_indents_screen.dart';
 import 'package:starter_project/features/home/presentation/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,7 +14,14 @@ part 'app_router.g.dart';
 
 GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
 
-enum AppPath { login, home, recordIndent, customers, shiftManagement }
+enum AppPath {
+  login,
+  home,
+  recordIndent,
+  customers,
+  shiftManagement,
+  draftIndents
+}
 
 @riverpod
 String? routerRedirect(Ref ref) {
@@ -111,6 +119,11 @@ GoRouter router(Ref ref) {
         path: '/${AppPath.shiftManagement.name}',
         name: AppPath.shiftManagement.name,
         builder: (context, state) => ShiftManagementScreen(),
+      ),
+      GoRoute(
+        path: '/${AppPath.draftIndents.name}',
+        name: AppPath.draftIndents.name,
+        builder: (context, state) => DraftIndentsScreen(),
       ),
     ],
     redirect: (context, state) {
