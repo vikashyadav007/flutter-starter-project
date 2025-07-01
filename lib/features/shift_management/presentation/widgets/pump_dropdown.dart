@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/record_indent/domain/entity/vehicle_entity.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/selected_customer_vehicle_provider.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/vehicles_list_provider.dart';
+import 'package:starter_project/features/shift_management/domain/entity/pump_nozzle_readings.dart';
 import 'package:starter_project/features/shift_management/domain/entity/pump_setting_entity.dart';
 import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
 import 'package:starter_project/shared/widgets/custom_dropdown.dart';
@@ -15,6 +13,7 @@ class PumpDropdown extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pumpProviderState = ref.watch(pumpSettingsProvider);
     final selectedPumpState = ref.watch(selectedPumpProvider.notifier);
+    final pumpNozzleReadings = ref.watch(pumpNozzleReadingsProvider.notifier);
 
     return pumpProviderState.when(
       data: (pumpList) {
@@ -32,6 +31,15 @@ class PumpDropdown extends ConsumerWidget {
               hintText: 'Select Pump',
               onChanged: (p0) {
                 selectedPumpState.state = p0 as PumpSettingEntity;
+                pumpNozzleReadings.state = [];
+                List<PumpNozzleReadings> readings = [];
+                for (String fuelType in p0.fuelTypes) {
+                  readings.add(PumpNozzleReadings(
+                    fuelType: fuelType,
+                    currentReading: '',
+                  ));
+                }
+                pumpNozzleReadings.state = readings;
               },
             ),
           ],

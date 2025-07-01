@@ -3,6 +3,8 @@ import 'package:starter_project/features/shift_management/data/models/pump_setti
 import 'package:starter_project/features/shift_management/data/models/reading_model.dart';
 import 'package:starter_project/features/shift_management/data/models/shift_model.dart';
 import 'package:starter_project/features/shift_management/data/models/staff_model.dart';
+import 'package:starter_project/features/shift_management/domain/entity/reading_entity.dart';
+import 'package:starter_project/features/shift_management/domain/entity/shift_entity.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ShiftManagementDataSource {
@@ -104,6 +106,47 @@ class ShiftManagementDataSource {
     } catch (e) {
       print('Error fetching pump_settings: $e');
       throw Exception("Failed to fetch pump_settings: $e");
+    }
+  }
+
+  Future<List<ShiftModel>> createShift(
+      {required Map<String, dynamic> body}) async {
+    try {
+      print("create Shift body: $body");
+      var response = await client.from('shifts').insert(body).select();
+      print("shift created successfully: $response");
+      return (response as List)
+          .map((item) => ShiftModel.fromJson(item))
+          .toList();
+    } catch (e) {
+      print("error in creating shift: $e");
+      throw Exception("Failed to Create shift");
+    }
+  }
+
+  Future<List<ReadingModel>> createReading(
+      {required Map<String, dynamic> body}) async {
+    try {
+      print("create Readings body: $body");
+      var response = await client.from('readings').insert(body).select();
+      print("readings response: $response");
+      return (response as List)
+          .map((item) => ReadingModel.fromJson(item))
+          .toList();
+    } catch (e) {
+      print("error in creating readings: $e");
+      throw Exception("Failed to Create readings");
+    }
+  }
+
+  Future<void> createShiftConsumables(
+      {required Map<String, dynamic> body}) async {
+    try {
+      print("create Shift Consumables body: $body");
+      return await client.from('shift_consumables').insert(body);
+    } catch (e) {
+      print("error in creating Shift Consumables: $e");
+      throw Exception("Failed to Create Shift Consumables");
     }
   }
 }

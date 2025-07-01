@@ -2,12 +2,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/selected_fuel_type.dart';
 import 'package:starter_project/features/shift_management/data/data_sources/shift_management_data_source.dart';
 import 'package:starter_project/features/shift_management/data/respositories/shift_management_respository_impl.dart';
+import 'package:starter_project/features/shift_management/domain/entity/consumables_cart.dart';
 import 'package:starter_project/features/shift_management/domain/entity/consumables_entity.dart';
+import 'package:starter_project/features/shift_management/domain/entity/pump_nozzle_readings.dart';
 import 'package:starter_project/features/shift_management/domain/entity/pump_setting_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/reading_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/shift_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/staff_entity.dart';
 import 'package:starter_project/features/shift_management/domain/repositories/shift_management_repository.dart';
+import 'package:starter_project/features/shift_management/domain/use_cases/create_reading_usecase.dart';
+import 'package:starter_project/features/shift_management/domain/use_cases/create_shift_consumables_usecase.dart';
+import 'package:starter_project/features/shift_management/domain/use_cases/create_shift_usecase.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/get_active_shifts_usecase.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/get_consumables_usecase.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/get_pump_settings_usecase.dart';
@@ -161,3 +166,32 @@ final selectedConsumableProvider =
     StateProvider<ConsumablesEntity?>((ref) => null);
 
 final staffOnActiveShifts = StateProvider<List<StaffEntity>>((ref) => []);
+
+final consumablesCartProvider =
+    StateProvider<List<ConsumablesCart>>((ref) => []);
+
+final selectedQuantityProvider = StateProvider<String>((ref) => '1');
+
+final startingCashAmountProvider = StateProvider<String>((ref) => '');
+
+final pumpNozzleReadingsProvider =
+    StateProvider<List<PumpNozzleReadings>>((ref) => []);
+
+final createShiftUsecaseProvider = Provider<CreateShiftUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return CreateShiftUsecase(shiftManagementRepository);
+});
+
+final createReadingUsecaseProvider = Provider<CreateReadingUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return CreateReadingUsecase(shiftManagementRepository);
+});
+
+final createShiftConsumablesUsecaseProvider =
+    Provider<CreateShiftConsumablesUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return CreateShiftConsumablesUsecase(shiftManagementRepository);
+});

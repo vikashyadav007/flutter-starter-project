@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:starter_project/core/api/error_handler.dart';
 import 'package:starter_project/core/api/failure.dart';
 import 'package:starter_project/features/shift_management/data/data_sources/shift_management_data_source.dart';
+import 'package:starter_project/features/shift_management/data/models/reading_model.dart';
 import 'package:starter_project/features/shift_management/domain/entity/consumables_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/pump_setting_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/reading_entity.dart';
@@ -78,6 +79,42 @@ class ShiftManagementRespositoryImpl extends ShiftManagementRepository {
         fuelPumpId: fuelPumpId,
       );
       return Right(staffs.map<StaffEntity>((e) => e.toEntity()).toList());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ShiftEntity>>> createShift(
+      {required Map<String, dynamic> body}) async {
+    try {
+      final readings = await _shiftManagementDataSource.createShift(body: body);
+
+      return Right(readings.map<ShiftEntity>((e) => e.toEntity()).toList());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ReadingEntity>>> createReading(
+      {required Map<String, dynamic> body}) async {
+    try {
+      final readings =
+          await _shiftManagementDataSource.createReading(body: body);
+
+      return Right(readings.map<ReadingEntity>((e) => e.toEntity()).toList());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> createShiftConsumables(
+      {required Map<String, dynamic> body}) async {
+    try {
+      return Right(
+          await _shiftManagementDataSource.createShiftConsumables(body: body));
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

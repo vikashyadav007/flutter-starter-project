@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/record_indent/domain/entity/vehicle_entity.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/selected_customer_vehicle_provider.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/vehicles_list_provider.dart';
 import 'package:starter_project/features/shift_management/domain/entity/consumables_entity.dart';
 import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
 import 'package:starter_project/shared/widgets/custom_dropdown.dart';
@@ -15,7 +12,7 @@ class ConsumablesDropdown extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final consumablesProviderState = ref.watch(consumablesProvider);
     final selectedConsumableProviderState =
-        ref.watch(selectedConsumableProvider.notifier);
+        ref.watch(selectedConsumableProvider);
 
     return consumablesProviderState.when(
       data: (consumablesList) {
@@ -25,14 +22,15 @@ class ConsumablesDropdown extends ConsumerWidget {
             const TextFieldLabel(label: 'Consumable'),
             customDropdown(
               key: _dropdownKey,
-              value: selectedConsumableProviderState.state,
+              value: selectedConsumableProviderState,
               context: context,
               dropdownList: consumablesList,
               isRequired: true,
               type: 'Consumable',
               hintText: 'Select Consumable',
               onChanged: (p0) {
-                selectedConsumableProviderState.state = p0 as ConsumablesEntity;
+                ref.read(selectedConsumableProvider.notifier).state =
+                    p0 as ConsumablesEntity;
               },
             ),
           ],

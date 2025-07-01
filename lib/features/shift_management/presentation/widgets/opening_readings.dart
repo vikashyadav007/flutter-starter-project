@@ -1,21 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:starter_project/features/shift_management/domain/entity/pump_nozzle_readings.dart';
 import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
 import 'package:starter_project/shared/constants/ui_constants.dart';
 import 'package:starter_project/shared/widgets/custom_text_field.dart';
 import 'package:starter_project/utils/validators.dart';
 
-class OpeningReadings extends ConsumerWidget {
-  Widget nozzleInputField({
-    required String label,
-  }) {
+class OpeningReadings extends ConsumerStatefulWidget {
+  const OpeningReadings({super.key});
+
+  @override
+  ConsumerState<OpeningReadings> createState() => _OpeningReadingsState();
+}
+
+class _OpeningReadingsState extends ConsumerState<OpeningReadings> {
+  final Map<String, TextEditingController> _controllers = {};
+
+  @override
+  void dispose() {
+    for (final controller in _controllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  void _syncControllers(List<PumpNozzleReadings> readings) {
+    // Create or update controllers
+    for (var reading in readings) {
+      final key = reading.fuelType;
+      if (_controllers.containsKey(key)) {
+        if (_controllers[key]!.text != reading.currentReading) {
+          _controllers[key]!.text = reading.currentReading;
+        }
+      } else {
+        _controllers[key] = TextEditingController(text: reading.currentReading);
+      }
+    }
+
+    // Remove controllers for deleted nozzles
+    final currentKeys = readings.map((r) => r.fuelType).toSet();
+    final keysToRemove =
+        _controllers.keys.where((k) => !currentKeys.contains(k)).toList();
+    for (final key in keysToRemove) {
+      _controllers[key]?.dispose();
+      _controllers.remove(key);
+    }
+  }
+
+  Widget nozzleInputField(PumpNozzleReadings reading, int index) {
+    final controller = _controllers[reading.fuelType]!;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
         children: [
           Expanded(
             child: Text(
-              label,
+              '${reading.fuelType} (Nozzle ${index + 1})',
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
             ),
           ),
@@ -28,12 +69,25 @@ class OpeningReadings extends ConsumerWidget {
                 CustomTextField(
                   hintText: 'Enter reading',
                   validator: Validators.validateQuantity,
-                  controller: TextEditingController(),
+                  controller: controller,
                   keyboardType: TextInputType.number,
-                  onChanged: (value) => {},
+                  onChanged: (value) {
+                    final state = ref.read(pumpNozzleReadingsProvider);
+                    final index = state.indexWhere(
+                      (r) => r.fuelType == reading.fuelType,
+                    );
+                    if (index == -1) return;
+
+                    final updatedList = [...state];
+                    updatedList[index] =
+                        updatedList[index].copyWith(currentReading: value);
+
+                    ref.read(pumpNozzleReadingsProvider.notifier).state =
+                        updatedList;
+                  },
                 ),
-                const Text(
-                  'Current: Not set',
+                Text(
+                  'Current: ${reading.currentReading.isEmpty ? 'Not Set' : reading.currentReading}',
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                 ),
               ],
@@ -45,14 +99,18 @@ class OpeningReadings extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final selectedPumpProviderState = ref.watch(selectedPumpProvider);
+    final readings = ref.watch(pumpNozzleReadingsProvider);
+
+    _syncControllers(readings); // keep controllers in sync with state
+
     return selectedPumpProviderState == null
         ? const SizedBox()
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               const Text(
                 'Opening Readings',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -71,21 +129,20 @@ class OpeningReadings extends ConsumerWidget {
                     Text(
                       "Selected Pump: ${selectedPumpProviderState.pumpNumber}",
                       style: const TextStyle(
-                          color: UiColors.textBluecolor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
+                        color: UiColors.textBluecolor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                    ...List.generate(
-                        selectedPumpProviderState.fuelTypes.length,
-                        (index) => nozzleInputField(
-                              label:
-                                  '${selectedPumpProviderState.fuelTypes[index]} (Nozzle ${index + 1})',
-                            )),
+                    ...readings.asMap().entries.map(
+                          (entry) => nozzleInputField(
+                            entry.value,
+                            entry.key,
+                          ),
+                        ),
                   ],
                 ),
               ),
-
-              // Add your input fields for opening readings here
             ],
           );
   }
