@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:starter_project/features/record_indent/presentation/pages/record_indent.dart';
 import 'package:starter_project/features/shift_management/presentation/pages/shift_management_screen.dart';
+import 'package:starter_project/features/shift_management/presentation/pages/start_new_shift.dart';
 
 part 'app_router.g.dart';
 
@@ -20,7 +21,8 @@ enum AppPath {
   recordIndent,
   customers,
   shiftManagement,
-  draftIndents
+  draftIndents,
+  startNewShift,
 }
 
 @riverpod
@@ -124,6 +126,11 @@ GoRouter router(Ref ref) {
         path: '/${AppPath.draftIndents.name}',
         name: AppPath.draftIndents.name,
         builder: (context, state) => DraftIndentsScreen(),
+      ),
+      GoRoute(
+        path: '/${AppPath.startNewShift.name}',
+        name: AppPath.startNewShift.name,
+        builder: (context, state) => StartNewShift(),
       ),
     ],
     redirect: (context, state) {

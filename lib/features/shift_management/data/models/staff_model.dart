@@ -11,7 +11,16 @@ abstract class StaffModel with _$StaffModel {
   const factory StaffModel({
     @JsonKey(name: "id") String? id,
     @JsonKey(name: "name") String? name,
+    @JsonKey(name: "phone") String? phone,
+    @JsonKey(name: "email") String? email,
+    @JsonKey(name: "role") String? role,
+    @JsonKey(name: "salary") int? salary,
+    @JsonKey(name: "joining_date") DateTime? joiningDate,
+    @JsonKey(name: "auth_id") String? authId,
+    @JsonKey(name: "is_active") bool? isActive,
     @JsonKey(name: "staff_numeric_id") String? staffNumericId,
+    @JsonKey(name: "fuel_pump_id") String? fuelPumpId,
+    @JsonKey(name: "mobile_only_access") bool? mobileOnlyAccess,
   }) = _StaffModel;
 
   factory StaffModel.fromJson(Map<String, dynamic> json) =>
@@ -22,6 +31,15 @@ abstract class StaffModel with _$StaffModel {
       id: id,
       name: name,
       staffNumericId: staffNumericId,
+      phone: phone,
+      email: email,
+      role: role,
+      salary: salary,
+      joiningDate: joiningDate,
+      authId: authId,
+      isActive: isActive,
+      fuelPumpId: fuelPumpId,
+      mobileOnlyAccess: mobileOnlyAccess,
     );
   }
 }

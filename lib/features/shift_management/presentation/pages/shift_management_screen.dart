@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:starter_project/core/routing/app_router.dart';
 import 'package:starter_project/features/shift_management/presentation/widgets/active_shifts.dart';
 import 'package:starter_project/shared/constants/ui_constants.dart';
 import 'package:starter_project/shared/widgets/title_header.dart';
@@ -93,7 +95,9 @@ class ShiftManagementScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              context.push('/${AppPath.startNewShift.name}');
+                            },
                             child: const Text(
                               "Start New Shift",
                               style: TextStyle(
