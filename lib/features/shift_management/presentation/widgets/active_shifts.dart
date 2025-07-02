@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:starter_project/core/routing/app_router.dart';
 import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
 import 'package:starter_project/shared/utils/utils.dart';
 
@@ -139,7 +141,12 @@ class ActiveShifts extends ConsumerWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 5, vertical: 5),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    ref
+                                        .read(selectedShiftProvider.notifier)
+                                        .state = shift;
+                                    context.push('/${AppPath.endShift.name}');
+                                  },
                                   child:
 
                                       //  recordIndentState.maybeWhen(

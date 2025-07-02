@@ -8,6 +8,7 @@ class CustomTextField extends StatelessWidget {
   TextEditingController controller;
   TextInputType keyboardType;
   Function(String)? onChanged;
+  bool enabled;
 
   CustomTextField({
     Key? key,
@@ -17,10 +18,12 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     this.keyboardType = TextInputType.text,
     this.onChanged,
+    this.enabled = true,
   });
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: enabled,
       validator: (value) {
         return validator(value);
       },

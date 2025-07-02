@@ -4,6 +4,7 @@ import 'package:starter_project/features/shift_management/data/data_sources/shif
 import 'package:starter_project/features/shift_management/data/respositories/shift_management_respository_impl.dart';
 import 'package:starter_project/features/shift_management/domain/entity/consumables_cart.dart';
 import 'package:starter_project/features/shift_management/domain/entity/consumables_entity.dart';
+import 'package:starter_project/features/shift_management/domain/entity/pump_closing_readings.dart';
 import 'package:starter_project/features/shift_management/domain/entity/pump_nozzle_readings.dart';
 import 'package:starter_project/features/shift_management/domain/entity/pump_setting_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/reading_entity.dart';
@@ -18,6 +19,7 @@ import 'package:starter_project/features/shift_management/domain/use_cases/get_c
 import 'package:starter_project/features/shift_management/domain/use_cases/get_pump_settings_usecase.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/get_readings_usecase.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/get_staffs_usecase.dart';
+import 'package:starter_project/features/shift_management/presentation/widgets/testing_fuel_reading.dart';
 import 'package:starter_project/shared/providers/selected_fuel_pump.dart';
 
 final shiftManagementRepositoryProvider =
@@ -195,3 +197,47 @@ final createShiftConsumablesUsecaseProvider =
       ref.watch(shiftManagementRepositoryProvider);
   return CreateShiftConsumablesUsecase(shiftManagementRepository);
 });
+
+final selectedShiftProvider = StateProvider<ShiftEntity?>((ref) => null);
+
+final pumpClosingReadingsProvider =
+    StateProvider<List<PumpClosingReadings>>((ref) => []);
+
+final testingFuelReadingProvider =
+    StateProvider<List<PumpNozzleReadings>>((ref) => []);
+
+final endShiftReadingProvider =
+    FutureProvider<List<PumpClosingReadings>>((ref) async {
+  final getReadingsUsecase = ref.watch(getReadinUseCaseProvider);
+  final shiftEntity = ref.watch(selectedShiftProvider);
+  print("Selected Shift: ${shiftEntity?.id}");
+  final result =
+      await getReadingsUsecase.execute(shiftIds: [shiftEntity?.id ?? ""]);
+  return result.fold(
+    (failure) => throw Exception(failure.message),
+    (readings) {
+      List<PumpClosingReadings> closingReadings = [];
+      List<PumpNozzleReadings> testingFuelReadings = [];
+      for (ReadingEntity reading in readings) {
+        closingReadings.add(PumpClosingReadings(
+          reading: reading,
+          closingReading: '',
+          totalLiters: '0.00',
+        ));
+        testingFuelReadings.add(PumpNozzleReadings(
+          fuelType: reading.fuelType ?? "",
+          currentReading: '0.00',
+        ));
+      }
+      ref.read(pumpClosingReadingsProvider.notifier).state = closingReadings;
+      ref.read(testingFuelReadingProvider.notifier).state = testingFuelReadings;
+      return closingReadings;
+    },
+  );
+});
+
+final cardSalesProvider = StateProvider<String>((ref) => '');
+final upiSalesProvider = StateProvider<String>((ref) => '');
+final cashSalesProvider = StateProvider<String>((ref) => '');
+final otherSalesProvider = StateProvider<String>((ref) => '');
+final indentSalesProvider = StateProvider<String>((ref) => '');

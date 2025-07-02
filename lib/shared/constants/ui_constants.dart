@@ -83,4 +83,5 @@ class UiColors {
   static const Color yellowColor = Color.fromRGBO(254, 243, 199, 1);
   static const Color brownColor = Color.fromRGBO(146, 64, 15, 1);
   static const Color textBluecolor = Color(0xFF1D4ED8);
+  static const Color textBlack = Color(0xFF0F1729);
 }
