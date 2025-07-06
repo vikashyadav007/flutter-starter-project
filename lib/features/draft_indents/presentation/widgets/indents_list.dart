@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:starter_project/core/routing/app_router.dart';
 import 'package:starter_project/features/draft_indents/presentation/providers/provider.dart';
+import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
 import 'package:starter_project/shared/constants/app_constants.dart';
 import 'package:starter_project/shared/utils/utils.dart';
 
@@ -174,13 +177,23 @@ class IndentsList extends ConsumerWidget {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 5, vertical: 5),
                               ),
-                              onPressed: () {},
-                              child:
+                              onPressed: () {
+                                ref.read(selectedStaffProvider.notifier).state =
+                                    null;
 
-                                  //  recordIndentState.maybeWhen(
-                                  //   orElse: () =>
+                                ref
+                                    .read(actualQuantityProvider.notifier)
+                                    .state = indent.quantity?.toString() ?? '';
 
-                                  const Row(
+                                ref.read(actualAmountProvider.notifier).state =
+                                    indent.amount?.toString() ?? '';
+                                ref
+                                    .read(selectedDraftIndentProvider.notifier)
+                                    .state = indent;
+
+                                context.push('/${AppPath.completeIndent.name}');
+                              },
+                              child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
@@ -199,18 +212,6 @@ class IndentsList extends ConsumerWidget {
                                   ),
                                 ],
                               ),
-                              // loading: () => const SizedBox(
-                              //   height: 30,
-                              //   width: 30,
-                              //   child: Padding(
-                              //     padding: EdgeInsets.all(8.0),
-                              //     child: CircularProgressIndicator(
-                              //       color: Colors.white,
-                              //       strokeWidth: 2,
-                              //     ),
-                              //   ),
-                              // ),
-                              // ),
                             ),
                           ),
                         ),

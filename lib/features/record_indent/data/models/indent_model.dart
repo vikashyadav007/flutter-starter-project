@@ -3,7 +3,6 @@ import 'package:starter_project/features/customers/data/models/customer_model.da
 import 'package:starter_project/features/record_indent/data/models/vehicle_model.dart';
 
 import 'package:starter_project/features/record_indent/domain/entity/indent_entity.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'indent_model.freezed.dart';
 part 'indent_model.g.dart';
@@ -16,7 +15,7 @@ abstract class IndentModel with _$IndentModel {
     @JsonKey(name: "customer_id") String? customerId,
     @JsonKey(name: "vehicle_id") String? vehicleId,
     @JsonKey(name: "fuel_type") String? fuelType,
-    @JsonKey(name: "quantity") int? quantity,
+    @JsonKey(name: "quantity") double? quantity,
     @JsonKey(name: "amount") double? amount,
     @JsonKey(name: "status") String? status,
     @JsonKey(name: "created_at") DateTime? createdAt,

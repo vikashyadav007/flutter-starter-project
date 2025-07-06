@@ -22,4 +22,28 @@ class DraftIndentsDataSource {
       throw Exception("Failed to fetch Indents: $e");
     }
   }
+
+  Future<void> completeDraftIndent(
+      {required Map<String, dynamic> body, required String id}) async {
+    try {
+      print("complete draft indent body: $body");
+      print("draft indent id: $id");
+      return await client.from('indents').update(body).eq('id', id);
+    } catch (e) {
+      print("error in completing draft indent: $e");
+      throw Exception("Failed to complete draft indent");
+    }
+  }
+
+  Future<void> createTransaction({
+    required Map<String, dynamic> body,
+  }) async {
+    try {
+      print("complete draft indent body: $body");
+      return await client.from('indents').insert(body);
+    } catch (e) {
+      print("error in completing draft indent: $e");
+      throw Exception("Failed to complete draft indent");
+    }
+  }
 }

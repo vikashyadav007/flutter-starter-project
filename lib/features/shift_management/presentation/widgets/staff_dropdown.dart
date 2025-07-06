@@ -6,6 +6,9 @@ import 'package:starter_project/shared/widgets/custom_dropdown.dart';
 import 'package:starter_project/shared/widgets/text_field_label.dart';
 
 class StaffDropdown extends ConsumerWidget {
+  String label;
+
+  StaffDropdown({this.label = 'Select Staff'});
   final GlobalKey<FormFieldState> _dropdownKey = GlobalKey<FormFieldState>();
 
   @override
@@ -18,7 +21,7 @@ class StaffDropdown extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const TextFieldLabel(label: 'Select Staff'),
+            TextFieldLabel(label: label),
             customDropdown(
               key: _dropdownKey,
               value: selectedStaff.state,

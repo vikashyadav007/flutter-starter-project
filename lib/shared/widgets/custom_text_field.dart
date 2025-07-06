@@ -9,6 +9,8 @@ class CustomTextField extends StatelessWidget {
   TextInputType keyboardType;
   Function(String)? onChanged;
   bool enabled;
+  int? minLines;
+  int? maxLines;
 
   CustomTextField({
     Key? key,
@@ -19,6 +21,8 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.onChanged,
     this.enabled = true,
+    this.minLines = 1,
+    this.maxLines = 1,
   });
   @override
   Widget build(BuildContext context) {
@@ -31,6 +35,8 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       controller: controller,
       obscureText: obscureText,
+      minLines: minLines,
+      maxLines: maxLines,
       decoration: InputDecoration(
         hintText: hintText,
         contentPadding: EdgeInsets.symmetric(horizontal: 10),

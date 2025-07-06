@@ -4,4 +4,10 @@ import 'package:starter_project/features/record_indent/domain/entity/indent_enti
 
 abstract class DraftIndentsRepository {
   Future<Either<Failure, List<IndentEntity>>> getDraftIndents();
+
+  Future<Either<Failure, void>> completeDraftIndent(
+      {required Map<String, dynamic> body, required String id});
+
+  Future<Either<Failure, void>> createTransaction(
+      {required Map<String, dynamic> body});
 }

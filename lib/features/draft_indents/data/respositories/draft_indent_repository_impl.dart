@@ -20,4 +20,25 @@ class DraftIndentRepositoryImpl extends DraftIndentsRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
+
+  @override
+  Future<Either<Failure, void>> completeDraftIndent(
+      {required Map<String, dynamic> body, required String id}) async {
+    try {
+      return Right(await _draftIndentsDataSource.completeDraftIndent(
+          body: body, id: id));
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> createTransaction(
+      {required Map<String, dynamic> body}) async {
+    try {
+      return Right(await _draftIndentsDataSource.createTransaction(body: body));
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
 }

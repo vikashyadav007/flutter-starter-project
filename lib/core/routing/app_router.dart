@@ -1,6 +1,7 @@
 import 'package:starter_project/features/auth/presentation/pages/auth_page.dart';
 import 'package:starter_project/features/auth/presentation/providers/global_auth_provider.dart';
 import 'package:starter_project/features/customers/presentation/pages/customer_screen.dart';
+import 'package:starter_project/features/draft_indents/presentation/pages/complete_draft_indent_screen.dart';
 import 'package:starter_project/features/draft_indents/presentation/pages/draft_indents_screen.dart';
 import 'package:starter_project/features/home/presentation/pages/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ enum AppPath {
   draftIndents,
   startNewShift,
   endShift,
+  completeIndent,
 }
 
 @riverpod
@@ -138,6 +140,11 @@ GoRouter router(Ref ref) {
         path: '/${AppPath.endShift.name}',
         name: AppPath.endShift.name,
         builder: (context, state) => EndShiftScreen(),
+      ),
+      GoRoute(
+        path: '/${AppPath.completeIndent.name}',
+        name: AppPath.completeIndent.name,
+        builder: (context, state) => CompleteDraftIndentScreen(),
       ),
     ],
     redirect: (context, state) {

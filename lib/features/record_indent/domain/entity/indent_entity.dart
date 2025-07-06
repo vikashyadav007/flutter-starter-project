@@ -11,7 +11,7 @@ class IndentEntity with _$IndentEntity {
     String? customerId,
     String? vehicleId,
     String? fuelType,
-    int? quantity,
+    double? quantity,
     double? amount,
     String? status,
     DateTime? createdAt,
