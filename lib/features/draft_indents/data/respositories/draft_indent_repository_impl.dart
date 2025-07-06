@@ -41,4 +41,13 @@ class DraftIndentRepositoryImpl extends DraftIndentsRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
+
+  @override
+  Future<Either<Failure, void>> deleteDraftIndent({required String id}) async {
+    try {
+      return Right(await _draftIndentsDataSource.deleteDraftIndent(id: id));
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
 }

@@ -4,6 +4,7 @@ import 'package:starter_project/features/draft_indents/data/respositories/draft_
 import 'package:starter_project/features/draft_indents/domain/repositories/draft_indents_repository.dart';
 import 'package:starter_project/features/draft_indents/domain/use_cases/complete_draft_indent_usecase.dart';
 import 'package:starter_project/features/draft_indents/domain/use_cases/create_transaction_usecase.dart';
+import 'package:starter_project/features/draft_indents/domain/use_cases/delete_draft_indent_usecase.dart';
 import 'package:starter_project/features/draft_indents/domain/use_cases/get_draft_indents_usecase.dart';
 import 'package:starter_project/features/record_indent/domain/entity/indent_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/staff_entity.dart';
@@ -49,4 +50,10 @@ final createTransactionUsecaseProvider =
     Provider<CreateTransactionUsecase>((ref) {
   final draftIndentsRepository = ref.watch(draftIndentsRepositoryProvider);
   return CreateTransactionUsecase(draftIndentsRepository);
+});
+
+final deleteDraftIndentUsecaseProvider =
+    Provider<DeleteDraftIndentUsecase>((ref) {
+  final draftIndentsRepository = ref.watch(draftIndentsRepositoryProvider);
+  return DeleteDraftIndentUsecase(draftIndentsRepository);
 });

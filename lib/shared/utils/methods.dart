@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:starter_project/features/draft_indents/presentation/providers/provider.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/search_by_indent_provider.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/submit_indent_provider.dart';
@@ -26,4 +27,13 @@ void invalidateActiveShifts({required WidgetRef ref}) {
   ref.invalidate(consumablesCartProvider);
   ref.invalidate(shiftsProvider);
   ref.invalidate(readingsProvider);
+}
+
+void invalidateDraftIndents({required WidgetRef ref}) {
+  ref.invalidate(draftIndentsProvider);
+  ref.invalidate(selectedDraftIndentProvider);
+  ref.invalidate(selectedStaffProvider);
+  ref.invalidate(actualAmountProvider);
+  ref.invalidate(actualQuantityProvider);
+  ref.invalidate(additionalNotesProvider);
 }

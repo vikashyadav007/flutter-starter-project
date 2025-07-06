@@ -39,11 +39,21 @@ class DraftIndentsDataSource {
     required Map<String, dynamic> body,
   }) async {
     try {
-      print("complete draft indent body: $body");
-      return await client.from('indents').insert(body);
+      print("createTransaction body: $body");
+      return await client.from('transactions').insert(body);
     } catch (e) {
-      print("error in completing draft indent: $e");
-      throw Exception("Failed to complete draft indent");
+      print("error in creating transaction: $e");
+      throw Exception("Failed to create draft indent");
+    }
+  }
+
+  Future<void> deleteDraftIndent({required String id}) async {
+    try {
+      print("delete draft indent id: $id");
+      return await client.from('indents').delete().eq('id', id);
+    } catch (e) {
+      print("error in deleting draft indent: $e");
+      throw Exception("Failed to delete draft indent");
     }
   }
 }

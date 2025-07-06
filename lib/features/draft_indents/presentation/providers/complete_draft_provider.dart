@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:starter_project/features/draft_indents/domain/use_cases/complete_draft_indent_usecase.dart';
 import 'package:starter_project/features/draft_indents/domain/use_cases/create_transaction_usecase.dart';
 import 'package:starter_project/features/draft_indents/presentation/providers/provider.dart';
+import 'package:starter_project/features/draft_indents/presentation/widgets/complete_draft_indent_success_popup.dart';
 import 'package:starter_project/features/home/domain/entity/fuel_pump_entity.dart';
 import 'package:starter_project/features/record_indent/domain/entity/indent_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/staff_entity.dart';
@@ -79,6 +80,7 @@ class CompleteDraftNotifier extends StateNotifier<CompleteDraftState> {
     final result2 = createTransaction();
     await Future.wait([result1, result2]).then((_) {
       state = const CompleteDraftState.submitted(true);
+      CompleteDraftIndentSuccessPopup();
     }).catchError((error) {
       state = CompleteDraftState.error(error.toString());
     });

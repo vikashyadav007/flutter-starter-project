@@ -10,4 +10,6 @@ abstract class DraftIndentsRepository {
 
   Future<Either<Failure, void>> createTransaction(
       {required Map<String, dynamic> body});
+
+  Future<Either<Failure, void>> deleteDraftIndent({required String id});
 }

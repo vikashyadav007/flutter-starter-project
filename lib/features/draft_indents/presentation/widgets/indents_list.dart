@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:starter_project/core/routing/app_router.dart';
 import 'package:starter_project/features/draft_indents/presentation/providers/provider.dart';
+import 'package:starter_project/features/draft_indents/presentation/widgets/delete_draft_indent_confirm_popup.dart';
 import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
 import 'package:starter_project/shared/constants/app_constants.dart';
 import 'package:starter_project/shared/utils/utils.dart';
@@ -216,21 +215,29 @@ class IndentsList extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: Colors.grey.shade300,
-                              width: 1.5,
+                        InkWell(
+                          onTap: () {
+                            ref
+                                .read(selectedDraftIndentProvider.notifier)
+                                .state = indent;
+                            DeleteDraftIndentConfirmPopup();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 8,
                             ),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Colors.grey.shade300,
+                                width: 1.5,
+                              ),
+                            ),
+                            child:
+                                Icon(Icons.delete_forever, color: Colors.white),
                           ),
-                          child:
-                              Icon(Icons.delete_forever, color: Colors.white),
                         ),
                       ],
                     ),

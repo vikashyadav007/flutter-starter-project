@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:starter_project/features/draft_indents/presentation/providers/complete_draft_provider.dart';
 import 'package:starter_project/features/draft_indents/presentation/providers/provider.dart';
+import 'package:starter_project/features/draft_indents/presentation/widgets/draft_indent_summary.dart';
 import 'package:starter_project/features/draft_indents/presentation/widgets/payment_method_dropdown.dart';
 import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
 import 'package:starter_project/features/shift_management/presentation/widgets/staff_dropdown.dart';
@@ -47,58 +48,8 @@ class CompleteDraftIndentScreen extends ConsumerWidget {
                   : Expanded(
                       child: ListView(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: UiColors.gray.withAlpha(50),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: Colors.grey.shade300,
-                                width: 1.5,
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${selectedDraftIndent.customers?.name ?? "N/A"}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      '${selectedDraftIndent.vehicles?.number}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Container(
-                                      height: 4,
-                                      width: 4,
-                                      decoration: const BoxDecoration(
-                                          color: Colors.black),
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      '${selectedDraftIndent.fuelType}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  'Indent ID: ${selectedDraftIndent.indentNumber}',
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
+                          DraftIndentSummary(
+                            showStatus: false,
                           ),
                           const SizedBox(height: 20),
                           StaffDropdown(
