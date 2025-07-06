@@ -99,7 +99,8 @@ final readingsProvider = FutureProvider<List<ShiftEntity>>((ref) async {
       for (ReadingEntity reading in readings) {
         final shift = shiftsMap[reading.shiftId];
         if (shift != null) {
-          shiftsMap[reading.shiftId!] = shift.copyWith(reading: reading);
+          shiftsMap[reading.shiftId!] =
+              shift.copyWith(readings: [reading, ...shift.readings ?? []]);
         }
       }
 
@@ -331,5 +332,3 @@ final updateReadingUsecaseProvider = Provider<UpdateReadingUsecase>((ref) {
       ref.watch(shiftManagementRepositoryProvider);
   return UpdateReadingUsecase(shiftManagementRepository);
 });
-
-final cashRemainingProvider = StateProvider<double>((ref) => 0.0);

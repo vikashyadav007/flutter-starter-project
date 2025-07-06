@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:starter_project/features/shift_management/domain/entity/consumables_reconciliation.dart';
 import 'package:starter_project/features/shift_management/domain/entity/pump_closing_readings.dart';
-import 'package:starter_project/features/shift_management/domain/entity/shift_consumables_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/shift_entity.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/complete_shift_usecase.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/reconcilize_shift_consumables_usecase.dart';
@@ -99,7 +98,7 @@ class EndShiftNotifier extends StateNotifier<EndShiftState> {
   Future<void> endShift() async {
     state = const EndShiftState.submitting();
 
-    double expectedCashCount = (shiftEntity?.reading?.cashGiven ?? 0.0) +
+    double expectedCashCount = (shiftEntity?.readings?[0].cashGiven ?? 0.0) +
         (cashSales.isEmpty ? 0.0 : double.tryParse(cashSales) ?? 0.0) -
         (double.tryParse(otherExpenses ?? "0.0") ?? 0.0);
 

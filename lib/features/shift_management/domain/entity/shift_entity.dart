@@ -19,6 +19,6 @@ class ShiftEntity with _$ShiftEntity {
     int? cashRemaining,
     String? fuelPumpId,
     StaffEntity? staff,
-    ReadingEntity? reading,
+    List<ReadingEntity>? readings,
   }) = _ShiftEntity;
 }

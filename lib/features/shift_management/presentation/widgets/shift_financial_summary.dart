@@ -79,7 +79,7 @@ class ShiftFinancialSummary extends ConsumerWidget {
 
     double netRevenue = totalRevenue - totalExpenses;
 
-    double expectedCashCount = (selectedShift?.reading?.cashGiven ?? 0.0) +
+    double expectedCashCount = (selectedShift?.readings?[0].cashGiven ?? 0.0) +
         (cashSales.isEmpty ? 0.0 : double.tryParse(cashSales) ?? 0.0) -
         (otherExpenses.isEmpty ? 0.0 : double.tryParse(otherExpenses) ?? 0.0);
 
@@ -205,7 +205,7 @@ class ShiftFinancialSummary extends ConsumerWidget {
                     context: context,
                     label: 'Cash at shift start',
                     value:
-                        '${Currency.rupee}${selectedShift?.reading?.cashGiven?.toStringAsFixed(2) ?? '0.00'}',
+                        '${Currency.rupee}${selectedShift?.readings?[0].cashGiven?.toStringAsFixed(2) ?? '0.00'}',
                   ),
                   row(
                     context: context,

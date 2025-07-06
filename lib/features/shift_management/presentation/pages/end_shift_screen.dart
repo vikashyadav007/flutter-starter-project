@@ -87,7 +87,7 @@ class EndShiftScreen extends ConsumerWidget {
                               ),
                               detailRow(
                                 label: 'Pump:',
-                                value: selectedShift?.reading?.pumpId ?? "",
+                                value: selectedShift?.readings?[0].pumpId ?? "",
                                 flex: 1,
                               )
                             ],

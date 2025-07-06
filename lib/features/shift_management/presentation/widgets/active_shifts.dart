@@ -114,12 +114,13 @@ class ActiveShifts extends ConsumerWidget {
                             detailRow(
                               flex: 2,
                               label: "Pump ID: ",
-                              value: shift.reading?.pumpId ?? "",
+                              value: shift.readings?[0].pumpId ?? "",
                             ),
                             detailRow(
                               flex: 1,
                               label: "Opening\nReading: ",
-                              value: "${shift.reading?.openingReading ?? "0"}",
+                              value:
+                                  "${shift.readings?[0].openingReading ?? "0"}",
                             ),
                           ],
                         ),
