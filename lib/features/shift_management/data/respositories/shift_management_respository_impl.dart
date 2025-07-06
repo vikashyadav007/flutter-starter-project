@@ -6,8 +6,10 @@ import 'package:starter_project/features/shift_management/data/models/reading_mo
 import 'package:starter_project/features/shift_management/domain/entity/consumables_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/pump_setting_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/reading_entity.dart';
+import 'package:starter_project/features/shift_management/domain/entity/shift_consumables_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/shift_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/staff_entity.dart';
+import 'package:starter_project/features/shift_management/domain/entity/transaction_entity.dart';
 import 'package:starter_project/features/shift_management/domain/repositories/shift_management_repository.dart';
 
 class ShiftManagementRespositoryImpl extends ShiftManagementRepository {
@@ -115,6 +117,76 @@ class ShiftManagementRespositoryImpl extends ShiftManagementRepository {
     try {
       return Right(
           await _shiftManagementDataSource.createShiftConsumables(body: body));
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ShiftConsumablesEntity>>> getShiftConsumables(
+      {required String shiftId}) async {
+    try {
+      final staffs = await _shiftManagementDataSource.getShiftConsumables(
+        shiftId: shiftId,
+      );
+      return Right(
+          staffs.map<ShiftConsumablesEntity>((e) => e.toEntity()).toList());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<TransactionEntity>>> getTransactions(
+      {required String staffId, required String createdAt}) async {
+    try {
+      final staffs = await _shiftManagementDataSource.getTransactions(
+        staffId: staffId,
+        createdAt: createdAt,
+      );
+      return Right(staffs.map<TransactionEntity>((e) => e.toEntity()).toList());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> completeShift(
+      {required Map<String, dynamic> body, required String shiftId}) async {
+    try {
+      return Right(await _shiftManagementDataSource.completeShift(
+        body: body,
+        shiftId: shiftId,
+      ));
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> reconilizeShiftConsumables(
+      {required Map<String, dynamic> body, required String id}) async {
+    try {
+      return Right(await _shiftManagementDataSource.reconilizeShiftConsumables(
+        body: body,
+        id: id,
+      ));
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updateReading(
+      {required Map<String, dynamic> body,
+      required String shiftId,
+      required String fuelType}) async {
+    try {
+      return Right(await _shiftManagementDataSource.updateReading(
+        body: body,
+        shiftId: shiftId,
+        fuelType: fuelType,
+      ));
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

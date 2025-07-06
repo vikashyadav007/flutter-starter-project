@@ -1,16 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/selected_fuel_type.dart';
+import 'package:starter_project/features/record_indent/domain/entity/fuel_entity.dart';
 import 'package:starter_project/features/shift_management/data/data_sources/shift_management_data_source.dart';
 import 'package:starter_project/features/shift_management/data/respositories/shift_management_respository_impl.dart';
 import 'package:starter_project/features/shift_management/domain/entity/consumables_cart.dart';
 import 'package:starter_project/features/shift_management/domain/entity/consumables_entity.dart';
+import 'package:starter_project/features/shift_management/domain/entity/consumables_reconciliation.dart';
 import 'package:starter_project/features/shift_management/domain/entity/pump_closing_readings.dart';
 import 'package:starter_project/features/shift_management/domain/entity/pump_nozzle_readings.dart';
 import 'package:starter_project/features/shift_management/domain/entity/pump_setting_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/reading_entity.dart';
+import 'package:starter_project/features/shift_management/domain/entity/shift_consumables_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/shift_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/staff_entity.dart';
+import 'package:starter_project/features/shift_management/domain/entity/transaction_entity.dart';
 import 'package:starter_project/features/shift_management/domain/repositories/shift_management_repository.dart';
+import 'package:starter_project/features/shift_management/domain/use_cases/complete_shift_usecase.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/create_reading_usecase.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/create_shift_consumables_usecase.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/create_shift_usecase.dart';
@@ -18,8 +22,11 @@ import 'package:starter_project/features/shift_management/domain/use_cases/get_a
 import 'package:starter_project/features/shift_management/domain/use_cases/get_consumables_usecase.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/get_pump_settings_usecase.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/get_readings_usecase.dart';
+import 'package:starter_project/features/shift_management/domain/use_cases/get_shifts_consumables_usecase.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/get_staffs_usecase.dart';
-import 'package:starter_project/features/shift_management/presentation/widgets/testing_fuel_reading.dart';
+import 'package:starter_project/features/shift_management/domain/use_cases/get_transactions_usecase.dart';
+import 'package:starter_project/features/shift_management/domain/use_cases/reconcilize_shift_consumables_usecase.dart';
+import 'package:starter_project/features/shift_management/domain/use_cases/update_reading_usecase.dart';
 import 'package:starter_project/shared/providers/selected_fuel_pump.dart';
 
 final shiftManagementRepositoryProvider =
@@ -203,9 +210,6 @@ final selectedShiftProvider = StateProvider<ShiftEntity?>((ref) => null);
 final pumpClosingReadingsProvider =
     StateProvider<List<PumpClosingReadings>>((ref) => []);
 
-final testingFuelReadingProvider =
-    StateProvider<List<PumpNozzleReadings>>((ref) => []);
-
 final endShiftReadingProvider =
     FutureProvider<List<PumpClosingReadings>>((ref) async {
   final getReadingsUsecase = ref.watch(getReadinUseCaseProvider);
@@ -217,20 +221,15 @@ final endShiftReadingProvider =
     (failure) => throw Exception(failure.message),
     (readings) {
       List<PumpClosingReadings> closingReadings = [];
-      List<PumpNozzleReadings> testingFuelReadings = [];
       for (ReadingEntity reading in readings) {
         closingReadings.add(PumpClosingReadings(
           reading: reading,
           closingReading: '',
           totalLiters: '0.00',
-        ));
-        testingFuelReadings.add(PumpNozzleReadings(
-          fuelType: reading.fuelType ?? "",
-          currentReading: '0.00',
+          testingFuelReading: '',
         ));
       }
       ref.read(pumpClosingReadingsProvider.notifier).state = closingReadings;
-      ref.read(testingFuelReadingProvider.notifier).state = testingFuelReadings;
       return closingReadings;
     },
   );
@@ -241,3 +240,96 @@ final upiSalesProvider = StateProvider<String>((ref) => '');
 final cashSalesProvider = StateProvider<String>((ref) => '');
 final otherSalesProvider = StateProvider<String>((ref) => '');
 final indentSalesProvider = StateProvider<String>((ref) => '');
+
+final getShiftsConsumablesUsecaseProvider =
+    Provider<GetShiftsConsumablesUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return GetShiftsConsumablesUsecase(shiftManagementRepository);
+});
+
+final consumablesReconciliationProvider =
+    StateProvider<List<ConsumablesReconciliation>>((ref) => []);
+
+final shiftConsumablesProvider =
+    FutureProvider<List<ConsumablesReconciliation>>((ref) async {
+  final getShiftsConsumablesUsecase =
+      ref.watch(getShiftsConsumablesUsecaseProvider);
+  final shiftEntity = ref.watch(selectedShiftProvider);
+  if (shiftEntity?.id == null) {
+    return [];
+  }
+  final result =
+      await getShiftsConsumablesUsecase.execute(shiftId: shiftEntity!.id!);
+  return result.fold(
+    (failure) => throw Exception(failure.message),
+    (consumables) {
+      List<ConsumablesReconciliation> reconciliations = [];
+      for (ShiftConsumablesEntity consumable in consumables) {
+        reconciliations.add(ConsumablesReconciliation(
+            shiftConsumables: consumable,
+            returns: consumable.quantityAllocated.toString(),
+            sold: 0,
+            soldPrice: 0));
+      }
+      ref.read(consumablesReconciliationProvider.notifier).state =
+          reconciliations;
+      return reconciliations;
+    },
+  );
+});
+
+final otherExpensesProvider = StateProvider<String>((ref) => '');
+final cashCountProvider = StateProvider<String>((ref) => '');
+
+final getTransactionsUsecaseProvider = Provider<GetTransactionsUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return GetTransactionsUsecase(shiftManagementRepository);
+});
+
+final transactionsProvider =
+    FutureProvider<List<TransactionEntity>>((ref) async {
+  final getTransactionsUsecase = ref.watch(getTransactionsUsecaseProvider);
+  final shiftEntity = ref.watch(selectedShiftProvider);
+  if (shiftEntity?.id == null) {
+    return [];
+  }
+  final result = await getTransactionsUsecase.execute(
+      staffId: shiftEntity!.staff?.id ?? "",
+      createdAt: shiftEntity.startTime?.toIso8601String() ?? "");
+  return result.fold(
+    (failure) => throw Exception(failure.message),
+    (transactions) {
+      double total = 0;
+      for (TransactionEntity transaction in transactions) {
+        if (transaction.amount != null) {
+          total += transaction.amount!;
+        }
+      }
+      ref.read(indentSalesProvider.notifier).state = total.toStringAsFixed(2);
+      return transactions;
+    },
+  );
+});
+
+final completeShiftUsecaseProvider = Provider<CompleteShiftUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return CompleteShiftUsecase(shiftManagementRepository);
+});
+
+final reconcilizeShiftConsumablesUsecaseProvider =
+    Provider<ReconcilizeShiftConsumablesUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return ReconcilizeShiftConsumablesUsecase(shiftManagementRepository);
+});
+
+final updateReadingUsecaseProvider = Provider<UpdateReadingUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return UpdateReadingUsecase(shiftManagementRepository);
+});
+
+final cashRemainingProvider = StateProvider<double>((ref) => 0.0);

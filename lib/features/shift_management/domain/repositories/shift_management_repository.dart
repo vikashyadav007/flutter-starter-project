@@ -3,8 +3,10 @@ import 'package:starter_project/core/api/failure.dart';
 import 'package:starter_project/features/shift_management/domain/entity/consumables_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/pump_setting_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/reading_entity.dart';
+import 'package:starter_project/features/shift_management/domain/entity/shift_consumables_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/shift_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/staff_entity.dart';
+import 'package:starter_project/features/shift_management/domain/entity/transaction_entity.dart';
 
 abstract class ShiftManagementRepository {
   Future<Either<Failure, List<ShiftEntity>>> getShifts({
@@ -33,4 +35,26 @@ abstract class ShiftManagementRepository {
 
   Future<Either<Failure, void>> createShiftConsumables(
       {required Map<String, dynamic> body});
+
+  Future<Either<Failure, List<ShiftConsumablesEntity>>> getShiftConsumables({
+    required String shiftId,
+  });
+
+  Future<Either<Failure, List<TransactionEntity>>> getTransactions({
+    required String staffId,
+    required String createdAt,
+  });
+
+  Future<Either<Failure, void>> completeShift(
+      {required Map<String, dynamic> body, required String shiftId});
+
+  Future<Either<Failure, void>> updateReading(
+      {required Map<String, dynamic> body,
+      required String shiftId,
+      required String fuelType});
+
+  Future<Either<Failure, void>> reconilizeShiftConsumables({
+    required Map<String, dynamic> body,
+    required String id,
+  });
 }

@@ -4,7 +4,7 @@ class ConsumablesEntity {
   String? id;
   String? name;
   int? quantity;
-  int? pricePerUnit;
+  double? pricePerUnit;
   int? totalPrice;
   DateTime? date;
   DateTime? createdAt;

@@ -13,7 +13,7 @@ abstract class ConsumablesModel with _$ConsumablesModel {
     @JsonKey(name: "id") String? id,
     @JsonKey(name: "name") String? name,
     @JsonKey(name: "quantity") int? quantity,
-    @JsonKey(name: "price_per_unit") int? pricePerUnit,
+    @JsonKey(name: "price_per_unit") double? pricePerUnit,
     @JsonKey(name: "total_price") int? totalPrice,
     @JsonKey(name: "date") DateTime? date,
     @JsonKey(name: "created_at") DateTime? createdAt,

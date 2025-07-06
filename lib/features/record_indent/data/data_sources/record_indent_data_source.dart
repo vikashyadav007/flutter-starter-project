@@ -65,6 +65,8 @@ class RecordIndentDataSource {
           .from('fuel_settings')
           .select("fuel_type,current_price")
           .eq('fuel_pump_id', fuelPumpId);
+
+      print("objects from getFuelTypes: $response");
       return (response as List)
           .map((item) => FuelModel.fromJson(item))
           .toList();

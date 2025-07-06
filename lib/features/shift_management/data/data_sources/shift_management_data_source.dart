@@ -1,8 +1,10 @@
 import 'package:starter_project/features/shift_management/data/models/consumables_model.dart';
 import 'package:starter_project/features/shift_management/data/models/pump_setting_model.dart';
 import 'package:starter_project/features/shift_management/data/models/reading_model.dart';
+import 'package:starter_project/features/shift_management/data/models/shift_consumables_model.dart';
 import 'package:starter_project/features/shift_management/data/models/shift_model.dart';
 import 'package:starter_project/features/shift_management/data/models/staff_model.dart';
+import 'package:starter_project/features/shift_management/data/models/transaction_model.dart';
 import 'package:starter_project/features/shift_management/domain/entity/reading_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/shift_entity.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -147,6 +149,94 @@ class ShiftManagementDataSource {
     } catch (e) {
       print("error in creating Shift Consumables: $e");
       throw Exception("Failed to Create Shift Consumables");
+    }
+  }
+
+  Future<List<ShiftConsumablesModel>> getShiftConsumables({
+    required String shiftId,
+  }) async {
+    try {
+      var query = client
+          .from('shift_consumables')
+          .select(
+              'id,quantity_allocated,quantity_returned,consumable_id,consumables(name,price_per_unit,unit)')
+          .eq(
+            'shift_id',
+            shiftId,
+          );
+      var response = await query;
+      print("Response from getConsumables: $response");
+      return (response as List)
+          .map((item) => ShiftConsumablesModel.fromJson(item))
+          .toList();
+    } catch (e) {
+      print('Error fetching consumables: $e');
+      throw Exception("Failed to fetch consumables: $e");
+    }
+  }
+
+  Future<List<TransactionModel>> getTransactions({
+    required String staffId,
+    required String createdAt,
+  }) async {
+    try {
+      var query = client
+          .from('transactions')
+          .select('amount')
+          .eq('staff_id', staffId)
+          .gte('created_at', createdAt)
+          .lte('created_at', DateTime.now().toIso8601String());
+
+      var response = await query;
+      print("Response from getTransactions: $response");
+      return (response as List)
+          .map((item) => TransactionModel.fromJson(item))
+          .toList();
+    } catch (e) {
+      print('Error fetching Transactions: $e');
+      throw Exception("Failed to fetch transactions: $e");
+    }
+  }
+
+  Future<void> completeShift(
+      {required Map<String, dynamic> body, required String shiftId}) async {
+    try {
+      print("complete shift body: $body");
+      return await client.from('shifts').update(body).eq('id', shiftId);
+    } catch (e) {
+      print("error in complete shift: $e");
+      throw Exception("Failed to complete shift: $e");
+    }
+  }
+
+  Future<void> updateReading({
+    required Map<String, dynamic> body,
+    required String shiftId,
+    required String fuelType,
+  }) async {
+    try {
+      print("update Reading body: $body");
+      return await client
+          .from('readings')
+          .update(body)
+          .eq('shift_id', shiftId)
+          .eq('fuel_type', fuelType);
+    } catch (e) {
+      print("error in updating reading: $e");
+      throw Exception("Failed to update reading");
+    }
+  }
+
+  Future<void> reconilizeShiftConsumables({
+    required Map<String, dynamic> body,
+    required String id,
+  }) async {
+    try {
+      print("reconilizeShiftConsumables body: $body");
+      return await client.from('shift_consumables').update(body).eq('id', id);
+    } catch (e) {
+      print("error in updating reading: $e");
+      throw Exception("Failed to update reading");
     }
   }
 }

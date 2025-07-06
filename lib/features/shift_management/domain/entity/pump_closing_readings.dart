@@ -9,5 +9,6 @@ class PumpClosingReadings with _$PumpClosingReadings {
     required ReadingEntity reading,
     required String closingReading,
     required String totalLiters,
+    required String testingFuelReading,
   }) = _PumpClosingReadings;
 }

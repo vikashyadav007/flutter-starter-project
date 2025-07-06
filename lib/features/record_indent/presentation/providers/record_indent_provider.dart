@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:starter_project/core/api/failure.dart';
 import 'package:starter_project/features/customers/domain/entity/customer_entity.dart';
 import 'package:starter_project/features/home/domain/entity/fuel_pump_entity.dart';
+import 'package:starter_project/features/record_indent/domain/entity/fuel_entity.dart';
 import 'package:starter_project/features/record_indent/domain/entity/indent_booklet_entity.dart';
 import 'package:starter_project/features/record_indent/domain/entity/indent_entity.dart';
 import 'package:starter_project/features/record_indent/domain/use_cases/get_customer_indent_booklet_usecase.dart';
@@ -12,7 +13,6 @@ import 'package:starter_project/features/record_indent/domain/use_cases/get_fuel
 import 'package:starter_project/features/record_indent/domain/use_cases/get_indent_booklets_usecase.dart';
 import 'package:starter_project/features/record_indent/domain/use_cases/verify_customer_indent_usecase.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/customer_indents_provider.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/fuel_types_provider.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/selected_customer_provider.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/selected_customer_vehicle_provider.dart';
@@ -45,8 +45,6 @@ final recordIndentProvider =
   final getCustomerVehicleUsecase =
       ref.watch(getCustomerVehicleUsecaseProvider);
 
-  final getFuelTypesUsecase = ref.watch(getFuelTypesUsecaseProvider);
-
   final selectedCustomerNotifier = ref.watch(selectedCustomerProvider.notifier);
 
   final getCustomerUsecase = ref.watch(getCustomerUsecaseProvider);
@@ -56,8 +54,6 @@ final recordIndentProvider =
   final customerVehicleNotifier =
       ref.watch(customerVehicleListProvider.notifier);
 
-  final fuelTypesNotifier = ref.watch(fuelTypesProvider.notifier);
-
   final selectedCustomerVehicleNotifier =
       ref.watch(selectedCustomerVehicleProvider.notifier);
 
@@ -66,20 +62,16 @@ final recordIndentProvider =
 
   final selectedFuelPumpNotifier = ref.watch(selectedFuelPumpProvider.notifier);
 
-  print("StateNotifierProvider Calleddd");
-
   return RecordIndentNotifier(
     verifyCustomerIndentUsecase: verifyCustomerIndentUsecase,
     getIndentBookletsUsecase: getIndentBookletsUsecase,
     selectedFuelPump: selectedPump,
     getCustomerIndentUsecase: getCustomerIndentUsecase,
     getCustomerVehicleUsecase: getCustomerVehicleUsecase,
-    getFuelTypesUsecase: getFuelTypesUsecase,
     selectedCustomerNotifier: selectedCustomerNotifier,
     getCustomerUsecase: getCustomerUsecase,
     customerIndentsNotifier: customerIndentsNotifier,
     customerVehicleNotifier: customerVehicleNotifier,
-    fuelTypesNotifier: fuelTypesNotifier,
     selectedCustomerVehicleNotifier: selectedCustomerVehicleNotifier,
     selectedIndentBookletNotifier: selectedIndentBookletNotifier,
     selectedFuelPumpNotifier: selectedFuelPumpNotifier,
@@ -92,13 +84,11 @@ class RecordIndentNotifier extends StateNotifier<RecordIndentState> {
   final FuelPumpEntity? selectedFuelPump;
   final GetCustomerIndentUsecase getCustomerIndentUsecase;
   final GetCustomerVehicleUsecase getCustomerVehicleUsecase;
-  final GetFuelTypesUsecase getFuelTypesUsecase;
   final SelectedCustomerNotifier selectedCustomerNotifier;
   final GetCustomerUsecase getCustomerUsecase;
 
   final CustomerIndentsNotifier customerIndentsNotifier;
   final CustomerVehicleListNotifier customerVehicleNotifier;
-  final FuelTypesNotifier fuelTypesNotifier;
 
   IndentBookletEntity? indentBookletEntity;
 
@@ -112,12 +102,10 @@ class RecordIndentNotifier extends StateNotifier<RecordIndentState> {
     required this.selectedFuelPump,
     required this.getCustomerIndentUsecase,
     required this.getCustomerVehicleUsecase,
-    required this.getFuelTypesUsecase,
     required this.getCustomerUsecase,
     required this.selectedCustomerNotifier,
     required this.customerIndentsNotifier,
     required this.customerVehicleNotifier,
-    required this.fuelTypesNotifier,
     required this.selectedCustomerVehicleNotifier,
     required this.selectedIndentBookletNotifier,
     required this.selectedFuelPumpNotifier,
@@ -227,9 +215,8 @@ class RecordIndentNotifier extends StateNotifier<RecordIndentState> {
       customerId: customerId,
     );
     final result3 = fetchCustomerVehicles(customerId: customerId);
-    final result4 = fetchFuelTypes();
 
-    await Future.wait([result2, result3, result4]);
+    await Future.wait([result2, result3]);
     verifiedRecordIndents(true);
   }
 
@@ -284,23 +271,6 @@ class RecordIndentNotifier extends StateNotifier<RecordIndentState> {
     );
   }
 
-  Future<void> fetchFuelTypes() async {
-    final result = await getFuelTypesUsecase.execute(
-      fuelPumpId: selectedFuelPump?.id ?? "",
-    );
-    result.fold(
-      (failure) => error(failure),
-      (fuels) {
-        print("fuelssss bookeletsssss111111: $fuels");
-        if (fuels.isNotEmpty) {
-          fuelTypesNotifier.setFuels(fuels);
-        } else {
-          fuelTypesNotifier.clearFuels();
-        }
-      },
-    );
-  }
-
   void loading() {
     state = const RecordIndentState.loading();
   }
@@ -320,7 +290,6 @@ class RecordIndentNotifier extends StateNotifier<RecordIndentState> {
   void clearAll() {
     customerVehicleNotifier.clearVehicles();
     customerIndentsNotifier.clearIndents();
-    fuelTypesNotifier.clearFuels();
     selectedCustomerNotifier.clearCustomer();
     selectedCustomerVehicleNotifier.clearVehicle();
     selectedIndentBookletNotifier.clearIndentBooklet();

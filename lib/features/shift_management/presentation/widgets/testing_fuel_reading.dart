@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/shift_management/domain/entity/pump_nozzle_readings.dart';
+import 'package:starter_project/features/shift_management/domain/entity/pump_closing_readings.dart';
 import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
 import 'package:starter_project/shared/constants/ui_constants.dart';
 import 'package:starter_project/shared/widgets/custom_text_field.dart';
@@ -24,21 +24,23 @@ class _OpeningReadingsState extends ConsumerState<TestingFuelReading> {
     super.dispose();
   }
 
-  void _syncControllers(List<PumpNozzleReadings> readings) {
+  void _syncControllers(List<PumpClosingReadings> pumpClosingReadings) {
     // Create or update controllers
-    for (var reading in readings) {
-      final key = reading.fuelType;
+    for (var pumpClosingReading in pumpClosingReadings) {
+      final key = pumpClosingReading.reading.fuelType ?? "";
       if (_controllers.containsKey(key)) {
-        if (_controllers[key]!.text != reading.currentReading) {
-          _controllers[key]!.text = reading.currentReading;
+        if (_controllers[key]!.text != pumpClosingReading.testingFuelReading) {
+          _controllers[key]!.text = pumpClosingReading.testingFuelReading;
         }
       } else {
-        _controllers[key] = TextEditingController(text: reading.currentReading);
+        _controllers[key] =
+            TextEditingController(text: pumpClosingReading.testingFuelReading);
       }
     }
 
     // Remove controllers for deleted nozzles
-    final currentKeys = readings.map((r) => r.fuelType).toSet();
+    final currentKeys =
+        pumpClosingReadings.map((r) => r.reading.fuelType).toSet();
     final keysToRemove =
         _controllers.keys.where((k) => !currentKeys.contains(k)).toList();
     for (final key in keysToRemove) {
@@ -47,8 +49,8 @@ class _OpeningReadingsState extends ConsumerState<TestingFuelReading> {
     }
   }
 
-  Widget nozzleInputField(PumpNozzleReadings reading, int index) {
-    final controller = _controllers[reading.fuelType]!;
+  Widget nozzleInputField(PumpClosingReadings pumpClosingReading, int index) {
+    final controller = _controllers[pumpClosingReading.reading.fuelType]!;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
@@ -56,7 +58,7 @@ class _OpeningReadingsState extends ConsumerState<TestingFuelReading> {
         children: [
           Expanded(
             child: Text(
-              '${reading.fuelType} sales:',
+              '${pumpClosingReading.reading.fuelType} sales:',
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
             ),
           ),
@@ -72,17 +74,19 @@ class _OpeningReadingsState extends ConsumerState<TestingFuelReading> {
                   controller: controller,
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
-                    final state = ref.read(testingFuelReadingProvider);
+                    final state = ref.read(pumpClosingReadingsProvider);
                     final index = state.indexWhere(
-                      (r) => r.fuelType == reading.fuelType,
+                      (r) =>
+                          r.reading.fuelType ==
+                          pumpClosingReading.reading.fuelType,
                     );
                     if (index == -1) return;
 
                     final updatedList = [...state];
                     updatedList[index] =
-                        updatedList[index].copyWith(currentReading: value);
+                        updatedList[index].copyWith(testingFuelReading: value);
 
-                    ref.read(testingFuelReadingProvider.notifier).state =
+                    ref.read(pumpClosingReadingsProvider.notifier).state =
                         updatedList;
                   },
                 ),
@@ -96,7 +100,7 @@ class _OpeningReadingsState extends ConsumerState<TestingFuelReading> {
 
   @override
   Widget build(BuildContext context) {
-    final readings = ref.watch(testingFuelReadingProvider);
+    final readings = ref.watch(pumpClosingReadingsProvider);
 
     _syncControllers(readings); // keep controllers in sync with state
 
