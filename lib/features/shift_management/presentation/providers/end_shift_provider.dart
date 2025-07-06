@@ -7,6 +7,7 @@ import 'package:starter_project/features/shift_management/domain/use_cases/compl
 import 'package:starter_project/features/shift_management/domain/use_cases/reconcilize_shift_consumables_usecase.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/update_reading_usecase.dart';
 import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
+import 'package:starter_project/features/shift_management/presentation/widgets/end_shift_success_popup.dart';
 
 part 'end_shift_provider.freezed.dart';
 
@@ -112,6 +113,7 @@ class EndShiftNotifier extends StateNotifier<EndShiftState> {
 
     await Future.wait([result1, result2, result3]);
     state = const EndShiftState.submitted(true);
+    endShiftSuccessPopup();
   }
 
   Future<void> completeShift() async {

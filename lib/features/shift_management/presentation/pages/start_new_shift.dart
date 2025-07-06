@@ -8,12 +8,13 @@ import 'package:starter_project/features/shift_management/presentation/widgets/c
 import 'package:starter_project/features/shift_management/presentation/widgets/opening_readings.dart';
 import 'package:starter_project/features/shift_management/presentation/widgets/pump_dropdown.dart';
 import 'package:starter_project/features/shift_management/presentation/widgets/staff_dropdown.dart';
+import 'package:starter_project/shared/utils/methods.dart';
 import 'package:starter_project/shared/widgets/custom_text_field.dart';
 import 'package:starter_project/shared/widgets/text_field_label.dart';
 import 'package:starter_project/shared/widgets/title_header.dart';
 import 'package:starter_project/utils/validators.dart';
 
-class StartNewShift extends StatelessWidget {
+class StartNewShift extends ConsumerWidget {
   TextEditingController amountController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
 
@@ -28,7 +29,7 @@ class StartNewShift extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -39,7 +40,11 @@ class StartNewShift extends StatelessWidget {
           color: Colors.white,
           child: Column(
             children: [
-              const TitleHeader(title: 'Start New Shift'),
+              TitleHeader(
+                  title: 'Start New Shift',
+                  onBackPressed: () {
+                    invalidateActiveShifts(ref: ref);
+                  }),
               const SizedBox(height: 20),
               Expanded(
                 child: ListView(

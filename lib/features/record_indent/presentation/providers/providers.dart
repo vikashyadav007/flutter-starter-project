@@ -1,7 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:starter_project/features/customers/domain/entity/customer_entity.dart';
 import 'package:starter_project/features/record_indent/data/data_sources/record_indent_data_source.dart';
 import 'package:starter_project/features/record_indent/data/respositories/record_indent_repository_impl.dart';
 import 'package:starter_project/features/record_indent/domain/entity/fuel_entity.dart';
+import 'package:starter_project/features/record_indent/domain/entity/indent_booklet_entity.dart';
+import 'package:starter_project/features/record_indent/domain/entity/vehicle_entity.dart';
 import 'package:starter_project/features/record_indent/domain/repositories/record_indent_repository.dart';
 import 'package:starter_project/features/record_indent/domain/use_cases/create_indent_usecase.dart';
 import 'package:starter_project/features/record_indent/domain/use_cases/get_all_customer_usecase.dart';
@@ -101,4 +104,51 @@ final fuelTypesProvider = FutureProvider<List<FuelEntity>>((ref) async {
 
     return fuelTypes;
   });
+});
+
+final allCustomersProvider = FutureProvider<List<CustomerEntity>>((ref) async {
+  final getAllCustomersUsecase = ref.watch(getAllCustomersUsecaseProvider);
+  final selectedPump = ref.watch(selectedFuelPumpProvider);
+  final result =
+      await getAllCustomersUsecase.execute(fuelPumpId: selectedPump?.id ?? '');
+  return result.fold(
+      (failure) => throw Exception(failure.message), (customers) => customers);
+});
+
+final selectedCustomerProvider = StateProvider<CustomerEntity?>((ref) => null);
+
+final customerIndentProvider =
+    FutureProvider<List<IndentBookletEntity>>((ref) async {
+  final getCustomerIndentBookletUsecase =
+      ref.watch(getCustomerIndentUsecaseProvider);
+  final selectedCustomer = ref.watch(selectedCustomerProvider);
+  final selectedPump = ref.watch(selectedFuelPumpProvider);
+  final result = await getCustomerIndentBookletUsecase.execute(
+    customerId: selectedCustomer?.id ?? '',
+    fuelPumpId: selectedPump?.id ?? '',
+  );
+  return result.fold((failure) => throw Exception(failure.message),
+      (indentBooklets) => indentBooklets);
+});
+
+final selectedCustomerVehicleProvider =
+    StateProvider<VehicleEntity?>((ref) => null);
+
+final selectedIndentBookletProvider =
+    StateProvider<IndentBookletEntity?>((ref) => null);
+
+final selectedFuelProvider = StateProvider<FuelEntity?>((ref) => null);
+
+final customerVehicleListProvider =
+    FutureProvider<List<VehicleEntity>>((ref) async {
+  final getCustomerVehicleUsecase =
+      ref.watch(getCustomerVehicleUsecaseProvider);
+  final selectedCustomer = ref.watch(selectedCustomerProvider);
+  final selectedPump = ref.watch(selectedFuelPumpProvider);
+  final result = await getCustomerVehicleUsecase.execute(
+    customerId: selectedCustomer?.id ?? '',
+    fuelPumpId: selectedPump?.id ?? '',
+  );
+  return result.fold(
+      (failure) => throw Exception(failure.message), (vehicles) => vehicles);
 });

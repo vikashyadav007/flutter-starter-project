@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:starter_project/features/record_indent/presentation/pages/search_by_customer_body.dart';
+import 'package:starter_project/features/record_indent/presentation/pages/search_by_indent_body.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/record_indent_provider.dart';
-import 'package:starter_project/features/record_indent/presentation/widgets/indent_content.dart';
 import 'package:starter_project/features/record_indent/presentation/widgets/indent_tab.dart';
 import 'package:starter_project/features/record_indent/presentation/widgets/search_by_customer.dart';
 import 'package:starter_project/features/record_indent/presentation/widgets/search_by_indent.dart';
 import 'package:starter_project/shared/constants/ui_constants.dart';
+import 'package:starter_project/shared/utils/methods.dart';
 
 class RecordIndentBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recordIndentState = ref.watch(recordIndentProvider);
     final selectedTabIndex = ref.watch(selectedTabIndexProvider);
-
-    print("RecordIndentBody rebuilds");
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -69,6 +67,8 @@ class RecordIndentBody extends ConsumerWidget {
                     index: 0,
                     selectedIndex: selectedTabIndex,
                     onTap: () {
+                      invalidateRecordIndentProviders(ref: ref);
+
                       ref.read(selectedTabIndexProvider.notifier).state = 0;
                     }),
                 IndentTab(
@@ -76,40 +76,20 @@ class RecordIndentBody extends ConsumerWidget {
                     index: 1,
                     selectedIndex: selectedTabIndex,
                     onTap: () {
+                      invalidateRecordIndentProviders(ref: ref);
                       ref.read(selectedTabIndexProvider.notifier).state = 1;
-                      ref.read(indentNumberProvider.notifier).state = '';
-                      ref.read(recordIndentProvider.notifier).clearAll();
                     }),
               ],
             ),
           ),
           const SizedBox(height: 20),
-          selectedTabIndex == 0 ? SearchByIndent() : SearchIndentByCustomer(),
-          const SizedBox(height: 20),
           selectedTabIndex == 0
-              ? recordIndentState.maybeWhen(
-                  orElse: () => const SizedBox.shrink(),
-                  verifiedRecordIndents: (verified) {
-                    if (verified) {
-                      return IndentContent();
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
+              ? SearchByIndent(
+                  source: 0,
                 )
-              : recordIndentState.maybeWhen(
-                  orElse: () => IndentContent(),
-                  loading: () {
-                    return const SizedBox(
-                      height: 30,
-                      width: 30,
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  },
-                ),
+              : SearchIndentByCustomer(),
+          const SizedBox(height: 20),
+          selectedTabIndex == 0 ? SearchByIndentBody() : SearchByCustomerBody(),
         ],
       ),
     );

@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:starter_project/core/routing/app_router.dart';
 import 'package:starter_project/features/home/domain/entity/fuel_pump_entity.dart';
 import 'package:starter_project/features/shift_management/domain/entity/consumables_cart.dart';
 import 'package:starter_project/features/shift_management/domain/entity/pump_nozzle_readings.dart';
@@ -9,7 +11,9 @@ import 'package:starter_project/features/shift_management/domain/use_cases/creat
 import 'package:starter_project/features/shift_management/domain/use_cases/create_shift_consumables_usecase.dart';
 import 'package:starter_project/features/shift_management/domain/use_cases/create_shift_usecase.dart';
 import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
+import 'package:starter_project/features/shift_management/presentation/widgets/create_new_shift_success_popup.dart';
 import 'package:starter_project/shared/providers/selected_fuel_pump.dart';
+import 'package:starter_project/shared/utils/methods.dart';
 
 part 'start_new_shift_provider.freezed.dart';
 
@@ -88,16 +92,19 @@ class StartNewShiftNotifier extends StateNotifier<StartNewShiftState> {
     var result = await createShiftUsecase.execute(body: body);
     result.fold(
       (failure) => state = StartNewShiftState.error(failure.message),
-      (shifts) {
+      (shifts) async {
         if (shifts.isNotEmpty) {
-          pumpNozzleReadings.forEach((reading) {
-            createReadings(shiftId: shifts.first.id ?? "", reading: reading);
+          pumpNozzleReadings.forEach((reading) async {
+            await createReadings(
+                shiftId: shifts.first.id ?? "", reading: reading);
           });
 
-          consumablesCart.forEach((consumable) {
-            createShiftConsumables(
+          consumablesCart.forEach((consumable) async {
+            await createShiftConsumables(
                 shiftId: shifts.first.id ?? "", consumablesCart: consumable);
           });
+
+          creaetNewShiftSuccessPopup();
         }
       },
     );

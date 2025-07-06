@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/all_customers_provider.dart';
+import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
 import 'package:starter_project/shared/constants/app_constants.dart';
 import 'package:starter_project/shared/constants/ui_constants.dart';
 import 'package:starter_project/shared/utils/utils.dart';
@@ -23,20 +22,17 @@ class CustomerScreen extends ConsumerWidget {
         color: Colors.white,
         child: Column(
           children: [
-            const TitleHeader(title: 'Customers'),
+            TitleHeader(
+              title: 'Customers',
+              onBackPressed: () {},
+            ),
             const SizedBox(height: 20),
             Expanded(
-              child: allCustomersState.maybeWhen(
-                  orElse: () => const Center(
-                        child: Text('No Customers Found'),
-                      ),
+              child: allCustomersState.when(
                   loading: () => const Center(
                         child: CircularProgressIndicator(),
                       ),
-                  error: (message) => Center(
-                        child: Text(message),
-                      ),
-                  loaded: (customers) {
+                  data: (customers) {
                     return ListView.builder(
                       itemCount: customers.length,
                       itemBuilder: (context, index) {
@@ -145,7 +141,10 @@ class CustomerScreen extends ConsumerWidget {
                         );
                       },
                     );
-                  }),
+                  },
+                  error: (error, stackTrace) => Center(
+                        child: Text('Error: $error'),
+                      )),
             ),
           ],
         ),

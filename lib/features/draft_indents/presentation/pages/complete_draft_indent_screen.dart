@@ -35,7 +35,10 @@ class CompleteDraftIndentScreen extends ConsumerWidget {
           color: Colors.white,
           child: Column(
             children: [
-              const TitleHeader(title: 'Draft Indents'),
+              TitleHeader(
+                title: 'Draft Indents',
+                onBackPressed: () {},
+              ),
               const SizedBox(height: 20),
               selectedDraftIndent == null
                   ? const Center(

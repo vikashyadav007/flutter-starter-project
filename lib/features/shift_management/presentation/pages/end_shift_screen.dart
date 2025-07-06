@@ -65,7 +65,10 @@ class EndShiftScreen extends ConsumerWidget {
               return Column(
                 children: [
                   const SizedBox(height: 10),
-                  const TitleHeader(title: 'End Shift'),
+                  TitleHeader(
+                    title: 'End Shift',
+                    onBackPressed: () {},
+                  ),
                   const SizedBox(height: 10),
                   Divider(
                     color: Colors.black12,
@@ -268,39 +271,53 @@ class EndShiftScreen extends ConsumerWidget {
                     ),
                     child: Column(
                       children: [
-                        Consumer(builder: (context, ref, child) {
-                          final selectedStaff =
-                              ref.watch(selectedStaffProvider);
-                          final selectedPump = ref.watch(selectedPumpProvider);
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final endShiftState = ref.watch(endShiftProvider);
 
-                          final startCashAmount =
-                              ref.watch(startingCashAmountProvider);
+                            final selectedStaff =
+                                ref.watch(selectedStaffProvider);
+                            final selectedPump =
+                                ref.watch(selectedPumpProvider);
 
-                          return SizedBox(
-                            height: 48,
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                            final startCashAmount =
+                                ref.watch(startingCashAmountProvider);
+
+                            return SizedBox(
+                              height: 48,
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.primary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  ref
+                                      .read(endShiftProvider.notifier)
+                                      .endShift();
+                                },
+                                child: endShiftState.maybeWhen(
+                                  orElse: () => const Text(
+                                    "End Shift",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  submitting: () => const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
-                              onPressed: () {
-                                ref.read(endShiftProvider.notifier).endShift();
-                              },
-                              child: const Text(
-                                "End Shift",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
+                            );
+                          },
+                        ),
                         const SizedBox(height: 10),
                         SizedBox(
                           height: 48,

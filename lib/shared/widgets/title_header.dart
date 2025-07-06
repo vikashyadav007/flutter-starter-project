@@ -6,8 +6,11 @@ import 'package:starter_project/shared/widgets/logout_button.dart';
 
 class TitleHeader extends ConsumerWidget {
   final String title;
+  final Function onBackPressed;
 
-  const TitleHeader({Key? key, required this.title}) : super(key: key);
+  const TitleHeader(
+      {Key? key, required this.title, required this.onBackPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,6 +22,7 @@ class TitleHeader extends ConsumerWidget {
           children: [
             IconButton(
                 onPressed: () {
+                  onBackPressed();
                   router.pop();
                 },
                 icon: const Icon(

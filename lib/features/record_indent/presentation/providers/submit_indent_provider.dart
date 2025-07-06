@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:starter_project/features/customers/domain/entity/customer_entity.dart';
@@ -9,10 +10,7 @@ import 'package:starter_project/features/record_indent/domain/use_cases/create_i
 import 'package:starter_project/features/record_indent/domain/use_cases/get_customer_indent_booklet_usecase.dart';
 import 'package:starter_project/features/record_indent/domain/use_cases/get_staffs_usecase.dart';
 import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/selected_customer_provider.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/selected_customer_vehicle_provider.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/selected_fuel_type.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/selected_indent_booklet.dart';
+import 'package:starter_project/features/record_indent/presentation/widgets/create_indent_success_popup.dart';
 import 'package:starter_project/features/shift_management/domain/entity/staff_entity.dart';
 import 'package:starter_project/shared/providers/selected_fuel_pump.dart';
 import 'package:uuid/uuid.dart';
@@ -127,7 +125,12 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
       (failure) => state = SubmitIndentState.error(failure.message),
       (success) {
         state = SubmitIndentState.submitted(true);
+        createIndentSuccessPopup();
       },
     );
+  }
+
+  void reset() {
+    state = const SubmitIndentState.initial();
   }
 }

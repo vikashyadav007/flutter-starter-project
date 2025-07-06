@@ -18,7 +18,7 @@ class DraftIndentsScreen extends StatelessWidget {
             color: Colors.white,
             child: Column(
               children: [
-                const TitleHeader(title: 'Draft Indents'),
+                TitleHeader(title: 'Draft Indents', onBackPressed: () {}),
                 const SizedBox(height: 20),
                 Expanded(child: IndentsList()),
               ],

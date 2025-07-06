@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:starter_project/features/record_indent/presentation/widgets/record_indent_body.dart';
+import 'package:starter_project/shared/utils/methods.dart';
 import 'package:starter_project/shared/widgets/title_header.dart';
 
-class RecordIndent extends StatelessWidget {
+class RecordIndent extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(
       child: Scaffold(
           backgroundColor: Colors.white,
@@ -15,7 +17,12 @@ class RecordIndent extends StatelessWidget {
             color: Colors.white,
             child: Column(
               children: [
-                const TitleHeader(title: 'Record Indent'),
+                TitleHeader(
+                  title: 'Record Indent',
+                  onBackPressed: () {
+                    invalidateRecordIndentProviders(ref: ref);
+                  },
+                ),
                 const SizedBox(height: 20),
                 Expanded(
                   child: RecordIndentBody(),

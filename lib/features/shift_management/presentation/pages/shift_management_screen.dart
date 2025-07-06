@@ -5,9 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:starter_project/core/routing/app_router.dart';
 import 'package:starter_project/features/shift_management/presentation/widgets/active_shifts.dart';
 import 'package:starter_project/shared/constants/ui_constants.dart';
+import 'package:starter_project/shared/utils/methods.dart';
 import 'package:starter_project/shared/widgets/title_header.dart';
 
-class ShiftManagementScreen extends StatelessWidget {
+class ShiftManagementScreen extends ConsumerWidget {
   const ShiftManagementScreen({super.key});
 
   Widget header({
@@ -41,7 +42,7 @@ class ShiftManagementScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(
         child: Scaffold(
       backgroundColor: Colors.white,
@@ -52,7 +53,12 @@ class ShiftManagementScreen extends StatelessWidget {
         color: Colors.white,
         child: Column(
           children: [
-            const TitleHeader(title: 'Shift Management'),
+            TitleHeader(
+              title: 'Shift Management',
+              onBackPressed: () {
+                invalidateActiveShifts(ref: ref);
+              },
+            ),
             const SizedBox(height: 20),
             Expanded(
               child: ListView(
