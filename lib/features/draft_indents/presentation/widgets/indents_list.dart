@@ -40,6 +40,14 @@ class IndentsList extends ConsumerWidget {
 
     return draftIndents.when(
       data: (indents) {
+        if (indents.isEmpty) {
+          return const Center(
+            child: Text(
+              "No draft indents found",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+          );
+        }
         return ListView.builder(
           itemCount: indents.length,
           itemBuilder: (context, index) {
