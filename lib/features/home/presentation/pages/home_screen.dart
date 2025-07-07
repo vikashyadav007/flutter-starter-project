@@ -1,10 +1,10 @@
 import 'package:go_router/go_router.dart';
-import 'package:starter_project/core/routing/app_router.dart';
-import 'package:starter_project/features/home/presentation/providers/home_provider.dart';
-import 'package:starter_project/features/home/presentation/widgets/home_header.dart';
-import 'package:starter_project/features/home/presentation/widgets/home_info_text.dart';
-import 'package:starter_project/features/home/presentation/widgets/home_item_tile.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/core/routing/app_router.dart';
+import 'package:fuel_pro_360/features/home/presentation/providers/home_provider.dart';
+import 'package:fuel_pro_360/features/home/presentation/widgets/home_header.dart';
+import 'package:fuel_pro_360/features/home/presentation/widgets/home_info_text.dart';
+import 'package:fuel_pro_360/features/home/presentation/widgets/home_item_tile.dart';
+import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

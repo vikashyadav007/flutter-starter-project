@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
-import 'package:starter_project/features/record_indent/domain/entity/fuel_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/fuel_entity.dart';
 
 part 'fuel_model.freezed.dart';
 part 'fuel_model.g.dart';

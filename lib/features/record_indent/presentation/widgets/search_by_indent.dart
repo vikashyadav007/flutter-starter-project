@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/record_indent/presentation/pages/search_by_indent_body.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/search_by_customer_provider.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/search_by_indent_provider.dart';
-import 'package:starter_project/shared/widgets/custom_text_field.dart';
-import 'package:starter_project/shared/widgets/text_field_label.dart';
-import 'package:starter_project/utils/validators.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/pages/search_by_indent_body.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/search_by_customer_provider.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/search_by_indent_provider.dart';
+import 'package:fuel_pro_360/shared/widgets/custom_text_field.dart';
+import 'package:fuel_pro_360/shared/widgets/text_field_label.dart';
+import 'package:fuel_pro_360/utils/validators.dart';
 
 class SearchByIndent extends ConsumerWidget {
   int source = 0; // 0 for search by customer, 1 for search by indent
@@ -37,6 +37,8 @@ class SearchByIndent extends ConsumerWidget {
             Consumer(builder: (context, ref, child) {
               final indentNumber = ref.watch(indentNumberProvider);
               indentNumberController.text = indentNumber;
+              final indentNumberVerified =
+                  ref.watch(indentNumberVerifiedProvider);
 
               return Expanded(
                 flex: 13,
@@ -45,7 +47,10 @@ class SearchByIndent extends ConsumerWidget {
                   controller: indentNumberController,
                   validator: Validators.validatePassword,
                   keyboardType: TextInputType.number,
+                  enabled: indentNumberVerified == false,
                   onChanged: (value) {
+                    ref.read(indentNumberVerifiedProvider.notifier).state =
+                        false;
                     ref.read(indentNumberProvider.notifier).state = value;
                   },
                 ),

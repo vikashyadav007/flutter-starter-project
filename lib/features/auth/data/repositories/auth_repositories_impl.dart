@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:starter_project/core/api/error_handler.dart';
-import 'package:starter_project/core/api/failure.dart';
-import 'package:starter_project/features/auth/data/data_sources/auth_local_data_source.dart';
-import 'package:starter_project/features/auth/data/data_sources/auth_remote_data_source.dart';
-import 'package:starter_project/features/auth/domain/entity/user_entity.dart';
-import 'package:starter_project/features/auth/domain/repositories/auth_repositories.dart';
+import 'package:fuel_pro_360/core/api/error_handler.dart';
+import 'package:fuel_pro_360/core/api/failure.dart';
+import 'package:fuel_pro_360/features/auth/data/data_sources/auth_local_data_source.dart';
+import 'package:fuel_pro_360/features/auth/data/data_sources/auth_remote_data_source.dart';
+import 'package:fuel_pro_360/features/auth/domain/entity/user_entity.dart';
+import 'package:fuel_pro_360/features/auth/domain/repositories/auth_repositories.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepositoriesImpl implements AuthRepository {

@@ -1,14 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:starter_project/features/draft_indents/domain/use_cases/complete_draft_indent_usecase.dart';
-import 'package:starter_project/features/draft_indents/domain/use_cases/create_transaction_usecase.dart';
-import 'package:starter_project/features/draft_indents/presentation/providers/provider.dart';
-import 'package:starter_project/features/draft_indents/presentation/widgets/complete_draft_indent_success_popup.dart';
-import 'package:starter_project/features/home/domain/entity/fuel_pump_entity.dart';
-import 'package:starter_project/features/record_indent/domain/entity/indent_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/staff_entity.dart';
-import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
-import 'package:starter_project/shared/providers/selected_fuel_pump.dart';
+import 'package:fuel_pro_360/features/draft_indents/domain/use_cases/complete_draft_indent_usecase.dart';
+import 'package:fuel_pro_360/features/draft_indents/domain/use_cases/create_transaction_usecase.dart';
+import 'package:fuel_pro_360/features/draft_indents/presentation/providers/provider.dart';
+import 'package:fuel_pro_360/features/draft_indents/presentation/widgets/complete_draft_indent_success_popup.dart';
+import 'package:fuel_pro_360/features/home/domain/entity/fuel_pump_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/staff_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
+import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'complete_draft_provider.freezed.dart';

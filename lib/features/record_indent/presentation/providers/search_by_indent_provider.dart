@@ -1,15 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:starter_project/core/api/failure.dart';
-import 'package:starter_project/features/customers/domain/entity/customer_entity.dart';
-import 'package:starter_project/features/home/domain/entity/fuel_pump_entity.dart';
-import 'package:starter_project/features/record_indent/domain/entity/indent_booklet_entity.dart';
-import 'package:starter_project/features/record_indent/domain/use_cases/get_customer_indent_booklet_usecase.dart';
-import 'package:starter_project/features/record_indent/domain/use_cases/get_customer_usecase.dart';
-import 'package:starter_project/features/record_indent/domain/use_cases/get_indent_booklets_usecase.dart';
-import 'package:starter_project/features/record_indent/domain/use_cases/verify_customer_indent_usecase.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
-import 'package:starter_project/shared/providers/selected_fuel_pump.dart';
+import 'package:fuel_pro_360/core/api/failure.dart';
+import 'package:fuel_pro_360/features/customers/domain/entity/customer_entity.dart';
+import 'package:fuel_pro_360/features/home/domain/entity/fuel_pump_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_booklet_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_customer_indent_booklet_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_customer_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_indent_booklets_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/verify_customer_indent_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
+import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 
 part 'search_by_indent_provider.freezed.dart';
 
@@ -39,6 +39,8 @@ final searchByIndentProvider =
 
   final selectedCustomerNotifier = ref.watch(selectedCustomerProvider.notifier);
 
+  final indentNumberVerified = ref.watch(indentNumberVerifiedProvider.notifier);
+
   return SearchByIndentNotifier(
     verifyCustomerIndentUsecase: verifyCustomerIndentUsecase,
     getIndentBookletsUsecase: getIndentBookletsUsecase,
@@ -47,6 +49,7 @@ final searchByIndentProvider =
     getCustomerUsecase: getCustomerUsecase,
     indentNumber: indentNumber,
     selectedCustomerNotifier: selectedCustomerNotifier,
+    indentNumberVerified: indentNumberVerified,
   );
 });
 
@@ -62,6 +65,7 @@ class SearchByIndentNotifier
   IndentBookletEntity? indentBookletEntity;
 
   String indentNumber;
+  StateController<bool> indentNumberVerified;
 
   SearchByIndentNotifier({
     required this.verifyCustomerIndentUsecase,
@@ -71,6 +75,7 @@ class SearchByIndentNotifier
     required this.getCustomerUsecase,
     required this.indentNumber,
     required this.selectedCustomerNotifier,
+    required this.indentNumberVerified,
   }) : super(const SearchByIndentProviderState.initial());
 
   Future<List<IndentBookletEntity>> getAllIndentBooklets() async {
@@ -127,6 +132,7 @@ class SearchByIndentNotifier
                   message: "This indent number has already been used."),
             );
           } else {
+            indentNumberVerified.state = true;
             state = SearchByIndentProviderState.verifiedRecordIndents(true);
             fetchCustomerDetails();
           }

@@ -1,4 +1,4 @@
-import 'package:starter_project/utils/email_validator.dart';
+import 'package:fuel_pro_360/utils/email_validator.dart';
 
 class Validators {
   static String? validateEmail(String? value) {

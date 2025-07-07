@@ -1,9 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
-import 'package:starter_project/features/shift_management/domain/entity/shift_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/shift_entity.dart';
 
-import 'package:starter_project/features/shift_management/data/models/staff_model.dart';
+import 'package:fuel_pro_360/features/shift_management/data/models/staff_model.dart';
 
 part 'shift_model.freezed.dart';
 part 'shift_model.g.dart';

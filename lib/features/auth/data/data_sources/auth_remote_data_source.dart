@@ -1,4 +1,4 @@
-import 'package:starter_project/core/api/api_client.dart';
+import 'package:fuel_pro_360/core/api/api_client.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRemoteDataSource {

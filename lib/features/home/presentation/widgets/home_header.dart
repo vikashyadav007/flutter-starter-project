@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:starter_project/shared/widgets/logout_button.dart';
-import 'package:starter_project/utils/app_assets.dart';
+import 'package:fuel_pro_360/shared/widgets/logout_button.dart';
+import 'package:fuel_pro_360/utils/app_assets.dart';
 
 class HomeHeader extends StatelessWidget {
   @override

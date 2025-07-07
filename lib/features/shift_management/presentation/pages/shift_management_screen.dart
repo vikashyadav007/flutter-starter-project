@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:starter_project/core/routing/app_router.dart';
-import 'package:starter_project/features/shift_management/presentation/widgets/active_shifts.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
-import 'package:starter_project/shared/utils/methods.dart';
-import 'package:starter_project/shared/widgets/title_header.dart';
+import 'package:fuel_pro_360/core/routing/app_router.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/widgets/active_shifts.dart';
+import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/shared/utils/methods.dart';
+import 'package:fuel_pro_360/shared/widgets/title_header.dart';
 
 class ShiftManagementScreen extends ConsumerWidget {
   const ShiftManagementScreen({super.key});

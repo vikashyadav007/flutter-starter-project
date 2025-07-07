@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
-import 'package:starter_project/shared/widgets/custom_text_field.dart';
-import 'package:starter_project/shared/widgets/text_field_label.dart';
-import 'package:starter_project/utils/validators.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
+import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/shared/widgets/custom_text_field.dart';
+import 'package:fuel_pro_360/shared/widgets/text_field_label.dart';
+import 'package:fuel_pro_360/utils/validators.dart';
 
 class OtherExpenses extends ConsumerWidget {
   TextEditingController otherExpensesController = TextEditingController();

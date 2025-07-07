@@ -1,5 +1,5 @@
-import 'package:starter_project/core/api/api_client.dart';
-import 'package:starter_project/features/home/data/models/fuel_pump_model.dart';
+import 'package:fuel_pro_360/core/api/api_client.dart';
+import 'package:fuel_pro_360/features/home/data/models/fuel_pump_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeDataSource {
@@ -9,6 +9,7 @@ class HomeDataSource {
 
   Future<List<FuelPumpModel>> getFuelPump() async {
     try {
+      print('getFuelPump called');
       var response = await Supabase.instance.client
           .rpc('get_fuel_pump_by_email', params: {
         'email_param': Supabase.instance.client.auth.currentUser?.email

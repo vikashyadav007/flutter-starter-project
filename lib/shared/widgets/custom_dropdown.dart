@@ -1,6 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
 
 Widget customDropdown<T>({
   required Key key,

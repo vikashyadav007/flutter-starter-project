@@ -1,15 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/core/api/failure.dart';
-import 'package:starter_project/features/record_indent/domain/entity/indent_booklet_entity.dart';
-import 'package:starter_project/features/record_indent/domain/use_cases/verify_customer_indent_usecase.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/search_by_indent_provider.dart';
+import 'package:fuel_pro_360/core/api/failure.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_booklet_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/verify_customer_indent_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/search_by_indent_provider.dart';
 
 final searchByCustomerProvider = StateNotifierProvider<SearchByCustomerNotifier,
     SearchByIndentProviderState>((ref) {
   final indentNumber = ref.watch(indentNumberProvider);
 
   final indentBookletEntity = ref.watch(selectedIndentBookletProvider);
+
+  final indentNumberVerified = ref.watch(indentNumberVerifiedProvider.notifier);
 
   final verifyCustomerIndentUsecase =
       ref.watch(verifyCustomerIndentUsecaseProvider);
@@ -18,6 +20,7 @@ final searchByCustomerProvider = StateNotifierProvider<SearchByCustomerNotifier,
     indentNumber: indentNumber,
     indentBookletEntity: indentBookletEntity,
     verifyCustomerIndentUsecase: verifyCustomerIndentUsecase,
+    indentNumberVerified: indentNumberVerified,
   );
 });
 
@@ -28,11 +31,14 @@ class SearchByCustomerNotifier
   String indentNumber;
   IndentBookletEntity? indentBookletEntity;
 
-  SearchByCustomerNotifier(
-      {required this.verifyCustomerIndentUsecase,
-      required this.indentNumber,
-      required this.indentBookletEntity})
-      : super(const SearchByIndentProviderState.initial());
+  StateController<bool> indentNumberVerified;
+
+  SearchByCustomerNotifier({
+    required this.verifyCustomerIndentUsecase,
+    required this.indentNumber,
+    required this.indentBookletEntity,
+    required this.indentNumberVerified,
+  }) : super(const SearchByIndentProviderState.initial());
 
   Future<void> verifyRecordIndent() async {
     state = const SearchByIndentProviderState.loading();
@@ -58,6 +64,7 @@ class SearchByCustomerNotifier
           setError(Failure(
               code: 1, message: "This indent number has already been used."));
         } else {
+          indentNumberVerified.state = true;
           state = SearchByIndentProviderState.verifiedRecordIndents(true);
         }
       },

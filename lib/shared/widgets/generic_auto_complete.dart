@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
 
 class GenericAutocomplete<T extends Object> extends StatelessWidget {
   final List<T> items;

@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
-import 'package:starter_project/features/shift_management/presentation/widgets/other_expenses.dart';
-import 'package:starter_project/shared/constants/app_constants.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
-import 'package:starter_project/shared/widgets/text_field_label.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/widgets/other_expenses.dart';
+import 'package:fuel_pro_360/shared/constants/app_constants.dart';
+import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/shared/widgets/text_field_label.dart';
 
 class ShiftFinancialSummary extends ConsumerWidget {
   Widget row({
@@ -98,10 +98,15 @@ class ShiftFinancialSummary extends ConsumerWidget {
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.done,
-                color: UiColors.paidGreen,
-              ),
+              cashDifference == 0
+                  ? const Icon(
+                      Icons.done,
+                      color: UiColors.paidGreen,
+                    )
+                  : const Icon(
+                      Icons.warning_amber,
+                      color: Colors.amber,
+                    ),
               const SizedBox(width: 10),
               Text(
                 'Shift Financial Summary',

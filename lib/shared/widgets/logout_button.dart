@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/auth/presentation/providers/auth_provider.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/features/auth/presentation/providers/auth_provider.dart';
+import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/shared/widgets/logout_confirm_popup.dart';
 
 class LogoutButton extends ConsumerWidget {
   @override
@@ -14,7 +15,7 @@ class LogoutButton extends ConsumerWidget {
       ),
       child: IconButton(
         onPressed: () {
-          ref.read(authProvider.notifier).logout();
+          LogoutConfirmPopup();
         },
         icon: const Icon(
           Icons.logout,

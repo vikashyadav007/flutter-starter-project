@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:starter_project/core/api/failure.dart';
-import 'package:starter_project/core/routing/app_router.dart';
-import 'package:starter_project/l10n/app_localizations_context.dart';
-import 'package:starter_project/shared/constants/app_constants.dart';
+import 'package:fuel_pro_360/core/api/failure.dart';
+import 'package:fuel_pro_360/core/routing/app_router.dart';
+import 'package:fuel_pro_360/l10n/app_localizations_context.dart';
+import 'package:fuel_pro_360/shared/constants/app_constants.dart';
 
 class ErrorHandler implements Exception {
   late final Failure failure;

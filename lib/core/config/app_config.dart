@@ -1,5 +1,5 @@
-import 'package:starter_project/shared/constants/app_constants.dart';
-import 'package:starter_project/shared/models/app_config/app_config.dart';
+import 'package:fuel_pro_360/shared/constants/app_constants.dart';
+import 'package:fuel_pro_360/shared/models/app_config/app_config.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_config.g.dart';

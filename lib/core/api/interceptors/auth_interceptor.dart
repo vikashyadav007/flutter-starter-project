@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:starter_project/core/api/api_client.dart';
-import 'package:starter_project/core/api/dio_refetch_client.dart';
-import 'package:starter_project/core/config/app_config.dart';
-import 'package:starter_project/features/auth/presentation/providers/auth_provider.dart';
-import 'package:starter_project/features/auth/presentation/providers/providers.dart';
-import 'package:starter_project/shared/constants/api_constants.dart';
-import 'package:starter_project/shared/providers/auth_credential_provider.dart';
+import 'package:fuel_pro_360/core/api/api_client.dart';
+import 'package:fuel_pro_360/core/api/dio_refetch_client.dart';
+import 'package:fuel_pro_360/core/config/app_config.dart';
+import 'package:fuel_pro_360/features/auth/presentation/providers/auth_provider.dart';
+import 'package:fuel_pro_360/features/auth/presentation/providers/providers.dart';
+import 'package:fuel_pro_360/shared/constants/api_constants.dart';
+import 'package:fuel_pro_360/shared/providers/auth_credential_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 

@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:starter_project/features/shift_management/domain/entity/reading_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/reading_entity.dart';
 import 'dart:convert';
 
-import 'package:starter_project/features/shift_management/domain/entity/staff_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/staff_entity.dart';
 
 part 'shift_entity.freezed.dart';
 

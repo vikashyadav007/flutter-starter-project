@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
-import 'package:starter_project/features/record_indent/domain/entity/indent_booklet_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_booklet_entity.dart';
 
 part 'indent_booklet_model.freezed.dart';
 part 'indent_booklet_model.g.dart';

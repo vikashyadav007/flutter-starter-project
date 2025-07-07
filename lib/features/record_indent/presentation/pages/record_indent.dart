@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/record_indent/presentation/widgets/record_indent_body.dart';
-import 'package:starter_project/shared/utils/methods.dart';
-import 'package:starter_project/shared/widgets/title_header.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/record_indent_body.dart';
+import 'package:fuel_pro_360/shared/utils/methods.dart';
+import 'package:fuel_pro_360/shared/widgets/title_header.dart';
 
 class RecordIndent extends ConsumerWidget {
   @override

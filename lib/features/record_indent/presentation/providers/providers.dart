@@ -1,21 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/customers/domain/entity/customer_entity.dart';
-import 'package:starter_project/features/record_indent/data/data_sources/record_indent_data_source.dart';
-import 'package:starter_project/features/record_indent/data/respositories/record_indent_repository_impl.dart';
-import 'package:starter_project/features/record_indent/domain/entity/fuel_entity.dart';
-import 'package:starter_project/features/record_indent/domain/entity/indent_booklet_entity.dart';
-import 'package:starter_project/features/record_indent/domain/entity/vehicle_entity.dart';
-import 'package:starter_project/features/record_indent/domain/repositories/record_indent_repository.dart';
-import 'package:starter_project/features/record_indent/domain/use_cases/create_indent_usecase.dart';
-import 'package:starter_project/features/record_indent/domain/use_cases/get_all_customer_usecase.dart';
-import 'package:starter_project/features/record_indent/domain/use_cases/get_customer_indent_booklet_usecase.dart';
-import 'package:starter_project/features/record_indent/domain/use_cases/get_customer_usecase.dart';
-import 'package:starter_project/features/record_indent/domain/use_cases/get_customer_vehicle_usecase.dart';
-import 'package:starter_project/features/record_indent/domain/use_cases/get_fuel_types_usecase.dart';
-import 'package:starter_project/features/record_indent/domain/use_cases/get_indent_booklets_usecase.dart';
-import 'package:starter_project/features/record_indent/domain/use_cases/get_staffs_usecase.dart';
-import 'package:starter_project/features/record_indent/domain/use_cases/verify_customer_indent_usecase.dart';
-import 'package:starter_project/shared/providers/selected_fuel_pump.dart';
+import 'package:fuel_pro_360/features/customers/domain/entity/customer_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/data/data_sources/record_indent_data_source.dart';
+import 'package:fuel_pro_360/features/record_indent/data/respositories/record_indent_repository_impl.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/fuel_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_booklet_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/vehicle_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/repositories/record_indent_repository.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/create_indent_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_all_customer_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_customer_indent_booklet_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_customer_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_customer_vehicle_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_fuel_types_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_indent_booklets_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_staffs_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/verify_customer_indent_usecase.dart';
+import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 
 final RecordsProvider = Provider<RecordIndentRepository>((ref) {
   final recordIndentDataSource = RecordIndentDataSource();
@@ -82,6 +82,7 @@ final indentNumberProvider = StateProvider<String>((ref) => '');
 final amountProvider = StateProvider<String>((ref) => '');
 final quantityProvider = StateProvider<String>((ref) => '');
 final selectedTabIndexProvider = StateProvider<int>((ref) => 0);
+final indentNumberVerifiedProvider = StateProvider<bool>((ref) => false);
 
 final fuelTypesMapProvider =
     StateProvider<Map<String, FuelEntity>>((ref) => {});
@@ -106,7 +107,8 @@ final fuelTypesProvider = FutureProvider<List<FuelEntity>>((ref) async {
   });
 });
 
-final allCustomersProvider = FutureProvider<List<CustomerEntity>>((ref) async {
+final allCustomersProvider =
+    FutureProvider.autoDispose<List<CustomerEntity>>((ref) async {
   final getAllCustomersUsecase = ref.watch(getAllCustomersUsecaseProvider);
   final selectedPump = ref.watch(selectedFuelPumpProvider);
   final result =

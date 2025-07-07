@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/shift_management/domain/entity/pump_closing_readings.dart';
-import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
-import 'package:starter_project/features/shift_management/presentation/widgets/end_shift_header.dart';
-import 'package:starter_project/shared/widgets/custom_text_field.dart';
-import 'package:starter_project/shared/widgets/text_field_label.dart';
-import 'package:starter_project/utils/validators.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/pump_closing_readings.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/widgets/end_shift_header.dart';
+import 'package:fuel_pro_360/shared/widgets/custom_text_field.dart';
+import 'package:fuel_pro_360/shared/widgets/text_field_label.dart';
+import 'package:fuel_pro_360/utils/validators.dart';
 
 class EndShiftMeterReadings extends ConsumerStatefulWidget {
   const EndShiftMeterReadings({super.key});

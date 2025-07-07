@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:starter_project/features/auth/data/models/login_response/login_response_model.dart';
-import 'package:starter_project/features/auth/data/models/refresh_response/refresh_response_model.dart';
-import 'package:starter_project/shared/constants/api_constants.dart';
+import 'package:fuel_pro_360/features/auth/data/models/login_response/login_response_model.dart';
+import 'package:fuel_pro_360/features/auth/data/models/refresh_response/refresh_response_model.dart';
+import 'package:fuel_pro_360/shared/constants/api_constants.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'api_client.g.dart';

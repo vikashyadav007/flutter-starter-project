@@ -1,12 +1,12 @@
-import 'package:starter_project/features/auth/presentation/widgets/login_form.dart';
-import 'package:starter_project/features/auth/presentation/providers/auth_provider.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
-import 'package:starter_project/shared/widgets/whole_screen_circular_progress.dart';
-import 'package:starter_project/utils/app_assets.dart';
+import 'package:fuel_pro_360/core/routing/app_router.dart';
+import 'package:fuel_pro_360/features/auth/presentation/widgets/login_form.dart';
+import 'package:fuel_pro_360/features/auth/presentation/providers/auth_provider.dart';
+import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/shared/widgets/whole_screen_circular_progress.dart';
+import 'package:fuel_pro_360/utils/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class AuthPage extends ConsumerWidget {
   const AuthPage({super.key});
@@ -14,6 +14,17 @@ class AuthPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
+
+    ref.listen<AuthState>(authProvider, (previous, current) {
+      current.maybeWhen(
+        completed: (user) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.goNamed(AppPath.home.name);
+          });
+        },
+        orElse: () {},
+      );
+    });
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -87,26 +98,6 @@ class AuthPage extends ConsumerWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  // Function to Build Social Login Buttons
-  Widget _buildSocialButton(IconData icon, String label, Color? color) {
-    return Expanded(
-      child: ElevatedButton.icon(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: const BorderSide(color: UiColors.grey),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-        ),
-        onPressed: () {},
-        icon: FaIcon(icon, size: 18, color: color),
-        label: Text(label),
       ),
     );
   }

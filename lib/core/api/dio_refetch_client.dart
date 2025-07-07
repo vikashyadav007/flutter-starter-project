@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:starter_project/core/config/app_config.dart';
+import 'package:fuel_pro_360/core/config/app_config.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

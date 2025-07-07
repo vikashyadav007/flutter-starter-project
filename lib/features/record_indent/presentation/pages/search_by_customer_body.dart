@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
-import 'package:starter_project/features/record_indent/presentation/widgets/amount_quantity_row.dart';
-import 'package:starter_project/features/record_indent/presentation/widgets/fuel_type_droopdown.dart';
-import 'package:starter_project/features/record_indent/presentation/widgets/indent_dropdown.dart';
-import 'package:starter_project/features/record_indent/presentation/widgets/record_indent_bottom.dart';
-import 'package:starter_project/features/record_indent/presentation/widgets/search_by_indent.dart';
-import 'package:starter_project/features/record_indent/presentation/widgets/vehicle_dropdown.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/amount_quantity_row.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/fuel_type_droopdown.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/indent_dropdown.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/record_indent_bottom.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/search_by_indent.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/vehicle_dropdown.dart';
 
 class SearchByCustomerBody extends ConsumerWidget {
   @override

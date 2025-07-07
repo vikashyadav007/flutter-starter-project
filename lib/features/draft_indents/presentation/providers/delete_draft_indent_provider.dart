@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:starter_project/core/routing/app_router.dart';
-import 'package:starter_project/features/draft_indents/domain/use_cases/delete_draft_indent_usecase.dart';
-import 'package:starter_project/features/draft_indents/presentation/providers/provider.dart';
-import 'package:starter_project/features/draft_indents/presentation/widgets/delete_draft_indent_success_popup%20.dart';
-import 'package:starter_project/features/record_indent/domain/entity/indent_entity.dart';
-import 'package:starter_project/shared/utils/methods.dart';
+import 'package:fuel_pro_360/core/routing/app_router.dart';
+import 'package:fuel_pro_360/features/draft_indents/domain/use_cases/delete_draft_indent_usecase.dart';
+import 'package:fuel_pro_360/features/draft_indents/presentation/providers/provider.dart';
+import 'package:fuel_pro_360/features/draft_indents/presentation/widgets/delete_draft_indent_success_popup%20.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_entity.dart';
+import 'package:fuel_pro_360/shared/utils/methods.dart';
 
 part 'delete_draft_indent_provider.freezed.dart';
 

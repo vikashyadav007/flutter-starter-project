@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
-import 'package:starter_project/shared/constants/app_constants.dart';
-import 'package:starter_project/shared/widgets/custom_text_field.dart';
-import 'package:starter_project/shared/widgets/text_field_label.dart';
-import 'package:starter_project/utils/validators.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
+import 'package:fuel_pro_360/shared/constants/app_constants.dart';
+import 'package:fuel_pro_360/shared/widgets/custom_text_field.dart';
+import 'package:fuel_pro_360/shared/widgets/text_field_label.dart';
+import 'package:fuel_pro_360/utils/validators.dart';
 
 class AmountQuantityRow extends ConsumerWidget {
   AmountQuantityRow({super.key});

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/submit_indent_provider.dart';
-import 'package:starter_project/features/record_indent/presentation/widgets/create_indent_success_popup.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/search_by_customer_provider.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/search_by_indent_provider.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/submit_indent_provider.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/create_indent_success_popup.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/search_by_indent.dart';
+import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
 
 class RecordIndentBottom extends ConsumerWidget {
+  int source = 0; // 0 for search by customer, 1 for search by indent
   RecordIndentBottom({
     super.key,
   });
@@ -27,6 +32,13 @@ class RecordIndentBottom extends ConsumerWidget {
         const SizedBox(height: 20),
         Consumer(builder: (context, ref, child) {
           final submitIndentState = ref.watch(submitIndentProvider);
+          final selectedCustomer = ref.watch(selectedCustomerProvider);
+          final selectedVehicle = ref.watch(selectedCustomerProvider);
+          final selectedIndentBooket = ref.watch(selectedIndentBookletProvider);
+          final selectedFuelType = ref.watch(selectedFuelProvider);
+          final amount = ref.watch(amountProvider);
+          final quantity = ref.watch(quantityProvider);
+          bool isIndentNumberVerified = ref.watch(indentNumberVerifiedProvider);
 
           return SizedBox(
             width: double.infinity,
@@ -38,9 +50,17 @@ class RecordIndentBottom extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              onPressed: () async {
-                ref.read(submitIndentProvider.notifier).submitIndent();
-              },
+              onPressed: selectedCustomer == null ||
+                      selectedVehicle == null ||
+                      selectedIndentBooket == null ||
+                      selectedFuelType == null ||
+                      amount.isEmpty ||
+                      quantity.isEmpty ||
+                      isIndentNumberVerified == false
+                  ? null
+                  : () async {
+                      ref.read(submitIndentProvider.notifier).submitIndent();
+                    },
               child: submitIndentState.maybeWhen(
                 submitting: () => const SizedBox(
                   height: 30,

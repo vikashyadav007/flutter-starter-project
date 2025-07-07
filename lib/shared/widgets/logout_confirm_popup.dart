@@ -1,14 +1,12 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fuel_pro_360/core/routing/app_router.dart';
-import 'package:fuel_pro_360/features/draft_indents/presentation/providers/delete_draft_indent_provider.dart';
-import 'package:fuel_pro_360/features/draft_indents/presentation/providers/provider.dart';
-import 'package:fuel_pro_360/features/draft_indents/presentation/widgets/draft_indent_summary.dart';
+import 'package:fuel_pro_360/features/auth/presentation/providers/auth_provider.dart';
 import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/shared/utils/methods.dart';
 import 'package:fuel_pro_360/shared/widgets/custom_popup.dart';
 
-void DeleteDraftIndentConfirmPopup() {
+void LogoutConfirmPopup() {
   customPopup(
     context: navigatorKey!.currentState!.context,
     childWidget: Consumer(builder: (context, ref, child) {
@@ -19,7 +17,7 @@ void DeleteDraftIndentConfirmPopup() {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   Icons.warning_outlined,
@@ -28,7 +26,7 @@ void DeleteDraftIndentConfirmPopup() {
                 ),
                 SizedBox(width: 10),
                 Text(
-                  'Delete Draft Indent',
+                  'Signout Confirmation',
                   style: TextStyle(
                     fontSize: 18,
                     color: UiColors.black,
@@ -38,8 +36,8 @@ void DeleteDraftIndentConfirmPopup() {
               ],
             ),
             const SizedBox(height: 10),
-            Text(
-              'This action cannot be undone. The draft indent will be permanently deleted.',
+            const Text(
+              'Are you sure you want to Logout?',
               style: TextStyle(
                 fontSize: 14,
                 color: UiColors.black,
@@ -47,9 +45,6 @@ void DeleteDraftIndentConfirmPopup() {
               ),
             ),
             const SizedBox(height: 20),
-            DraftIndentSummary(
-              showStatus: true,
-            ),
             const SizedBox(height: 20),
             Row(
               children: [
@@ -59,8 +54,6 @@ void DeleteDraftIndentConfirmPopup() {
                     child: OutlinedButton(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        ref.read(selectedDraftIndentProvider.notifier).state =
-                            null;
                       },
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
@@ -87,40 +80,24 @@ void DeleteDraftIndentConfirmPopup() {
                       height: 48,
                       width: 50,
                       child: Consumer(builder: (context, ref, child) {
-                        final delteIndentState =
-                            ref.watch(deleteDraftIndentProvider);
-
-                        return delteIndentState.maybeWhen(
-                          orElse: () => ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: UiColors.red,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            onPressed: () {
-                              ref
-                                  .read(deleteDraftIndentProvider.notifier)
-                                  .deleteDraftIndent();
-                            },
-                            child: const Text(
-                              "Delete Draft",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        return ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: UiColors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          loading: () => const SizedBox(
-                            height: 30,
-                            width: 30,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
+                          onPressed: () {
+                            invalidateAllProviders(ref: ref);
+                            Navigator.of(context).pop();
+                            ref.read(authProvider.notifier).logout();
+                          },
+                          child: const Text(
+                            "Logout",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         );
@@ -134,7 +111,7 @@ void DeleteDraftIndentConfirmPopup() {
         ),
       );
     }),
-    barrierDismissible: false,
+    barrierDismissible: true,
     onBarrierDismiss: () {
       Navigator.of(navigatorKey!.currentState!.context).pop();
     },

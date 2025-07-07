@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
-import 'package:starter_project/shared/constants/app_constants.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
-import 'package:starter_project/shared/utils/utils.dart';
-import 'package:starter_project/shared/widgets/title_header.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
+import 'package:fuel_pro_360/shared/constants/app_constants.dart';
+import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/shared/utils/methods.dart';
+import 'package:fuel_pro_360/shared/utils/utils.dart';
+import 'package:fuel_pro_360/shared/widgets/title_header.dart';
+import 'package:retrofit/http.dart';
 
-class CustomerScreen extends ConsumerWidget {
+class CustomerScreen extends ConsumerStatefulWidget {
   const CustomerScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CustomerScreen> createState() => _CustomerScreenState();
+}
+
+class _CustomerScreenState extends ConsumerState<CustomerScreen> {
+  @override
+  Widget build(BuildContext context) {
     final allCustomersState = ref.watch(allCustomersProvider);
     return SafeArea(
         child: Scaffold(

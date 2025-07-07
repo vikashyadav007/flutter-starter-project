@@ -1,10 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:starter_project/core/api/failure.dart';
-import 'package:starter_project/features/home/domain/entity/fuel_pump_entity.dart';
-import 'package:starter_project/features/home/domain/use_cases/get_fuel_pump_usecase.dart';
-import 'package:starter_project/features/home/presentation/providers/providers.dart';
-import 'package:starter_project/shared/providers/selected_fuel_pump.dart';
+import 'package:fuel_pro_360/core/api/failure.dart';
+import 'package:fuel_pro_360/features/auth/presentation/providers/global_auth_provider.dart';
+import 'package:fuel_pro_360/features/home/domain/entity/fuel_pump_entity.dart';
+import 'package:fuel_pro_360/features/home/domain/use_cases/get_fuel_pump_usecase.dart';
+import 'package:fuel_pro_360/features/home/presentation/providers/providers.dart';
+import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 
 part 'home_provider.freezed.dart';
 
@@ -21,6 +22,7 @@ class HomeState with _$HomeState {
 final homeProvider = StateNotifierProvider<HomeNotifier, HomeState>((ref) {
   final getFuelPumpUsecase = ref.watch(getFuelPumpUsecaseProvider);
   final selectedFuelPump = ref.watch(selectedFuelPumpProvider.notifier);
+  final globalAuth = ref.watch(globalAuthProvider);
 
   return HomeNotifier(
     getFuelPumpUsecase: getFuelPumpUsecase,

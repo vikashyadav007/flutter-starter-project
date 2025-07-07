@@ -1,6 +1,6 @@
 // Project imports:
 
-import 'package:starter_project/shared/models/filter/filter.dart';
+import 'package:fuel_pro_360/shared/models/filter/filter.dart';
 
 String constructFilterString(List<Filter> filters) {
   final List<String> fields = [];

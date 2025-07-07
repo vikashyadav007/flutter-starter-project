@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:starter_project/core/routing/app_router.dart';
-import 'package:starter_project/features/home/domain/entity/fuel_pump_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/consumables_cart.dart';
-import 'package:starter_project/features/shift_management/domain/entity/pump_nozzle_readings.dart';
-import 'package:starter_project/features/shift_management/domain/entity/pump_setting_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/staff_entity.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/create_reading_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/create_shift_consumables_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/create_shift_usecase.dart';
-import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
-import 'package:starter_project/features/shift_management/presentation/widgets/create_new_shift_success_popup.dart';
-import 'package:starter_project/shared/providers/selected_fuel_pump.dart';
-import 'package:starter_project/shared/utils/methods.dart';
+import 'package:fuel_pro_360/core/routing/app_router.dart';
+import 'package:fuel_pro_360/features/home/domain/entity/fuel_pump_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_cart.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/pump_nozzle_readings.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/pump_setting_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/staff_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_reading_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_shift_consumables_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_shift_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/widgets/create_new_shift_success_popup.dart';
+import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
+import 'package:fuel_pro_360/shared/utils/methods.dart';
 
 part 'start_new_shift_provider.freezed.dart';
 

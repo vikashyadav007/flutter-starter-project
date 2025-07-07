@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/shift_management/domain/entity/consumables_cart.dart';
-import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
-import 'package:starter_project/shared/constants/app_constants.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_cart.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
+import 'package:fuel_pro_360/shared/constants/app_constants.dart';
 
 class AddConsumablesListing extends ConsumerWidget {
   double getTotalCost(List<ConsumablesCart> consumablesCartState) {

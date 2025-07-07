@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/record_indent/presentation/pages/search_by_customer_body.dart';
-import 'package:starter_project/features/record_indent/presentation/pages/search_by_indent_body.dart';
-import 'package:starter_project/features/record_indent/presentation/providers/providers.dart';
-import 'package:starter_project/features/record_indent/presentation/widgets/indent_tab.dart';
-import 'package:starter_project/features/record_indent/presentation/widgets/search_by_customer.dart';
-import 'package:starter_project/features/record_indent/presentation/widgets/search_by_indent.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
-import 'package:starter_project/shared/utils/methods.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/pages/search_by_customer_body.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/pages/search_by_indent_body.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/indent_tab.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/search_by_customer.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/search_by_indent.dart';
+import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/shared/utils/methods.dart';
 
 class RecordIndentBody extends ConsumerWidget {
   @override

@@ -1,6 +1,6 @@
-import 'package:starter_project/core/routing/app_router.dart';
-import 'package:starter_project/core/theme/app_theme.dart';
-import 'package:starter_project/l10n/l10n.dart';
+import 'package:fuel_pro_360/core/routing/app_router.dart';
+import 'package:fuel_pro_360/core/theme/app_theme.dart';
+import 'package:fuel_pro_360/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

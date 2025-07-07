@@ -1,16 +1,16 @@
 import 'package:dartz/dartz.dart';
-import 'package:starter_project/core/api/error_handler.dart';
-import 'package:starter_project/core/api/failure.dart';
-import 'package:starter_project/features/shift_management/data/data_sources/shift_management_data_source.dart';
-import 'package:starter_project/features/shift_management/data/models/reading_model.dart';
-import 'package:starter_project/features/shift_management/domain/entity/consumables_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/pump_setting_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/reading_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/shift_consumables_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/shift_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/staff_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/transaction_entity.dart';
-import 'package:starter_project/features/shift_management/domain/repositories/shift_management_repository.dart';
+import 'package:fuel_pro_360/core/api/error_handler.dart';
+import 'package:fuel_pro_360/core/api/failure.dart';
+import 'package:fuel_pro_360/features/shift_management/data/data_sources/shift_management_data_source.dart';
+import 'package:fuel_pro_360/features/shift_management/data/models/reading_model.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/pump_setting_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/reading_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/shift_consumables_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/shift_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/staff_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/transaction_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/repositories/shift_management_repository.dart';
 
 class ShiftManagementRespositoryImpl extends ShiftManagementRepository {
   final ShiftManagementDataSource _shiftManagementDataSource;

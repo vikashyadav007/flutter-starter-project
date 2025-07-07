@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/draft_indents/presentation/providers/provider.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/features/draft_indents/presentation/providers/provider.dart';
+import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
 
 class DraftIndentSummary extends ConsumerWidget {
   bool showStatus;

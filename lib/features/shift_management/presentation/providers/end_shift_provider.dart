@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:starter_project/features/shift_management/domain/entity/consumables_reconciliation.dart';
-import 'package:starter_project/features/shift_management/domain/entity/pump_closing_readings.dart';
-import 'package:starter_project/features/shift_management/domain/entity/shift_entity.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/complete_shift_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/reconcilize_shift_consumables_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/update_reading_usecase.dart';
-import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
-import 'package:starter_project/features/shift_management/presentation/widgets/end_shift_success_popup.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_reconciliation.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/pump_closing_readings.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/shift_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/complete_shift_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/reconcilize_shift_consumables_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/update_reading_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/widgets/end_shift_success_popup.dart';
 
 part 'end_shift_provider.freezed.dart';
 

@@ -1,4 +1,4 @@
-import 'package:starter_project/features/auth/domain/entity/auth_entity.dart';
+import 'package:fuel_pro_360/features/auth/domain/entity/auth_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 

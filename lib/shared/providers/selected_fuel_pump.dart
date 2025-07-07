@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/home/domain/entity/fuel_pump_entity.dart';
+import 'package:fuel_pro_360/features/home/domain/entity/fuel_pump_entity.dart';
 
 final selectedFuelPumpProvider =
     StateNotifierProvider<SelectedFuelPumpNotifier, FuelPumpEntity?>((ref) {

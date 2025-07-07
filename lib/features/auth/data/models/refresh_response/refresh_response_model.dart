@@ -1,4 +1,4 @@
-import 'package:starter_project/features/auth/domain/entity/refresh_response_entity.dart';
+import 'package:fuel_pro_360/features/auth/domain/entity/refresh_response_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'refresh_response_model.freezed.dart';

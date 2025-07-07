@@ -1,33 +1,33 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/record_indent/domain/entity/fuel_entity.dart';
-import 'package:starter_project/features/shift_management/data/data_sources/shift_management_data_source.dart';
-import 'package:starter_project/features/shift_management/data/respositories/shift_management_respository_impl.dart';
-import 'package:starter_project/features/shift_management/domain/entity/consumables_cart.dart';
-import 'package:starter_project/features/shift_management/domain/entity/consumables_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/consumables_reconciliation.dart';
-import 'package:starter_project/features/shift_management/domain/entity/pump_closing_readings.dart';
-import 'package:starter_project/features/shift_management/domain/entity/pump_nozzle_readings.dart';
-import 'package:starter_project/features/shift_management/domain/entity/pump_setting_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/reading_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/shift_consumables_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/shift_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/staff_entity.dart';
-import 'package:starter_project/features/shift_management/domain/entity/transaction_entity.dart';
-import 'package:starter_project/features/shift_management/domain/repositories/shift_management_repository.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/complete_shift_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/create_reading_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/create_shift_consumables_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/create_shift_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/get_active_shifts_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/get_consumables_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/get_pump_settings_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/get_readings_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/get_shifts_consumables_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/get_staffs_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/get_transactions_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/reconcilize_shift_consumables_usecase.dart';
-import 'package:starter_project/features/shift_management/domain/use_cases/update_reading_usecase.dart';
-import 'package:starter_project/shared/providers/selected_fuel_pump.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/fuel_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/data/data_sources/shift_management_data_source.dart';
+import 'package:fuel_pro_360/features/shift_management/data/respositories/shift_management_respository_impl.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_cart.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_reconciliation.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/pump_closing_readings.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/pump_nozzle_readings.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/pump_setting_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/reading_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/shift_consumables_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/shift_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/staff_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/transaction_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/repositories/shift_management_repository.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/complete_shift_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_reading_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_shift_consumables_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_shift_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_active_shifts_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_consumables_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_pump_settings_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_readings_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_shifts_consumables_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_staffs_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_transactions_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/reconcilize_shift_consumables_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/update_reading_usecase.dart';
+import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 
 final shiftManagementRepositoryProvider =
     Provider<ShiftManagementRepository>((ref) {
@@ -48,7 +48,8 @@ final getReadinUseCaseProvider = Provider<GetReadingsUsecase>((ref) {
   return GetReadingsUsecase(shiftManagementRepository);
 });
 
-final shiftsProvider = FutureProvider<List<ShiftEntity>>((ref) async {
+final shiftsProvider =
+    FutureProvider.autoDispose<List<ShiftEntity>>((ref) async {
   final getActiveShiftUseCase = ref.watch(getActiveShiftsUsecaseProvider);
   final fuelPump = ref.watch(selectedFuelPumpProvider);
   final result =

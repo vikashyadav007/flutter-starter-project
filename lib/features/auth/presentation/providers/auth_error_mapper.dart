@@ -1,5 +1,5 @@
-import 'package:starter_project/core/api/failure.dart';
-import 'package:starter_project/core/api/error_handler.dart';
+import 'package:fuel_pro_360/core/api/failure.dart';
+import 'package:fuel_pro_360/core/api/error_handler.dart';
 
 Failure mapLoginFailure(Failure failure) {
   switch (failure.code) {

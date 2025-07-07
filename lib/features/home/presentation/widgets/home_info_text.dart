@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
 
 class HomeInfoText extends StatelessWidget {
   @override

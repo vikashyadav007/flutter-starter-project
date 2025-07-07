@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:starter_project/features/shift_management/domain/entity/consumables_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_entity.dart';
 
 part 'consumables_cart.freezed.dart';
 

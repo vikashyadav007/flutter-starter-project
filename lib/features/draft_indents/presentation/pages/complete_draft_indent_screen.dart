@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/draft_indents/presentation/providers/complete_draft_provider.dart';
-import 'package:starter_project/features/draft_indents/presentation/providers/provider.dart';
-import 'package:starter_project/features/draft_indents/presentation/widgets/draft_indent_summary.dart';
-import 'package:starter_project/features/draft_indents/presentation/widgets/payment_method_dropdown.dart';
-import 'package:starter_project/features/shift_management/presentation/providers/provider.dart';
-import 'package:starter_project/features/shift_management/presentation/widgets/staff_dropdown.dart';
-import 'package:starter_project/shared/constants/app_constants.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
-import 'package:starter_project/shared/widgets/custom_text_field.dart';
-import 'package:starter_project/shared/widgets/text_field_label.dart';
-import 'package:starter_project/shared/widgets/title_header.dart';
-import 'package:starter_project/utils/validators.dart';
+import 'package:fuel_pro_360/features/draft_indents/presentation/providers/complete_draft_provider.dart';
+import 'package:fuel_pro_360/features/draft_indents/presentation/providers/provider.dart';
+import 'package:fuel_pro_360/features/draft_indents/presentation/widgets/draft_indent_summary.dart';
+import 'package:fuel_pro_360/features/draft_indents/presentation/widgets/payment_method_dropdown.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/widgets/staff_dropdown.dart';
+import 'package:fuel_pro_360/shared/constants/app_constants.dart';
+import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/shared/widgets/custom_text_field.dart';
+import 'package:fuel_pro_360/shared/widgets/text_field_label.dart';
+import 'package:fuel_pro_360/shared/widgets/title_header.dart';
+import 'package:fuel_pro_360/utils/validators.dart';
 
 class CompleteDraftIndentScreen extends ConsumerWidget {
   final TextEditingController actualQuantityController =

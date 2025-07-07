@@ -1,4 +1,4 @@
-import 'package:starter_project/shared/constants/app_constants.dart';
+import 'package:fuel_pro_360/shared/constants/app_constants.dart';
 
 class FuelEntity {
   String? fuelType;

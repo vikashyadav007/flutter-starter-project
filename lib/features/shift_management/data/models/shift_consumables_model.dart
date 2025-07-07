@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
-import 'package:starter_project/features/shift_management/data/models/consumables_model.dart';
-import 'package:starter_project/features/shift_management/domain/entity/shift_consumables_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/data/models/consumables_model.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/shift_consumables_entity.dart';
 
 part 'shift_consumables_model.freezed.dart';
 part 'shift_consumables_model.g.dart';

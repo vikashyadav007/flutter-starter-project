@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:starter_project/features/draft_indents/presentation/widgets/indents_list.dart';
-import 'package:starter_project/shared/utils/methods.dart';
-import 'package:starter_project/shared/widgets/title_header.dart';
+import 'package:fuel_pro_360/features/draft_indents/presentation/widgets/indents_list.dart';
+import 'package:fuel_pro_360/shared/widgets/title_header.dart';
 
 class DraftIndentsScreen extends ConsumerWidget {
   const DraftIndentsScreen({super.key});
@@ -20,11 +18,7 @@ class DraftIndentsScreen extends ConsumerWidget {
             color: Colors.white,
             child: Column(
               children: [
-                TitleHeader(
-                    title: 'Draft Indents',
-                    onBackPressed: () {
-                      invalidateDraftIndents(ref: ref);
-                    }),
+                TitleHeader(title: 'Draft Indents', onBackPressed: () {}),
                 const SizedBox(height: 20),
                 Expanded(child: IndentsList()),
               ],

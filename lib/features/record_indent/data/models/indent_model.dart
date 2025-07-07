@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:starter_project/features/customers/data/models/customer_model.dart';
-import 'package:starter_project/features/record_indent/data/models/vehicle_model.dart';
+import 'package:fuel_pro_360/features/customers/data/models/customer_model.dart';
+import 'package:fuel_pro_360/features/record_indent/data/models/vehicle_model.dart';
 
-import 'package:starter_project/features/record_indent/domain/entity/indent_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_entity.dart';
 
 part 'indent_model.freezed.dart';
 part 'indent_model.g.dart';

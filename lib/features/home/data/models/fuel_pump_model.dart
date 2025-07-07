@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
-import 'package:starter_project/features/home/domain/entity/fuel_pump_entity.dart';
+import 'package:fuel_pro_360/features/home/domain/entity/fuel_pump_entity.dart';
 
 part 'fuel_pump_model.freezed.dart';
 part 'fuel_pump_model.g.dart';

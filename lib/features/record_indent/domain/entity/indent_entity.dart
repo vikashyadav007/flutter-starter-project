@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:starter_project/features/customers/domain/entity/customer_entity.dart';
-import 'package:starter_project/features/record_indent/domain/entity/vehicle_entity.dart';
+import 'package:fuel_pro_360/features/customers/domain/entity/customer_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/vehicle_entity.dart';
 
 part 'indent_entity.freezed.dart';
 

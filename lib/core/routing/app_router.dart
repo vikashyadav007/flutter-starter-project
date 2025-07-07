@@ -1,17 +1,17 @@
-import 'package:starter_project/features/auth/presentation/pages/auth_page.dart';
-import 'package:starter_project/features/auth/presentation/providers/global_auth_provider.dart';
-import 'package:starter_project/features/customers/presentation/pages/customer_screen.dart';
-import 'package:starter_project/features/draft_indents/presentation/pages/complete_draft_indent_screen.dart';
-import 'package:starter_project/features/draft_indents/presentation/pages/draft_indents_screen.dart';
-import 'package:starter_project/features/home/presentation/pages/home_screen.dart';
+import 'package:fuel_pro_360/features/auth/presentation/pages/auth_page.dart';
+import 'package:fuel_pro_360/features/auth/presentation/providers/global_auth_provider.dart';
+import 'package:fuel_pro_360/features/customers/presentation/pages/customer_screen.dart';
+import 'package:fuel_pro_360/features/draft_indents/presentation/pages/complete_draft_indent_screen.dart';
+import 'package:fuel_pro_360/features/draft_indents/presentation/pages/draft_indents_screen.dart';
+import 'package:fuel_pro_360/features/home/presentation/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:starter_project/features/record_indent/presentation/pages/record_indent.dart';
-import 'package:starter_project/features/shift_management/presentation/pages/end_shift_screen.dart';
-import 'package:starter_project/features/shift_management/presentation/pages/shift_management_screen.dart';
-import 'package:starter_project/features/shift_management/presentation/pages/start_new_shift.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/pages/record_indent.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/pages/end_shift_screen.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/pages/shift_management_screen.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/pages/start_new_shift.dart';
 
 part 'app_router.g.dart';
 

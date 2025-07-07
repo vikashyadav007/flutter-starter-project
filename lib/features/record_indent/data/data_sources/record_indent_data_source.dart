@@ -1,9 +1,9 @@
-import 'package:starter_project/features/customers/data/models/customer_model.dart';
-import 'package:starter_project/features/record_indent/data/models/fuel_model.dart';
-import 'package:starter_project/features/record_indent/data/models/indent_booklet_model.dart';
-import 'package:starter_project/features/record_indent/data/models/indent_model.dart';
-import 'package:starter_project/features/record_indent/data/models/vehicle_model.dart';
-import 'package:starter_project/features/shift_management/data/models/staff_model.dart';
+import 'package:fuel_pro_360/features/customers/data/models/customer_model.dart';
+import 'package:fuel_pro_360/features/record_indent/data/models/fuel_model.dart';
+import 'package:fuel_pro_360/features/record_indent/data/models/indent_booklet_model.dart';
+import 'package:fuel_pro_360/features/record_indent/data/models/indent_model.dart';
+import 'package:fuel_pro_360/features/record_indent/data/models/vehicle_model.dart';
+import 'package:fuel_pro_360/features/shift_management/data/models/staff_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RecordIndentDataSource {

@@ -1,11 +1,10 @@
-import 'package:starter_project/core/routing/app_router.dart';
-import 'package:starter_project/features/auth/presentation/providers/auth_provider.dart';
-import 'package:starter_project/shared/constants/ui_constants.dart';
-import 'package:starter_project/shared/widgets/custom_circular_progress.dart';
-import 'package:starter_project/utils/validators.dart';
+import 'package:flutter/foundation.dart';
+import 'package:fuel_pro_360/core/routing/app_router.dart';
+import 'package:fuel_pro_360/features/auth/presentation/providers/auth_provider.dart';
+import 'package:fuel_pro_360/shared/widgets/custom_circular_progress.dart';
+import 'package:fuel_pro_360/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
   @override
@@ -21,8 +20,10 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   @override
   void initState() {
     super.initState();
-    _usernameController = TextEditingController(text: "admin@example.com");
-    _passwordController = TextEditingController(text: "admin123");
+    if (kDebugMode) {
+      _usernameController = TextEditingController(text: "admin@example.com");
+      _passwordController = TextEditingController(text: "admin123");
+    }
   }
 
   @override
@@ -37,11 +38,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       bool status = await ref
           .read(authProvider.notifier)
           .login(_usernameController.text, _passwordController.text);
-
-      if (status) {
-        final router = ref.read(routerProvider);
-        router.goNamed(AppPath.home.name);
-      }
     }
   }
 
