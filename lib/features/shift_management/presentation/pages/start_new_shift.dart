@@ -103,11 +103,12 @@ class StartNewShift extends ConsumerWidget {
                                     final selectedQuantity =
                                         ref.watch(selectedQuantityProvider);
 
+                                    quantityController.text = selectedQuantity;
+
                                     return CustomTextField(
                                       hintText: '1',
                                       validator: Validators.validateQuantity,
-                                      controller: TextEditingController(
-                                          text: selectedQuantity),
+                                      controller: quantityController,
                                       keyboardType: TextInputType.number,
                                       onChanged: (value) => ref
                                           .read(
@@ -132,6 +133,11 @@ class StartNewShift extends ConsumerWidget {
                                 final consumablesCartState =
                                     ref.watch(consumablesCartProvider.notifier);
 
+                                int quantity = 0;
+                                if (selectedQuantity.isNotEmpty) {
+                                  quantity = int.parse(selectedQuantity);
+                                }
+
                                 return Column(
                                   children: [
                                     const TextFieldLabel(label: ''),
@@ -150,7 +156,12 @@ class StartNewShift extends ConsumerWidget {
                                               horizontal: 5, vertical: 5),
                                         ),
                                         onPressed: selectedQuantity == '' ||
-                                                selectedConsumable == null
+                                                selectedConsumable == null ||
+                                                quantity <= 0 ||
+                                                quantity >
+                                                    (selectedConsumable
+                                                            .quantity ??
+                                                        0)
                                             ? null
                                             : () {
                                                 consumablesCartState.state = [
