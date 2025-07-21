@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
@@ -25,4 +28,14 @@ String getCommaSeperatedNumber({required int number}) {
 
 String getCommaSeperatedNumberDouble({required double number}) {
   return NumberFormat("#,##0.##").format(number);
+}
+
+Future<XFile> compressAndGetImageFile(File file, String targetPath) async {
+  var result = await FlutterImageCompress.compressAndGetFile(
+    file.absolute.path,
+    targetPath,
+    quality: 50,
+  );
+
+  return result!;
 }

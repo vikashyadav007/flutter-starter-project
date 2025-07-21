@@ -107,7 +107,7 @@ class EndShiftScreen extends ConsumerWidget {
                               ],
                             ),
                             const SizedBox(height: 20),
-                            EndShiftMeterReadings(),
+                            const EndShiftMeterReadings(),
                             const SizedBox(height: 10),
                             EndShiftHeader(title: 'Sales Details'),
                             const SizedBox(height: 10),

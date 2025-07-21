@@ -11,11 +11,20 @@ class ConsumablesDropdown extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final consumablesProviderState = ref.watch(consumablesProvider);
+    final consumablesCartState = ref.watch(consumablesCartProvider);
     final selectedConsumableProviderState =
         ref.watch(selectedConsumableProvider);
 
     return consumablesProviderState.when(
       data: (consumablesList) {
+        final selected =
+            consumablesCartState.map((cart) => cart.consumables).toSet();
+
+        final availableConsumables =
+            consumablesList.where((item) => !selected.contains(item)).toList();
+
+        print("availableConsumables: $availableConsumables");
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -24,7 +33,7 @@ class ConsumablesDropdown extends ConsumerWidget {
               key: _dropdownKey,
               value: selectedConsumableProviderState,
               context: context,
-              dropdownList: consumablesList,
+              dropdownList: availableConsumables,
               isRequired: true,
               type: 'Consumable',
               hintText: 'Select Consumable',

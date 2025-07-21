@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fuel_pro_360/features/customers/data/models/customer_model.dart';
 import 'package:fuel_pro_360/features/record_indent/data/models/fuel_model.dart';
 import 'package:fuel_pro_360/features/record_indent/data/models/indent_booklet_model.dart';
@@ -187,6 +189,31 @@ class RecordIndentDataSource {
     } catch (e) {
       print("Error fetching Customers: $e");
       throw Exception("Failed to fetch Customers");
+    }
+  }
+
+  Future<String> uploadMeterReadingImage({required File file}) async {
+    try {
+      String publicUrl = '';
+      final fileName =
+          'meter-readings/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final fullPath = await client.storage.from('assets').upload(
+            fileName,
+            file,
+            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+          );
+
+      print("full path: $fullPath");
+
+      if (fullPath.isNotEmpty) {
+        publicUrl = await client.storage.from('assets').getPublicUrl(fileName);
+      }
+      print("publicUrl: $publicUrl");
+
+      return publicUrl;
+    } catch (e) {
+      print("Error uploading meter reading image: $e");
+      throw Exception("Failed to upload meter reading image");
     }
   }
 }

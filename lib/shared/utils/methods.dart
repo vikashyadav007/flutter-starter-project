@@ -19,6 +19,7 @@ void invalidateRecordIndentProviders({required WidgetRef ref}) {
   ref.invalidate(selectedTabIndexProvider);
   ref.invalidate(amountProvider);
   ref.invalidate(quantityProvider);
+  ref.invalidate(meterReadingImageProvider);
   ref.invalidate(indentNumberVerifiedProvider);
 }
 

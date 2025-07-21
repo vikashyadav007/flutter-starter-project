@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fuel_pro_360/features/customers/domain/entity/customer_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/data/data_sources/record_indent_data_source.dart';
@@ -14,6 +16,7 @@ import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_custome
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_fuel_types_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_indent_booklets_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_staffs_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/upload_meter_reading_image_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/verify_customer_indent_usecase.dart';
 import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 
@@ -153,4 +156,12 @@ final customerVehicleListProvider =
   );
   return result.fold(
       (failure) => throw Exception(failure.message), (vehicles) => vehicles);
+});
+
+final meterReadingImageProvider = StateProvider<File?>((ref) => null);
+
+final uploadMeterReadingImageUsecaseProvider =
+    Provider<UploadMeterReadingImageUsecase>((ref) {
+  final recordIndentRepository = ref.watch(RecordsProvider);
+  return UploadMeterReadingImageUsecase(recordIndentRepository);
 });

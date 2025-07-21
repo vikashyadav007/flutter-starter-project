@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -9,8 +11,10 @@ import 'package:fuel_pro_360/features/record_indent/domain/entity/vehicle_entity
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/create_indent_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_customer_indent_booklet_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_staffs_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/upload_meter_reading_image_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/create_indent_success_popup.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/meter_reading_image.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/staff_entity.dart';
 import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 import 'package:uuid/uuid.dart';
@@ -36,6 +40,11 @@ final submitIndentProvider =
   final createIndentUsecase = ref.watch(createIndentUsecaseProvider);
   final getCustomerIndentUsecase = ref.watch(getCustomerIndentUsecaseProvider);
 
+  final uploadMeterReadingImageUsecase =
+      ref.watch(uploadMeterReadingImageUsecaseProvider);
+
+  final meterReadingImage = ref.watch(meterReadingImageProvider);
+
   final quantity = ref.watch(quantityProvider);
   final amount = ref.watch(amountProvider);
   final indentNumber = ref.watch(indentNumberProvider);
@@ -49,6 +58,8 @@ final submitIndentProvider =
     selectedIndentBooklet: selectedIndentBooklet,
     createIndentUsecase: createIndentUsecase,
     getCustomerIndentUsecase: getCustomerIndentUsecase,
+    uploadMeterReadingImageUsecase: uploadMeterReadingImageUsecase,
+    meterReadingImage: meterReadingImage,
     quantity: quantity,
     amount: amount,
     indentNumber: indentNumber,
@@ -64,6 +75,8 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
   final IndentBookletEntity? selectedIndentBooklet;
   final CreateIndentUsecase createIndentUsecase;
   final GetCustomerIndentUsecase getCustomerIndentUsecase;
+  final UploadMeterReadingImageUsecase uploadMeterReadingImageUsecase;
+  final File? meterReadingImage;
   final String quantity;
   final String amount;
   final String indentNumber;
@@ -77,12 +90,16 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
     required this.selectedIndentBooklet,
     required this.createIndentUsecase,
     required this.getCustomerIndentUsecase,
+    required this.uploadMeterReadingImageUsecase,
+    this.meterReadingImage,
     required this.quantity,
     required this.amount,
     required this.indentNumber,
   }) : super(const SubmitIndentState.initial());
 
   StaffEntity? staffEntity;
+
+  String publicImageUrl = "";
 
   Future<void> submitIndent() async {
     state = const SubmitIndentState.submitting();
@@ -92,11 +109,28 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
         (staffs) {
       if (staffs.isNotEmpty) {
         staffEntity = staffs.first;
-        createNewIndent();
+        uploadMeterReadingImage();
       } else {
         state = const SubmitIndentState.error("No staff available");
       }
     });
+  }
+
+  Future<void> uploadMeterReadingImage() async {
+    if (meterReadingImage != null) {
+      final result = await uploadMeterReadingImageUsecase.execute(
+        file: meterReadingImage!,
+      );
+      result.fold(
+        (failure) => state = SubmitIndentState.error(failure.message),
+        (publicUrl) {
+          publicImageUrl = publicUrl;
+          createNewIndent();
+        },
+      );
+    } else {
+      createNewIndent();
+    }
   }
 
   Future<void> createNewIndent() async {
@@ -118,6 +152,7 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
       "source": "mobile",
       "fuel_pump_id": selectedFuelPump?.id ?? "",
       "created_by_staff_id": staffEntity?.id ?? "",
+      if (publicImageUrl.isNotEmpty) "meter_reading_image": publicImageUrl
     };
 
     var result = await createIndentUsecase.execute(body: body);

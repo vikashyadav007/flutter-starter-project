@@ -17,8 +17,8 @@ abstract class ReadingModel with _$ReadingModel {
     @JsonKey(name: "id") String? id,
     @JsonKey(name: "pump_id") String? pumpId,
     @JsonKey(name: "shift_id") String? shiftId,
-    @JsonKey(name: "opening_reading") int? openingReading,
-    @JsonKey(name: "closing_reading") dynamic closingReading,
+    @JsonKey(name: "opening_reading") double? openingReading,
+    @JsonKey(name: "closing_reading") double? closingReading,
     @JsonKey(name: "staff_id") String? staffId,
     @JsonKey(name: "date") DateTime? date,
     @JsonKey(name: "created_at") DateTime? createdAt,
@@ -28,12 +28,12 @@ abstract class ReadingModel with _$ReadingModel {
     @JsonKey(name: "upi_sales") dynamic upiSales,
     @JsonKey(name: "cash_sales") dynamic cashSales,
     @JsonKey(name: "expenses") int? expenses,
-    @JsonKey(name: "testing_fuel") int? testingFuel,
-    @JsonKey(name: "consumable_expenses") int? consumableExpenses,
+    @JsonKey(name: "testing_fuel") double? testingFuel,
+    @JsonKey(name: "consumable_expenses") double? consumableExpenses,
     @JsonKey(name: "fuel_pump_id") String? fuelPumpId,
     @JsonKey(name: "fuel_type") String? fuelType,
-    @JsonKey(name: "indent_sales") int? indentSales,
-    @JsonKey(name: "others_sales") int? othersSales,
+    @JsonKey(name: "indent_sales") double? indentSales,
+    @JsonKey(name: "others_sales") double? othersSales,
   }) = _ReadingModel;
 
   factory ReadingModel.fromJson(Map<String, dynamic> json) =>

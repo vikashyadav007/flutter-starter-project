@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:fuel_pro_360/core/api/error_handler.dart';
 import 'package:fuel_pro_360/core/api/failure.dart';
@@ -142,6 +144,18 @@ class RecordIndentRepositoryImpl extends RecordIndentRepository {
           await _recordIndentDataSource.getAllCustomers(fuelPumpId: fuelPumpId);
       return Right(
           indentBooklets.map<CustomerEntity>((e) => e.toEntity()).toList());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> uploadMeterReadingImage(
+      {required File file}) async {
+    try {
+      final publicUrl =
+          await _recordIndentDataSource.uploadMeterReadingImage(file: file);
+      return Right(publicUrl);
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

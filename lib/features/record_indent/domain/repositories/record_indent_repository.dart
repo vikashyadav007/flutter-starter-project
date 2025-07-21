@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:fuel_pro_360/core/api/failure.dart';
 import 'package:fuel_pro_360/features/customers/domain/entity/customer_entity.dart';
@@ -33,4 +35,6 @@ abstract class RecordIndentRepository {
 
   Future<Either<Failure, List<CustomerEntity>>> getAllCustomers(
       {required String fuelPumpId});
+
+  Future<Either<Failure, String>> uploadMeterReadingImage({required File file});
 }
