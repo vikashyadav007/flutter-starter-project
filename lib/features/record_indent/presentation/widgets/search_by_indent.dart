@@ -46,7 +46,7 @@ class SearchByIndent extends ConsumerWidget {
                   hintText: 'Enter indent number to search',
                   controller: indentNumberController,
                   validator: Validators.validatePassword,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.text,
                   enabled: indentNumberVerified == false,
                   onChanged: (value) {
                     ref.read(indentNumberVerifiedProvider.notifier).state =

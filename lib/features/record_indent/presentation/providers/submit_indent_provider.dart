@@ -5,16 +5,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:fuel_pro_360/features/customers/domain/entity/customer_entity.dart';
 import 'package:fuel_pro_360/features/home/domain/entity/fuel_pump_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/active_staff_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/fuel_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_booklet_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/vehicle_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/create_indent_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_customer_indent_booklet_usecase.dart';
-import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_staffs_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/upload_meter_reading_image_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/create_indent_success_popup.dart';
-import 'package:fuel_pro_360/features/record_indent/presentation/widgets/meter_reading_image.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/staff_entity.dart';
 import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 import 'package:uuid/uuid.dart';
@@ -31,7 +30,6 @@ class SubmitIndentState with _$SubmitIndentState {
 
 final submitIndentProvider =
     StateNotifierProvider<SubmitIndentNotifier, SubmitIndentState>((ref) {
-  final getStaffsUsecase = ref.watch(getStaffsUsecaseProvider);
   final selectedPump = ref.watch(selectedFuelPumpProvider);
   final selectedCustomer = ref.watch(selectedCustomerProvider);
   final selectedVehicle = ref.watch(selectedCustomerVehicleProvider);
@@ -49,25 +47,25 @@ final submitIndentProvider =
   final amount = ref.watch(amountProvider);
   final indentNumber = ref.watch(indentNumberProvider);
 
+  final selectedStaff = ref.watch(selectedActiveStaffProvider);
+
   return SubmitIndentNotifier(
-    getStaffsUsecase: getStaffsUsecase,
-    selectedFuelPump: selectedPump,
-    selectedCustomer: selectedCustomer,
-    selectedVehicle: selectedVehicle,
-    selectedFuelType: selectedFuelType,
-    selectedIndentBooklet: selectedIndentBooklet,
-    createIndentUsecase: createIndentUsecase,
-    getCustomerIndentUsecase: getCustomerIndentUsecase,
-    uploadMeterReadingImageUsecase: uploadMeterReadingImageUsecase,
-    meterReadingImage: meterReadingImage,
-    quantity: quantity,
-    amount: amount,
-    indentNumber: indentNumber,
-  );
+      selectedFuelPump: selectedPump,
+      selectedCustomer: selectedCustomer,
+      selectedVehicle: selectedVehicle,
+      selectedFuelType: selectedFuelType,
+      selectedIndentBooklet: selectedIndentBooklet,
+      createIndentUsecase: createIndentUsecase,
+      getCustomerIndentUsecase: getCustomerIndentUsecase,
+      uploadMeterReadingImageUsecase: uploadMeterReadingImageUsecase,
+      meterReadingImage: meterReadingImage,
+      quantity: quantity,
+      amount: amount,
+      indentNumber: indentNumber,
+      selectedStaff: selectedStaff);
 });
 
 class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
-  final GetStaffsUsecase getStaffsUsecase;
   final FuelPumpEntity? selectedFuelPump;
   final CustomerEntity? selectedCustomer;
   final VehicleEntity? selectedVehicle;
@@ -82,7 +80,6 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
   final String indentNumber;
 
   SubmitIndentNotifier({
-    required this.getStaffsUsecase,
     required this.selectedFuelPump,
     required this.selectedCustomer,
     required this.selectedVehicle,
@@ -95,25 +92,17 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
     required this.quantity,
     required this.amount,
     required this.indentNumber,
+    required this.selectedStaff,
   }) : super(const SubmitIndentState.initial());
 
-  StaffEntity? staffEntity;
+  ActiveStaffEntity? selectedStaff;
 
   String publicImageUrl = "";
 
   Future<void> submitIndent() async {
     state = const SubmitIndentState.submitting();
-    final result =
-        await getStaffsUsecase.execute(fuelPumpId: selectedFuelPump?.id ?? "");
-    result.fold((failure) => state = SubmitIndentState.error(failure.message),
-        (staffs) {
-      if (staffs.isNotEmpty) {
-        staffEntity = staffs.first;
-        uploadMeterReadingImage();
-      } else {
-        state = const SubmitIndentState.error("No staff available");
-      }
-    });
+
+    uploadMeterReadingImage();
   }
 
   Future<void> uploadMeterReadingImage() async {
@@ -151,7 +140,7 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
       "approval_status": "pending",
       "source": "mobile",
       "fuel_pump_id": selectedFuelPump?.id ?? "",
-      "created_by_staff_id": staffEntity?.id ?? "",
+      "created_by_staff_id": selectedStaff?.staffId ?? "",
       if (publicImageUrl.isNotEmpty) "meter_reading_image": publicImageUrl
     };
 

@@ -5,12 +5,12 @@ import 'package:fuel_pro_360/core/api/error_handler.dart';
 import 'package:fuel_pro_360/core/api/failure.dart';
 import 'package:fuel_pro_360/features/customers/domain/entity/customer_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/data/data_sources/record_indent_data_source.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/active_staff_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/fuel_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_booklet_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/vehicle_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/repositories/record_indent_repository.dart';
-import 'package:fuel_pro_360/features/shift_management/domain/entity/staff_entity.dart';
 
 class RecordIndentRepositoryImpl extends RecordIndentRepository {
   final RecordIndentDataSource _recordIndentDataSource;
@@ -114,13 +114,13 @@ class RecordIndentRepositoryImpl extends RecordIndentRepository {
   }
 
   @override
-  Future<Either<Failure, List<StaffEntity>>> getStaffs(
+  Future<Either<Failure, List<ActiveStaffEntity>>> getActiveStaffs(
       {required String fuelPumpId}) async {
     try {
       final indentBooklets =
-          await _recordIndentDataSource.getStaffs(fuelPumpId: fuelPumpId);
+          await _recordIndentDataSource.getActiveStaffs(fuelPumpId: fuelPumpId);
       return Right(
-          indentBooklets.map<StaffEntity>((e) => e.toEntity()).toList());
+          indentBooklets.map<ActiveStaffEntity>((e) => e.toEntity()).toList());
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

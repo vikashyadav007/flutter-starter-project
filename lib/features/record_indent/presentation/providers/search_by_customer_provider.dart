@@ -4,6 +4,7 @@ import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_booklet
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/verify_customer_indent_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/search_by_indent_provider.dart';
+import 'package:fuel_pro_360/shared/utils/utils.dart';
 
 final searchByCustomerProvider = StateNotifierProvider<SearchByCustomerNotifier,
     SearchByIndentProviderState>((ref) {
@@ -43,32 +44,34 @@ class SearchByCustomerNotifier
   Future<void> verifyRecordIndent() async {
     state = const SearchByIndentProviderState.loading();
 
-    if (!(int.parse(indentNumber) >=
-            int.parse(indentBookletEntity?.startNumber ?? "0") &&
-        int.parse(indentNumber) <=
-            int.parse(indentBookletEntity?.endNumber ?? "0"))) {
-      setError(Failure(
-          code: 1, message: "This indent number not belongs to this booklet."));
-
-      return;
+    if (isInRange(
+        value: indentNumber,
+        start: indentBookletEntity?.startNumber ?? "",
+        end: indentBookletEntity?.endNumber ?? "")) {
+      final result = await verifyCustomerIndentUsecase.execute(
+        indentNumber: indentNumber.toString(),
+        bookletId: indentBookletEntity?.id ?? "",
+      );
+      print(result);
+      result.fold(
+        (failure) => setError(failure),
+        (indentList) {
+          if (indentList.isNotEmpty) {
+            setError(Failure(
+                code: 1, message: "This indent number has already been used."));
+          } else {
+            indentNumberVerified.state = true;
+            state = SearchByIndentProviderState.verifiedRecordIndents(true);
+          }
+        },
+      );
+    } else {
+      setError(
+        Failure(
+            code: 1,
+            message: "This indent number not belongs to this booklet."),
+      );
     }
-    final result = await verifyCustomerIndentUsecase.execute(
-      indentNumber: indentNumber.toString(),
-      bookletId: indentBookletEntity?.id ?? "",
-    );
-    print(result);
-    result.fold(
-      (failure) => setError(failure),
-      (indentList) {
-        if (indentList.isNotEmpty) {
-          setError(Failure(
-              code: 1, message: "This indent number has already been used."));
-        } else {
-          indentNumberVerified.state = true;
-          state = SearchByIndentProviderState.verifiedRecordIndents(true);
-        }
-      },
-    );
   }
 
   void setError(Failure error) {

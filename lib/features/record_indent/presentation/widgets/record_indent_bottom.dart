@@ -4,6 +4,7 @@ import 'package:fuel_pro_360/features/record_indent/presentation/providers/provi
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/search_by_customer_provider.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/search_by_indent_provider.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/submit_indent_provider.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/active_staff_dropdown.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/create_indent_success_popup.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/meter_reading_image.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/search_by_indent.dart';
@@ -20,6 +21,8 @@ class RecordIndentBottom extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        ActiveStaffDropdown(),
+        const SizedBox(height: 20),
         MeterReadingImage(),
         const SizedBox(height: 20),
         Container(

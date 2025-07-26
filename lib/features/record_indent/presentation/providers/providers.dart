@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fuel_pro_360/features/customers/domain/entity/customer_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/data/data_sources/record_indent_data_source.dart';
 import 'package:fuel_pro_360/features/record_indent/data/respositories/record_indent_repository_impl.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/active_staff_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/fuel_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_booklet_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/vehicle_entity.dart';
@@ -15,9 +16,10 @@ import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_custome
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_customer_vehicle_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_fuel_types_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_indent_booklets_usecase.dart';
-import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_staffs_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_active_staffs_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/upload_meter_reading_image_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/verify_customer_indent_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/staff_entity.dart';
 import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 
 final RecordsProvider = Provider<RecordIndentRepository>((ref) {
@@ -64,11 +66,6 @@ final getIndentBookletUsecaseProvider =
 final getCustomerUsecaseProvider = Provider<GetCustomerUsecase>((ref) {
   final recordIndentRepository = ref.watch(RecordsProvider);
   return GetCustomerUsecase(recordIndentRepository);
-});
-
-final getStaffsUsecaseProvider = Provider<GetStaffsUsecase>((ref) {
-  final recordIndentRepository = ref.watch(RecordsProvider);
-  return GetStaffsUsecase(recordIndentRepository);
 });
 
 final createIndentUsecaseProvider = Provider<CreateIndentUsecase>((ref) {
@@ -165,3 +162,22 @@ final uploadMeterReadingImageUsecaseProvider =
   final recordIndentRepository = ref.watch(RecordsProvider);
   return UploadMeterReadingImageUsecase(recordIndentRepository);
 });
+
+final getActiveStaffsUsecaseProvider = Provider<GetActiveStaffsUsecase>((ref) {
+  final recordIndentRepository = ref.watch(RecordsProvider);
+  return GetActiveStaffsUsecase(recordIndentRepository);
+});
+
+final activeStaffProvider =
+    FutureProvider<List<ActiveStaffEntity>>((ref) async {
+  final getActiveStaffsUsecase = ref.watch(getActiveStaffsUsecaseProvider);
+  final selectedPump = ref.watch(selectedFuelPumpProvider);
+  final result = await getActiveStaffsUsecase.execute(
+    fuelPumpId: selectedPump?.id ?? '',
+  );
+  return result.fold(
+      (failure) => throw Exception(failure.message), (staffs) => staffs);
+});
+
+final selectedActiveStaffProvider =
+    StateProvider<ActiveStaffEntity?>((ref) => null);

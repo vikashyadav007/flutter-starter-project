@@ -34,6 +34,7 @@ void invalidateActiveShifts({required WidgetRef ref}) {
 }
 
 void invalidateDraftIndents({required WidgetRef ref}) {
+  ref.invalidate(draftIndentsProvider);
   ref.invalidate(selectedDraftIndentProvider);
   ref.invalidate(selectedStaffProvider);
   ref.invalidate(actualAmountProvider);

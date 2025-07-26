@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:fuel_pro_360/features/customers/data/models/customer_model.dart';
+import 'package:fuel_pro_360/features/record_indent/data/models/active_staff_model.dart';
 import 'package:fuel_pro_360/features/record_indent/data/models/fuel_model.dart';
 import 'package:fuel_pro_360/features/record_indent/data/models/indent_booklet_model.dart';
 import 'package:fuel_pro_360/features/record_indent/data/models/indent_model.dart';
 import 'package:fuel_pro_360/features/record_indent/data/models/vehicle_model.dart';
-import 'package:fuel_pro_360/features/shift_management/data/models/staff_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RecordIndentDataSource {
@@ -145,16 +145,16 @@ class RecordIndentDataSource {
     }
   }
 
-  Future<List<StaffModel>> getStaffs({required String fuelPumpId}) async {
+  Future<List<ActiveStaffModel>> getActiveStaffs(
+      {required String fuelPumpId}) async {
     try {
-      var response = await client
-          .from('staff')
-          .select("id,name")
-          .eq('fuel_pump_id', fuelPumpId)
-          .order('name', ascending: false);
-
+      var response =
+          await client.rpc("get_staff_with_active_shifts_and_pumps", params: {
+        'pump_id_param': fuelPumpId,
+      });
+      print("Response from getActiveStaffs: $response");
       return (response as List)
-          .map((item) => StaffModel.fromJson(item))
+          .map((item) => ActiveStaffModel.fromJson(item))
           .toList();
     } catch (e) {
       throw Exception("Failed to fetch Staffs");

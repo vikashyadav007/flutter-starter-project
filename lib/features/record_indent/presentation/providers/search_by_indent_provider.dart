@@ -10,6 +10,7 @@ import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_indent_
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/verify_customer_indent_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
 import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
+import 'package:fuel_pro_360/shared/utils/utils.dart';
 
 part 'search_by_indent_provider.freezed.dart';
 
@@ -96,8 +97,10 @@ class SearchByIndentNotifier
 
     bool flag = false;
     for (IndentBookletEntity booklet in booklets) {
-      if (int.parse(indentNumber) >= int.parse(booklet.startNumber ?? "0") &&
-          int.parse(indentNumber) <= int.parse(booklet.endNumber ?? "0")) {
+      if (isInRange(
+          value: indentNumber,
+          start: booklet.startNumber ?? "0",
+          end: booklet.endNumber ?? "0")) {
         indentBookletEntity = booklet;
         flag = true;
         break;

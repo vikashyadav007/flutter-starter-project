@@ -8,7 +8,6 @@ import 'package:fuel_pro_360/features/draft_indents/presentation/widgets/payment
 import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
 import 'package:fuel_pro_360/features/shift_management/presentation/widgets/staff_dropdown.dart';
 import 'package:fuel_pro_360/shared/constants/app_constants.dart';
-import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
 import 'package:fuel_pro_360/shared/widgets/custom_text_field.dart';
 import 'package:fuel_pro_360/shared/widgets/text_field_label.dart';
 import 'package:fuel_pro_360/shared/widgets/title_header.dart';

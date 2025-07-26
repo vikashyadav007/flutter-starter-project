@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/staff_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
-import 'package:fuel_pro_360/shared/widgets/custom_dropdown.dart';
-import 'package:fuel_pro_360/shared/widgets/text_field_label.dart';
+import 'package:fuel_pro_360/shared/widgets/staff_dropdown_base.dart';
 
 class StaffDropdown extends ConsumerWidget {
   String label;
@@ -18,23 +17,14 @@ class StaffDropdown extends ConsumerWidget {
 
     return staffProvider.when(
       data: (staffList) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFieldLabel(label: label),
-            customDropdown(
-              key: _dropdownKey,
-              value: selectedStaff.state,
-              context: context,
-              dropdownList: staffList,
-              isRequired: true,
-              type: 'Staff',
-              hintText: 'Select Staff',
-              onChanged: (p0) {
-                selectedStaff.state = p0 as StaffEntity;
-              },
-            ),
-          ],
+        return StaffDropdownBase(
+          label: label,
+          dropdownKey: _dropdownKey,
+          selectedStaff: selectedStaff.state,
+          staffList: staffList,
+          onChanged: (p0) {
+            selectedStaff.state = p0 as StaffEntity;
+          },
         );
       },
       error: (error, stackTrace) {
