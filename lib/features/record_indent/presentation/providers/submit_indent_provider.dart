@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:fuel_pro_360/features/customers/domain/entity/customer_entity.dart';
@@ -14,7 +13,6 @@ import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_custome
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/upload_meter_reading_image_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/create_indent_success_popup.dart';
-import 'package:fuel_pro_360/features/shift_management/domain/entity/staff_entity.dart';
 import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 import 'package:uuid/uuid.dart';
 

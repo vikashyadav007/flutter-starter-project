@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/vehicle_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/add_new_vehicle_popup.dart';
 import 'package:fuel_pro_360/shared/widgets/custom_dropdown.dart';
 import 'package:fuel_pro_360/shared/widgets/text_field_label.dart';
 
@@ -36,6 +37,29 @@ class VehicleDropdown extends ConsumerWidget {
                 ref.read(selectedCustomerVehicleProvider.notifier).state =
                     p0 as VehicleEntity?;
               },
+              extraItemToList: Container(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                decoration: BoxDecoration(
+                  border: Border(top: BorderSide(color: Colors.grey.shade300)),
+                ),
+                child: Center(
+                  child: TextButton.icon(
+                    onPressed: () {
+                      addNewVehiclePopup();
+                    },
+                    icon: Icon(
+                      Icons.add,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    label: Text(
+                      "Add New Vehicle",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         );

@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   bool enabled;
   int? minLines;
   int? maxLines;
+  TextCapitalization textCapitalization;
 
   CustomTextField({
     Key? key,
@@ -23,6 +24,7 @@ class CustomTextField extends StatelessWidget {
     this.enabled = true,
     this.minLines = 1,
     this.maxLines = 1,
+    this.textCapitalization = TextCapitalization.none,
   });
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,7 @@ class CustomTextField extends StatelessWidget {
       obscureText: obscureText,
       minLines: minLines,
       maxLines: maxLines,
+      textCapitalization: textCapitalization,
       decoration: InputDecoration(
         hintText: hintText,
         contentPadding: EdgeInsets.symmetric(horizontal: 10),

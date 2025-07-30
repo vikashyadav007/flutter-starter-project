@@ -37,4 +37,7 @@ abstract class RecordIndentRepository {
       {required String fuelPumpId});
 
   Future<Either<Failure, String>> uploadMeterReadingImage({required File file});
+
+  Future<Either<Failure, VehicleEntity>> addNewVehicle(
+      {required Map<String, dynamic> body});
 }

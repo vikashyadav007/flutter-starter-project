@@ -160,4 +160,15 @@ class RecordIndentRepositoryImpl extends RecordIndentRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
+
+  @override
+  Future<Either<Failure, VehicleEntity>> addNewVehicle(
+      {required Map<String, dynamic> body}) async {
+    try {
+      final vehicle = await _recordIndentDataSource.addNewVehicle(body: body);
+      return Right(vehicle.toEntity());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
 }

@@ -181,3 +181,7 @@ final activeStaffProvider =
 
 final selectedActiveStaffProvider =
     StateProvider<ActiveStaffEntity?>((ref) => null);
+
+final vehicleNumberProvider = StateProvider<String>((ref) => "");
+final vehicleTypeProvider = StateProvider<String>((ref) => "Truck");
+final capacityProvider = StateProvider<String>((ref) => "");

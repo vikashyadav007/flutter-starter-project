@@ -21,6 +21,7 @@ Widget customDropdown<T>({
   double horizontalPadding = 5,
   double maxHeight = 50,
   required BuildContext context,
+  Widget? extraItemToList,
 }) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -46,24 +47,31 @@ Widget customDropdown<T>({
           hintText ?? 'Select',
           style: TextStyle(fontSize: fontSize, color: UiColors.gray),
         ),
-        items: dropdownList
-            .map((item) => DropdownMenuItem<T>(
-                  value: item,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.75,
-                    ),
-                    child: Text(
-                      item.toString(),
-                      maxLines: 2,
-                      style: TextStyle(
-                        fontSize: fontSize,
-                        color: UiColors.black,
+        items: [
+          ...dropdownList
+              .map((item) => DropdownMenuItem<T>(
+                    value: item,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.75,
+                      ),
+                      child: Text(
+                        item.toString(),
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          color: UiColors.black,
+                        ),
                       ),
                     ),
-                  ),
-                ))
-            .toList(),
+                  ))
+              .toList(),
+          if (extraItemToList != null)
+            DropdownMenuItem<T>(
+              enabled: false,
+              child: extraItemToList,
+            ),
+        ],
         validator: (value) {
           if (value == null) {
             return 'Please select a $type.';

@@ -216,4 +216,17 @@ class RecordIndentDataSource {
       throw Exception("Failed to upload meter reading image");
     }
   }
+
+  Future<VehicleModel> addNewVehicle(
+      {required Map<String, dynamic> body}) async {
+    try {
+      print("add new vehicle body: $body");
+      var response = await client.from('vehicles').insert(body).select("*");
+
+      return VehicleModel.fromJson(response as Map<String, dynamic>);
+    } catch (e) {
+      print("error in adding new vehicle: $e");
+      throw Exception("Failed to Add New Vehicle");
+    }
+  }
 }
