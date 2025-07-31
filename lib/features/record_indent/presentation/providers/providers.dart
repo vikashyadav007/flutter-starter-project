@@ -9,6 +9,7 @@ import 'package:fuel_pro_360/features/record_indent/domain/entity/fuel_entity.da
 import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_booklet_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/vehicle_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/repositories/record_indent_repository.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/add_new_vehicle_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/create_indent_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_all_customer_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_customer_indent_booklet_usecase.dart';
@@ -185,3 +186,8 @@ final selectedActiveStaffProvider =
 final vehicleNumberProvider = StateProvider<String>((ref) => "");
 final vehicleTypeProvider = StateProvider<String>((ref) => "Truck");
 final capacityProvider = StateProvider<String>((ref) => "");
+
+final addNewVehicleUsecaseProvider = Provider<AddNewVehicleUsecase>((ref) {
+  final recordIndentRepository = ref.watch(RecordsProvider);
+  return AddNewVehicleUsecase(recordIndentRepository);
+});

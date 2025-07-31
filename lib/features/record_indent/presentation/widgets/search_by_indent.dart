@@ -4,6 +4,7 @@ import 'package:fuel_pro_360/features/record_indent/presentation/pages/search_by
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/search_by_customer_provider.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/search_by_indent_provider.dart';
+import 'package:fuel_pro_360/shared/utils/uppercase_formatter.dart';
 import 'package:fuel_pro_360/shared/widgets/custom_text_field.dart';
 import 'package:fuel_pro_360/shared/widgets/text_field_label.dart';
 import 'package:fuel_pro_360/utils/validators.dart';
@@ -48,6 +49,9 @@ class SearchByIndent extends ConsumerWidget {
                   validator: Validators.validatePassword,
                   keyboardType: TextInputType.text,
                   enabled: indentNumberVerified == false,
+                  inputFormatters: [
+                    UpperCaseTextFormatter(),
+                  ],
                   onChanged: (value) {
                     ref.read(indentNumberVerifiedProvider.notifier).state =
                         false;

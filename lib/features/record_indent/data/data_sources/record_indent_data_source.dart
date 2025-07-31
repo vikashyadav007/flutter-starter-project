@@ -20,6 +20,7 @@ class RecordIndentDataSource {
           .select("id,customer_id,number,type,capacity,created_at,fuel_pump_id")
           .eq("customer_id", customerId)
           .eq('fuel_pump_id', fuelPumpId);
+      print("customer vehicles response: $response");
       return (response as List)
           .map((item) => VehicleModel.fromJson(item))
           .toList();
@@ -221,7 +222,10 @@ class RecordIndentDataSource {
       {required Map<String, dynamic> body}) async {
     try {
       print("add new vehicle body: $body");
-      var response = await client.from('vehicles').insert(body).select("*");
+      var response =
+          await client.from('vehicles').insert(body).select("*").single();
+
+      print("add new vehicle response: $response");
 
       return VehicleModel.fromJson(response as Map<String, dynamic>);
     } catch (e) {

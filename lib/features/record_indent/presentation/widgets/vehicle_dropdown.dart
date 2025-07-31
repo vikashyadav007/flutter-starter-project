@@ -45,6 +45,7 @@ class VehicleDropdown extends ConsumerWidget {
                 child: Center(
                   child: TextButton.icon(
                     onPressed: () {
+                      Navigator.of(context).pop();
                       addNewVehiclePopup();
                     },
                     icon: Icon(

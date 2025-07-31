@@ -6,6 +6,7 @@ Future<void> customPopup({
   required BuildContext context,
   required Widget childWidget,
   bool barrierDismissible = true,
+  bool childIsScrollable = false,
   VoidCallback? onBarrierDismiss,
 }) async {
   await showDialog(
@@ -23,7 +24,11 @@ Future<void> customPopup({
           },
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: childIsScrollable
+                  ? EdgeInsets.symmetric(horizontal: 20).copyWith(
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                    )
+                  : EdgeInsets.symmetric(horizontal: 20),
               child: GestureDetector(
                 onTap: () {}, // Prevent tap-through
                 child: ClipRRect(
@@ -32,11 +37,15 @@ Future<void> customPopup({
                     filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                     child: Material(
                       color: Colors.white,
-                      child: IntrinsicWidth(
-                        child: IntrinsicHeight(
-                          child: childWidget,
-                        ),
-                      ),
+                      child: childIsScrollable
+                          ? SingleChildScrollView(
+                              child: childWidget,
+                            )
+                          : IntrinsicWidth(
+                              child: IntrinsicHeight(
+                                child: childWidget,
+                              ),
+                            ),
                     ),
                   ),
                 ),

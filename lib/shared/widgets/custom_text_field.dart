@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -12,6 +13,7 @@ class CustomTextField extends StatelessWidget {
   int? minLines;
   int? maxLines;
   TextCapitalization textCapitalization;
+  List<TextInputFormatter> inputFormatters;
 
   CustomTextField({
     Key? key,
@@ -25,6 +27,7 @@ class CustomTextField extends StatelessWidget {
     this.minLines = 1,
     this.maxLines = 1,
     this.textCapitalization = TextCapitalization.none,
+    this.inputFormatters = const [],
   });
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,9 @@ class CustomTextField extends StatelessWidget {
       minLines: minLines,
       maxLines: maxLines,
       textCapitalization: textCapitalization,
+      inputFormatters: [
+        ...inputFormatters,
+      ],
       decoration: InputDecoration(
         hintText: hintText,
         contentPadding: EdgeInsets.symmetric(horizontal: 10),

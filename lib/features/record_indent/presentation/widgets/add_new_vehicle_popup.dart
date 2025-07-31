@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fuel_pro_360/core/routing/app_router.dart';
 import 'package:fuel_pro_360/features/draft_indents/presentation/providers/complete_draft_provider.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/providers/add_new_vehicle_provider.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
+import 'package:fuel_pro_360/shared/utils/uppercase_formatter.dart';
 import 'package:fuel_pro_360/shared/widgets/custom_popup.dart';
 import 'package:fuel_pro_360/shared/widgets/custom_text_field.dart';
 import 'package:fuel_pro_360/shared/widgets/text_field_label.dart';
@@ -15,6 +17,7 @@ void addNewVehiclePopup() {
 
   customPopup(
     context: navigatorKey!.currentState!.context,
+    childIsScrollable: true,
     childWidget: Consumer(builder: (context, ref, child) {
       return Container(
         padding: EdgeInsets.all(20),
@@ -76,6 +79,9 @@ void addNewVehiclePopup() {
                   controller: vehicleNumberController,
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.words,
+                  inputFormatters: [
+                    UpperCaseTextFormatter(),
+                  ],
                   onChanged: (value) => {
                     ref.read(vehicleNumberProvider.notifier).state = value,
                   },
@@ -166,7 +172,7 @@ void addNewVehiclePopup() {
                   return SizedBox(
                     height: 48,
                     child: Consumer(builder: (context, ref, child) {
-                      final submitState = ref.watch(completeDraftProvider);
+                      final submitState = ref.watch(AddNewVehicleProvider);
 
                       return submitState.maybeWhen(
                         orElse: () => ElevatedButton(
@@ -181,8 +187,11 @@ void addNewVehiclePopup() {
                               ? null
                               : () {
                                   ref
-                                      .read(completeDraftProvider.notifier)
-                                      .submitDraft();
+                                      .read(AddNewVehicleProvider.notifier)
+                                      .addNewVehicle();
+
+                                  // ref.invalidate(customerVehicleListProvider);
+                                  Navigator.of(context).pop();
                                 },
                           child: const Row(
                             children: [
