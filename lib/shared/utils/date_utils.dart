@@ -12,6 +12,35 @@ String formatDate(
   return DateFormat(dateFormat).format(dateTime);
 }
 
+String formatDateWithOrdinal(DateTime date) {
+  // Get month and day parts
+  final month = DateFormat.MMMM().format(date); // "August"
+  final day = date.day;
+  final year = date.year;
+
+  // Compute ordinal suffix
+  String suffix;
+  if (day >= 11 && day <= 13) {
+    suffix = 'th';
+  } else {
+    switch (day % 10) {
+      case 1:
+        suffix = 'st';
+        break;
+      case 2:
+        suffix = 'nd';
+        break;
+      case 3:
+        suffix = 'rd';
+        break;
+      default:
+        suffix = 'th';
+    }
+  }
+
+  return '$month $day$suffix, $year';
+}
+
 bool isSameDay(DateTime? date1, DateTime? date2) {
   return date1 != null &&
       date2 != null &&

@@ -45,22 +45,28 @@ final submitIndentProvider =
   final amount = ref.watch(amountProvider);
   final indentNumber = ref.watch(indentNumberProvider);
 
+  final indentDate = ref.watch(indentDateProvider);
+  final billNumber = ref.watch(indentNumberProvider);
+
   final selectedStaff = ref.watch(selectedActiveStaffProvider);
 
   return SubmitIndentNotifier(
-      selectedFuelPump: selectedPump,
-      selectedCustomer: selectedCustomer,
-      selectedVehicle: selectedVehicle,
-      selectedFuelType: selectedFuelType,
-      selectedIndentBooklet: selectedIndentBooklet,
-      createIndentUsecase: createIndentUsecase,
-      getCustomerIndentUsecase: getCustomerIndentUsecase,
-      uploadMeterReadingImageUsecase: uploadMeterReadingImageUsecase,
-      meterReadingImage: meterReadingImage,
-      quantity: quantity,
-      amount: amount,
-      indentNumber: indentNumber,
-      selectedStaff: selectedStaff);
+    selectedFuelPump: selectedPump,
+    selectedCustomer: selectedCustomer,
+    selectedVehicle: selectedVehicle,
+    selectedFuelType: selectedFuelType,
+    selectedIndentBooklet: selectedIndentBooklet,
+    createIndentUsecase: createIndentUsecase,
+    getCustomerIndentUsecase: getCustomerIndentUsecase,
+    uploadMeterReadingImageUsecase: uploadMeterReadingImageUsecase,
+    meterReadingImage: meterReadingImage,
+    quantity: quantity,
+    amount: amount,
+    indentNumber: indentNumber,
+    selectedStaff: selectedStaff,
+    indentDate: indentDate,
+    billNumber: billNumber,
+  );
 });
 
 class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
@@ -77,6 +83,9 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
   final String amount;
   final String indentNumber;
 
+  final DateTime indentDate;
+  final String billNumber;
+
   SubmitIndentNotifier({
     required this.selectedFuelPump,
     required this.selectedCustomer,
@@ -91,6 +100,8 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
     required this.amount,
     required this.indentNumber,
     required this.selectedStaff,
+    required this.indentDate,
+    required this.billNumber,
   }) : super(const SubmitIndentState.initial());
 
   ActiveStaffEntity? selectedStaff;
@@ -133,13 +144,14 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
       "discount_amount": 0,
       "indent_number": indentNumber,
       "booklet_id": selectedIndentBooklet?.id ?? "",
-      "date": DateTime.now().toIso8601String(),
       "status": "Pending Approval",
       "approval_status": "pending",
       "source": "mobile",
       "fuel_pump_id": selectedFuelPump?.id ?? "",
       "created_by_staff_id": selectedStaff?.staffId ?? "",
-      if (publicImageUrl.isNotEmpty) "meter_reading_image": publicImageUrl
+      "date": indentDate.toIso8601String(),
+      if (publicImageUrl.isNotEmpty) "meter_reading_image": publicImageUrl,
+      if (billNumber.isNotEmpty) "bill_number": billNumber,
     };
 
     var result = await createIndentUsecase.execute(body: body);

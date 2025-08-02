@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
-import 'package:fuel_pro_360/features/record_indent/presentation/providers/search_by_customer_provider.dart';
-import 'package:fuel_pro_360/features/record_indent/presentation/providers/search_by_indent_provider.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/submit_indent_provider.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/active_staff_dropdown.dart';
-import 'package:fuel_pro_360/features/record_indent/presentation/widgets/create_indent_success_popup.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/bill_number_container.dart';
+import 'package:fuel_pro_360/features/record_indent/presentation/widgets/indent_date_container.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/meter_reading_image.dart';
-import 'package:fuel_pro_360/features/record_indent/presentation/widgets/search_by_indent.dart';
 import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
 
 class RecordIndentBottom extends ConsumerWidget {
-  int source = 0; // 0 for search by customer, 1 for search by indent
+  int source = 0;
   RecordIndentBottom({
     super.key,
   });
@@ -21,7 +19,11 @@ class RecordIndentBottom extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        IndentDateContainer(),
+        const SizedBox(height: 20),
         ActiveStaffDropdown(),
+        const SizedBox(height: 20),
+        BillNumberContainer(),
         const SizedBox(height: 20),
         MeterReadingImage(),
         const SizedBox(height: 20),

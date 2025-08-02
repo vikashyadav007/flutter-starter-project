@@ -191,3 +191,7 @@ final addNewVehicleUsecaseProvider = Provider<AddNewVehicleUsecase>((ref) {
   final recordIndentRepository = ref.watch(RecordsProvider);
   return AddNewVehicleUsecase(recordIndentRepository);
 });
+
+final billNumberProvider = StateProvider<String>((ref) => "");
+
+final indentDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
