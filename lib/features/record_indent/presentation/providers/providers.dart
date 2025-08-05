@@ -20,7 +20,6 @@ import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_indent_
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_active_staffs_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/upload_meter_reading_image_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/verify_customer_indent_usecase.dart';
-import 'package:fuel_pro_360/features/shift_management/domain/entity/staff_entity.dart';
 import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 
 final RecordsProvider = Provider<RecordIndentRepository>((ref) {

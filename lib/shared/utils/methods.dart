@@ -21,6 +21,11 @@ void invalidateRecordIndentProviders({required WidgetRef ref}) {
   ref.invalidate(quantityProvider);
   ref.invalidate(meterReadingImageProvider);
   ref.invalidate(indentNumberVerifiedProvider);
+  ref.invalidate(selectedStaffProvider);
+  ref.invalidate(indentDateProvider);
+  ref.invalidate(billNumberProvider);
+  ref.invalidate(meterReadingImageProvider);
+  ref.invalidate(selectedConsumableProvider);
 }
 
 void invalidateActiveShifts({required WidgetRef ref}) {

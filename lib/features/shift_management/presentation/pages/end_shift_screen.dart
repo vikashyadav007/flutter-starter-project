@@ -51,7 +51,7 @@ class EndShiftScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedShift = ref.watch(selectedShiftProvider);
-    ref.watch(transactionsProvider);
+    ref.watch(totalIndentSalesProvider);
     final fuelTpyeProvider = ref.watch(fuelTypesProvider);
 
     return PopScope(

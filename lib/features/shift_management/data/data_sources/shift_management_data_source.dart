@@ -1,3 +1,4 @@
+import 'package:fuel_pro_360/features/record_indent/data/models/indent_model.dart';
 import 'package:fuel_pro_360/features/shift_management/data/models/consumables_model.dart';
 import 'package:fuel_pro_360/features/shift_management/data/models/pump_setting_model.dart';
 import 'package:fuel_pro_360/features/shift_management/data/models/reading_model.dart';
@@ -176,16 +177,14 @@ class ShiftManagementDataSource {
   }
 
   Future<List<TransactionModel>> getTransactions({
-    required String staffId,
-    required String createdAt,
+    required String shiftId,
   }) async {
     try {
       var query = client
           .from('transactions')
-          .select('amount')
-          .eq('staff_id', staffId)
-          .gte('created_at', createdAt)
-          .lte('created_at', DateTime.now().toIso8601String());
+          .select('amount,payment_method')
+          .eq('shift_id', shiftId)
+          .eq('approval_status', 'approved');
 
       var response = await query;
       print("Response from getTransactions: $response");
@@ -195,6 +194,28 @@ class ShiftManagementDataSource {
     } catch (e) {
       print('Error fetching Transactions: $e');
       throw Exception("Failed to fetch transactions: $e");
+    }
+  }
+
+  Future<List<IndentModel>> getIndentSales({
+    required String shiftId,
+  }) async {
+    try {
+      var query = client
+          .from('indents')
+          .select('amount')
+          .eq("shift_id", shiftId)
+          .eq("approval_status", "approved")
+          .eq("status", "Fulfilled");
+
+      var response = await query;
+      print("Response from getIndentSales:: $response");
+      return (response as List)
+          .map((item) => IndentModel.fromJson(item))
+          .toList();
+    } catch (e) {
+      print('Error fetching indent sales: $e');
+      throw Exception("Failed to fetch indent sales: $e");
     }
   }
 

@@ -10,6 +10,7 @@ abstract class TransactionModel with _$TransactionModel {
   const TransactionModel._();
   const factory TransactionModel({
     @JsonKey(name: "amount") double? amount,
+    @JsonKey(name: "payment_method") String? paymentMethod,
   }) = _TransactionModel;
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) =>
@@ -18,6 +19,7 @@ abstract class TransactionModel with _$TransactionModel {
   TransactionEntity toEntity() {
     return TransactionEntity(
       amount: amount,
+      paymentMethod: paymentMethod,
     );
   }
 }

@@ -9,10 +9,10 @@ class GetTransactionsUsecase {
   GetTransactionsUsecase(this._repository);
 
   Future<Either<Failure, List<TransactionEntity>>> execute({
-    required String staffId,
-    required String createdAt,
+    required String shiftId,
   }) async {
     return await _repository.getTransactions(
-        staffId: staffId, createdAt: createdAt);
+      shiftId: shiftId,
+    );
   }
 }

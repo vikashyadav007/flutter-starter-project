@@ -7,6 +7,7 @@ import 'package:fuel_pro_360/features/record_indent/presentation/widgets/bill_nu
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/indent_date_container.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/meter_reading_image.dart';
 import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
+import 'package:fuel_pro_360/shared/widgets/consumables_listings.dart';
 
 class RecordIndentBottom extends ConsumerWidget {
   int source = 0;
@@ -24,6 +25,8 @@ class RecordIndentBottom extends ConsumerWidget {
         ActiveStaffDropdown(),
         const SizedBox(height: 20),
         BillNumberContainer(),
+        const SizedBox(height: 20),
+        ConsumablesListings(),
         const SizedBox(height: 20),
         MeterReadingImage(),
         const SizedBox(height: 20),

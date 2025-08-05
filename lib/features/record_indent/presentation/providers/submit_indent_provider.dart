@@ -13,6 +13,7 @@ import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_custome
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/upload_meter_reading_image_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/create_indent_success_popup.dart';
+import 'package:fuel_pro_360/shared/providers/providers.dart';
 import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 import 'package:uuid/uuid.dart';
 
@@ -50,6 +51,8 @@ final submitIndentProvider =
 
   final selectedStaff = ref.watch(selectedActiveStaffProvider);
 
+  final totalConsumablesCost = ref.watch(totalConsumablesCostProvider);
+
   return SubmitIndentNotifier(
     selectedFuelPump: selectedPump,
     selectedCustomer: selectedCustomer,
@@ -66,6 +69,7 @@ final submitIndentProvider =
     selectedStaff: selectedStaff,
     indentDate: indentDate,
     billNumber: billNumber,
+    totalConsumablesCost: totalConsumablesCost,
   );
 });
 
@@ -86,6 +90,8 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
   final DateTime indentDate;
   final String billNumber;
 
+  final double totalConsumablesCost;
+
   SubmitIndentNotifier({
     required this.selectedFuelPump,
     required this.selectedCustomer,
@@ -102,6 +108,7 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
     required this.selectedStaff,
     required this.indentDate,
     required this.billNumber,
+    required this.totalConsumablesCost,
   }) : super(const SubmitIndentState.initial());
 
   ActiveStaffEntity? selectedStaff;
@@ -150,6 +157,7 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
       "fuel_pump_id": selectedFuelPump?.id ?? "",
       "created_by_staff_id": selectedStaff?.staffId ?? "",
       "date": indentDate.toIso8601String(),
+      "consumables_amount": totalConsumablesCost.toString(),
       if (publicImageUrl.isNotEmpty) "meter_reading_image": publicImageUrl,
       if (billNumber.isNotEmpty) "bill_number": billNumber,
     };

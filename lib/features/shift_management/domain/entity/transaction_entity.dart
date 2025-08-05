@@ -7,5 +7,6 @@ part 'transaction_entity.freezed.dart';
 class TransactionEntity with _$TransactionEntity {
   const factory TransactionEntity({
     double? amount,
+    String? paymentMethod,
   }) = _TransactionEntity;
 }

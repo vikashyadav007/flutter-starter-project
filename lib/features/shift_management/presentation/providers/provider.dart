@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/fuel_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/data/data_sources/shift_management_data_source.dart';
 import 'package:fuel_pro_360/features/shift_management/data/respositories/shift_management_respository_impl.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_cart.dart';
@@ -20,6 +21,7 @@ import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_s
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_shift_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_active_shifts_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_consumables_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_indent_sales_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_pump_settings_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_readings_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_shifts_consumables_usecase.dart';
@@ -290,29 +292,66 @@ final getTransactionsUsecaseProvider = Provider<GetTransactionsUsecase>((ref) {
   return GetTransactionsUsecase(shiftManagementRepository);
 });
 
-final transactionsProvider =
-    FutureProvider<List<TransactionEntity>>((ref) async {
+final shiftTransactionsProvider = FutureProvider<double>((ref) async {
   final getTransactionsUsecase = ref.watch(getTransactionsUsecaseProvider);
   final shiftEntity = ref.watch(selectedShiftProvider);
   if (shiftEntity?.id == null) {
-    return [];
+    return 0.0;
   }
   final result = await getTransactionsUsecase.execute(
-      staffId: shiftEntity!.staff?.id ?? "",
-      createdAt: shiftEntity.startTime?.toIso8601String() ?? "");
+    shiftId: shiftEntity?.id ?? "",
+  );
   return result.fold(
     (failure) => throw Exception(failure.message),
     (transactions) {
       double total = 0;
       for (TransactionEntity transaction in transactions) {
-        if (transaction.amount != null) {
+        if (transaction.amount != null &&
+            transaction.paymentMethod == "indent") {
           total += transaction.amount!;
         }
       }
-      ref.read(indentSalesProvider.notifier).state = total.toStringAsFixed(2);
-      return transactions;
+      return total;
     },
   );
+});
+
+final indentSalesUsecaseProvider = Provider<GetIndentSalesUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return GetIndentSalesUsecase(shiftManagementRepository);
+});
+
+final shiftIndentSalesProvider = FutureProvider<double>((ref) async {
+  final getIndentSalesUsecase = ref.watch(indentSalesUsecaseProvider);
+  final shiftEntity = ref.watch(selectedShiftProvider);
+  if (shiftEntity?.id == null) {
+    return 0.0;
+  }
+  final result = await getIndentSalesUsecase.execute(
+    shiftId: shiftEntity!.id!,
+  );
+  return result.fold(
+    (failure) => throw Exception(failure.message),
+    (indents) {
+      double total = 0;
+      for (IndentEntity indent in indents) {
+        if (indent.amount != null) {
+          total += indent.amount!;
+        }
+      }
+      return total;
+    },
+  );
+});
+
+//It will be sum of transactionsProvide and indentSalesProvider
+final totalIndentSalesProvider = FutureProvider<double>((ref) async {
+  final transactions = await ref.watch(shiftTransactionsProvider.future);
+  final indentSales = await ref.watch(shiftIndentSalesProvider.future);
+  final totalSales = transactions + indentSales;
+  ref.read(indentSalesProvider.notifier).state = totalSales.toStringAsFixed(2);
+  return totalSales;
 });
 
 final completeShiftUsecaseProvider = Provider<CompleteShiftUsecase>((ref) {

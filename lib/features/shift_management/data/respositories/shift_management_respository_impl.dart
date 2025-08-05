@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:fuel_pro_360/core/api/error_handler.dart';
 import 'package:fuel_pro_360/core/api/failure.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/data/data_sources/shift_management_data_source.dart';
 import 'package:fuel_pro_360/features/shift_management/data/models/reading_model.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_entity.dart';
@@ -138,13 +139,24 @@ class ShiftManagementRespositoryImpl extends ShiftManagementRepository {
 
   @override
   Future<Either<Failure, List<TransactionEntity>>> getTransactions(
-      {required String staffId, required String createdAt}) async {
+      {required String shiftId}) async {
     try {
       final staffs = await _shiftManagementDataSource.getTransactions(
-        staffId: staffId,
-        createdAt: createdAt,
+        shiftId: shiftId,
       );
       return Right(staffs.map<TransactionEntity>((e) => e.toEntity()).toList());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<IndentEntity>>> getIndentSales(
+      {required String shiftId}) async {
+    try {
+      final staffs =
+          await _shiftManagementDataSource.getIndentSales(shiftId: shiftId);
+      return Right(staffs.map<IndentEntity>((e) => e.toEntity()).toList());
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }
