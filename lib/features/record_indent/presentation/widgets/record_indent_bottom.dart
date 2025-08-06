@@ -50,6 +50,8 @@ class RecordIndentBottom extends ConsumerWidget {
           final amount = ref.watch(amountProvider);
           final quantity = ref.watch(quantityProvider);
           bool isIndentNumberVerified = ref.watch(indentNumberVerifiedProvider);
+          bool noIndentCheckbox = ref.watch(noIndentCheckboxProvider);
+          final selectedStaff = ref.watch(selectedActiveStaffProvider);
 
           return SizedBox(
             width: double.infinity,
@@ -63,11 +65,13 @@ class RecordIndentBottom extends ConsumerWidget {
               ),
               onPressed: selectedCustomer == null ||
                       selectedVehicle == null ||
-                      selectedIndentBooket == null ||
                       selectedFuelType == null ||
                       amount.isEmpty ||
                       quantity.isEmpty ||
-                      isIndentNumberVerified == false
+                      selectedStaff == null ||
+                      (!noIndentCheckbox &&
+                          (selectedIndentBooket == null ||
+                              isIndentNumberVerified == false))
                   ? null
                   : () async {
                       ref.read(submitIndentProvider.notifier).submitIndent();

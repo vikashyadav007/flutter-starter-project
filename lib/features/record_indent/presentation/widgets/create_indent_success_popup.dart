@@ -18,6 +18,7 @@ void createIndentSuccessPopup() {
       final selectedFuel = ref.watch(selectedFuelProvider);
       final amount = ref.watch(amountProvider);
       final quantity = ref.watch(quantityProvider);
+      final noIndentCheckbox = ref.watch(noIndentCheckboxProvider);
       return Container(
         padding: EdgeInsets.all(20),
         child: Column(
@@ -49,7 +50,8 @@ void createIndentSuccessPopup() {
                   fontWeight: FontWeight.w300),
             ),
             const SizedBox(height: 20),
-            PopupSuccessRow(label: 'Indent Number', value: indentNumber),
+            if (!noIndentCheckbox)
+              PopupSuccessRow(label: 'Indent Number', value: indentNumber),
             PopupSuccessRow(
               label: 'Customer',
               value: customer?.name ?? 'N/A',
@@ -70,7 +72,7 @@ void createIndentSuccessPopup() {
               label: 'Quantity',
               value: quantity.isNotEmpty ? '$quantity L' : 'N/A',
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             SizedBox(
               width: double.infinity,
               height: 48,

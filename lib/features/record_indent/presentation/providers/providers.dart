@@ -194,3 +194,5 @@ final addNewVehicleUsecaseProvider = Provider<AddNewVehicleUsecase>((ref) {
 final billNumberProvider = StateProvider<String>((ref) => "");
 
 final indentDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
+
+final noIndentCheckboxProvider = StateProvider<bool>((ref) => false);

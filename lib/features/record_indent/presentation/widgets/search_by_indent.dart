@@ -26,122 +26,128 @@ class SearchByIndent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const TextFieldLabel(
-          label: "Enter Indent Number",
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Consumer(builder: (context, ref, child) {
-              final indentNumber = ref.watch(indentNumberProvider);
-              indentNumberController.text = indentNumber;
-              final indentNumberVerified =
-                  ref.watch(indentNumberVerifiedProvider);
+    final noIndentCheckbox = ref.watch(noIndentCheckboxProvider);
 
-              return Expanded(
-                flex: 13,
-                child: CustomTextField(
-                  hintText: 'Enter indent number to search',
-                  controller: indentNumberController,
-                  validator: Validators.validatePassword,
-                  keyboardType: TextInputType.text,
-                  enabled: indentNumberVerified == false,
-                  inputFormatters: [
-                    UpperCaseTextFormatter(),
-                  ],
-                  onChanged: (value) {
-                    ref.read(indentNumberVerifiedProvider.notifier).state =
-                        false;
-                    ref.read(indentNumberProvider.notifier).state = value;
-                  },
-                ),
-              );
-            }),
-            const SizedBox(width: 10),
-            Consumer(builder: (context, ref, child) {
-              var searchByIndentState;
-              if (source == 0) {
-                searchByIndentState = ref.watch(searchByIndentProvider);
-              } else {
-                searchByIndentState = ref.watch(searchByCustomerProvider);
-              }
+    return noIndentCheckbox == false
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const TextFieldLabel(
+                label: "Enter Indent Number",
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Consumer(builder: (context, ref, child) {
+                    final indentNumber = ref.watch(indentNumberProvider);
+                    indentNumberController.text = indentNumber;
+                    final indentNumberVerified =
+                        ref.watch(indentNumberVerifiedProvider);
 
-              return Expanded(
-                flex: 7,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 5, vertical: 5),
-                    ),
-                    onPressed: () {
-                      onSearch(ref);
-                    },
-                    child: searchByIndentState.maybeWhen(
-                      orElse: () => const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.search,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            "Search",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                    return Expanded(
+                      flex: 13,
+                      child: CustomTextField(
+                        hintText: 'Enter indent number to search',
+                        controller: indentNumberController,
+                        validator: Validators.validatePassword,
+                        keyboardType: TextInputType.text,
+                        enabled: indentNumberVerified == false,
+                        inputFormatters: [
+                          UpperCaseTextFormatter(),
                         ],
+                        onChanged: (value) {
+                          ref
+                              .read(indentNumberVerifiedProvider.notifier)
+                              .state = false;
+                          ref.read(indentNumberProvider.notifier).state = value;
+                        },
                       ),
-                      loading: () => const SizedBox(
-                        height: 30,
-                        width: 30,
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
+                    );
+                  }),
+                  const SizedBox(width: 10),
+                  Consumer(builder: (context, ref, child) {
+                    var searchByIndentState;
+                    if (source == 0) {
+                      searchByIndentState = ref.watch(searchByIndentProvider);
+                    } else {
+                      searchByIndentState = ref.watch(searchByCustomerProvider);
+                    }
+
+                    return Expanded(
+                      flex: 7,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 5),
+                          ),
+                          onPressed: () {
+                            onSearch(ref);
+                          },
+                          child: searchByIndentState.maybeWhen(
+                            orElse: () => const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.search,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  "Search",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            loading: () => const SizedBox(
+                              height: 30,
+                              width: 30,
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
+                    );
+                  }),
+                ],
+              ),
+              Consumer(builder: (context, ref, child) {
+                var searchByIndentState;
+                if (source == 0) {
+                  searchByIndentState = ref.watch(searchByIndentProvider);
+                } else {
+                  searchByIndentState = ref.watch(searchByCustomerProvider);
+                }
+                return searchByIndentState.maybeWhen(
+                  orElse: () => const SizedBox.shrink(),
+                  error: (error) => Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      error.message,
+                      style: const TextStyle(color: Colors.red, fontSize: 14),
                     ),
                   ),
-                ),
-              );
-            }),
-          ],
-        ),
-        Consumer(builder: (context, ref, child) {
-          var searchByIndentState;
-          if (source == 0) {
-            searchByIndentState = ref.watch(searchByIndentProvider);
-          } else {
-            searchByIndentState = ref.watch(searchByCustomerProvider);
-          }
-          return searchByIndentState.maybeWhen(
-            orElse: () => const SizedBox.shrink(),
-            error: (error) => Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Text(
-                error.message,
-                style: const TextStyle(color: Colors.red, fontSize: 14),
-              ),
-            ),
-          );
-        }),
-      ],
-    );
+                );
+              }),
+            ],
+          )
+        : const SizedBox();
   }
 }

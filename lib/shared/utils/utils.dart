@@ -43,6 +43,8 @@ Future<XFile> compressAndGetImageFile(File file, String targetPath) async {
 // Helper: check if a string is numeric
 bool isNumeric(String s) => int.tryParse(s) != null;
 
+bool isPurelyAlpha(String s) => RegExp(r'^[A-Za-z]+$').hasMatch(s);
+
 // Helper: parse alphanumeric string into prefix and numeric suffix
 Map<String, dynamic>? parseAlphanumeric(String str) {
   final regex = RegExp(r'^([A-Za-z]*)(\d+)$');
@@ -51,14 +53,18 @@ Map<String, dynamic>? parseAlphanumeric(String str) {
     return {
       'prefix': match.group(1),
       'number': int.parse(match.group(2)!),
+      'numberStr': match.group(2),
     };
   }
   return null;
 }
 
-bool isInRange(
-    {required String value, required String start, required String end}) {
-  // Numeric comparison
+bool isInRange({
+  required String value,
+  required String start,
+  required String end,
+}) {
+  // Pure numeric comparison
   if (isNumeric(value) && isNumeric(start) && isNumeric(end)) {
     final val = int.parse(value);
     final startVal = int.parse(start);
@@ -73,14 +79,35 @@ bool isInRange(
 
   if (valueParts != null && startParts != null && endParts != null) {
     final prefix = valueParts['prefix'];
-    if (prefix == startParts['prefix'] && prefix == endParts['prefix']) {
+    final startPrefix = startParts['prefix'];
+    final endPrefix = endParts['prefix'];
+
+    if (prefix == startPrefix && prefix == endPrefix) {
       final valNum = valueParts['number'];
       final startNum = startParts['number'];
       final endNum = endParts['number'];
-      return valNum >= startNum && valNum <= endNum;
+
+      final valNumStr = valueParts['numberStr'];
+      final startNumStr = startParts['numberStr'];
+      final endNumStr = endParts['numberStr'];
+
+      // Require exact digit width match
+      if (valNumStr.length == startNumStr.length &&
+          valNumStr.length == endNumStr.length) {
+        return valNum >= startNum && valNum <= endNum;
+      } else {
+        return false; // mismatched digit length (e.g. ABC000540 in ABC0001–ABC0009)
+      }
+    } else {
+      return false; // prefix mismatch (e.g. ABC vs DEF)
     }
   }
 
-  // Fallback to lexicographic comparison
-  return value.compareTo(start) >= 0 && value.compareTo(end) <= 0;
+  // Optional: lexicographic fallback ONLY for purely alphabetic strings (e.g., AAA to CCC)
+  if (isPurelyAlpha(value) && isPurelyAlpha(start) && isPurelyAlpha(end)) {
+    return value.compareTo(start) >= 0 && value.compareTo(end) <= 0;
+  }
+
+  // Invalid or unsupported format — not in range
+  return false;
 }

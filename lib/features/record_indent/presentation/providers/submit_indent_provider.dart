@@ -53,6 +53,8 @@ final submitIndentProvider =
 
   final totalConsumablesCost = ref.watch(totalConsumablesCostProvider);
 
+  final noIndentCheckbox = ref.watch(noIndentCheckboxProvider);
+
   return SubmitIndentNotifier(
     selectedFuelPump: selectedPump,
     selectedCustomer: selectedCustomer,
@@ -70,6 +72,7 @@ final submitIndentProvider =
     indentDate: indentDate,
     billNumber: billNumber,
     totalConsumablesCost: totalConsumablesCost,
+    noIndentCheckbox: noIndentCheckbox,
   );
 });
 
@@ -91,7 +94,7 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
   final String billNumber;
 
   final double totalConsumablesCost;
-
+  final bool noIndentCheckbox;
   SubmitIndentNotifier({
     required this.selectedFuelPump,
     required this.selectedCustomer,
@@ -109,6 +112,7 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
     required this.indentDate,
     required this.billNumber,
     required this.totalConsumablesCost,
+    required this.noIndentCheckbox,
   }) : super(const SubmitIndentState.initial());
 
   ActiveStaffEntity? selectedStaff;
@@ -149,8 +153,8 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
       "amount": amount,
       "quantity": quantity,
       "discount_amount": 0,
-      "indent_number": indentNumber,
-      "booklet_id": selectedIndentBooklet?.id ?? "",
+      if (!noIndentCheckbox) "indent_number": indentNumber,
+      if (!noIndentCheckbox) "booklet_id": selectedIndentBooklet?.id ?? "",
       "status": "Pending Approval",
       "approval_status": "pending",
       "source": "mobile",
