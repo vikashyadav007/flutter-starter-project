@@ -8,11 +8,15 @@ import 'package:fuel_pro_360/features/record_indent/domain/entity/active_staff_e
 import 'package:fuel_pro_360/features/record_indent/domain/entity/fuel_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_booklet_entity.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/vehicle_entity.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/create_consumables_transactions_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/create_indent_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/get_customer_indent_booklet_usecase.dart';
+import 'package:fuel_pro_360/features/record_indent/domain/use_cases/update_consumables_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/use_cases/upload_meter_reading_image_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/providers/providers.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/create_indent_success_popup.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_cart.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
 import 'package:fuel_pro_360/shared/providers/providers.dart';
 import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 import 'package:uuid/uuid.dart';
@@ -37,6 +41,12 @@ final submitIndentProvider =
   final createIndentUsecase = ref.watch(createIndentUsecaseProvider);
   final getCustomerIndentUsecase = ref.watch(getCustomerIndentUsecaseProvider);
 
+  final createConsumablesTransactionsUsecase = ref.watch(
+    createConsumablesTransactionsUsecaseProvider,
+  );
+
+  final updateConsumablesUsecase = ref.watch(updateConsumablesUsecaseProvider);
+
   final uploadMeterReadingImageUsecase =
       ref.watch(uploadMeterReadingImageUsecaseProvider);
 
@@ -47,13 +57,15 @@ final submitIndentProvider =
   final indentNumber = ref.watch(indentNumberProvider);
 
   final indentDate = ref.watch(indentDateProvider);
-  final billNumber = ref.watch(indentNumberProvider);
+  final billNumber = ref.watch(billNumberProvider);
 
   final selectedStaff = ref.watch(selectedActiveStaffProvider);
 
   final totalConsumablesCost = ref.watch(totalConsumablesCostProvider);
 
   final noIndentCheckbox = ref.watch(noIndentCheckboxProvider);
+
+  final consumablesCart = ref.watch(consumablesCartProvider);
 
   return SubmitIndentNotifier(
     selectedFuelPump: selectedPump,
@@ -73,6 +85,9 @@ final submitIndentProvider =
     billNumber: billNumber,
     totalConsumablesCost: totalConsumablesCost,
     noIndentCheckbox: noIndentCheckbox,
+    createConsumablesTransactionsUsecase: createConsumablesTransactionsUsecase,
+    updateConsumablesUsecase: updateConsumablesUsecase,
+    consumablesCart: consumablesCart,
   );
 });
 
@@ -85,6 +100,10 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
   final CreateIndentUsecase createIndentUsecase;
   final GetCustomerIndentUsecase getCustomerIndentUsecase;
   final UploadMeterReadingImageUsecase uploadMeterReadingImageUsecase;
+  final CreateConsumablesTransactionsUsecase
+      createConsumablesTransactionsUsecase;
+
+  final UpdateConsumablesUsecase updateConsumablesUsecase;
   final File? meterReadingImage;
   final String quantity;
   final String amount;
@@ -95,6 +114,9 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
 
   final double totalConsumablesCost;
   final bool noIndentCheckbox;
+
+  final List<ConsumablesCart> consumablesCart;
+
   SubmitIndentNotifier({
     required this.selectedFuelPump,
     required this.selectedCustomer,
@@ -113,6 +135,9 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
     required this.billNumber,
     required this.totalConsumablesCost,
     required this.noIndentCheckbox,
+    required this.createConsumablesTransactionsUsecase,
+    required this.updateConsumablesUsecase,
+    required this.consumablesCart,
   }) : super(const SubmitIndentState.initial());
 
   ActiveStaffEntity? selectedStaff;
@@ -171,10 +196,36 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
       (failure) => state = SubmitIndentState.error(failure.message),
       (success) {
         state = SubmitIndentState.submitted(true);
+       
         createIndentSuccessPopup();
       },
     );
   }
+
+  // Future<void> processConsumables() async {
+
+  //   var consumablesInserts = consumablesCart.map((consumable) {
+  //     return {
+  //       "id": consumable.id,
+  //       "name": consumable.name,
+  //       "quantity": consumable.quantity,
+  //       "price": consumable.price,
+  //     };
+  //   }).toList();
+
+  //   for (var consumable in consumablesCart) {
+  //     final result = await updateConsumablesUsecase.execute(
+  //       body: consumable.toJson(),
+  //       consumableId: consumable.id,
+  //     );
+  //     result.fold(
+  //       (failure) => state = SubmitIndentState.error(failure.message),
+  //       (success) {
+  //         // Handle success
+  //       },
+  //     );
+  //   }
+  // }
 
   void reset() {
     state = const SubmitIndentState.initial();

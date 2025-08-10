@@ -35,6 +35,12 @@ class AmountQuantityRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedFuel = ref.watch(selectedFuelProvider);
+    final amount = ref.watch(amountProvider);
+    final quantity = ref.watch(quantityProvider);
+
+    // Keep controllers in sync with provider
+    amountController.text = amount;
+    quantityController.text = quantity;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

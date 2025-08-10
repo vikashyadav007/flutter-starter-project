@@ -40,4 +40,10 @@ abstract class RecordIndentRepository {
 
   Future<Either<Failure, VehicleEntity>> addNewVehicle(
       {required Map<String, dynamic> body});
+
+  Future<Either<Failure, void>> createTransactionConsumables(
+      {required List<Map<String, dynamic>> body});
+
+  Future<Either<Failure, void>> updateConsumables(
+      {required Map<String, dynamic> body, required String consumableId});
 }

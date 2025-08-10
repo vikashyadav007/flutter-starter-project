@@ -171,4 +171,27 @@ class RecordIndentRepositoryImpl extends RecordIndentRepository {
       return Left(ErrorHandler.handle(e).failure);
     }
   }
+
+  @override
+  Future<Either<Failure, void>> createTransactionConsumables(
+      {required List<Map<String, dynamic>> body}) async {
+    try {
+      return Right(await _recordIndentDataSource.createTransactionConsumables(
+          body: body));
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updateConsumables(
+      {required Map<String, dynamic> body,
+      required String consumableId}) async {
+    try {
+      return Right(await _recordIndentDataSource.updateConsumablesQuantity(
+          body: body, consumableId: consumableId));
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
 }

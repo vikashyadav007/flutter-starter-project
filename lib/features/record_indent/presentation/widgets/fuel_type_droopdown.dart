@@ -32,7 +32,8 @@ class FuelTypeDropdown extends ConsumerWidget {
                       type: 'Fuel Type',
                       hintText: 'Select Fuel Type',
                       onChanged: (p0) {
-                        print(p0);
+                        ref.read(quantityProvider.notifier).state = '';
+                        ref.read(amountProvider.notifier).state = '';
                         ref.read(selectedFuelProvider.notifier).state =
                             p0 as FuelEntity?;
                       },

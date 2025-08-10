@@ -234,28 +234,28 @@ class RecordIndentDataSource {
     }
   }
 
-  Future<VehicleModel> transaction_consumables(
-      {required Map<String, dynamic> body}) async {
+  Future<void> createTransactionConsumables(
+      {required List<Map<String, dynamic>> body}) async {
     try {
-      print("add new vehicle body: $body");
-      var response =
-          await client.from('vehicles').insert(body).select("*").single();
+      print("transaction_consumables body: $body");
+      var response = await client.from('transaction_consumables').insert(body);
 
-      print("add new vehicle response: $response");
+      print("transaction_consumables response: $response");
 
-      return VehicleModel.fromJson(response as Map<String, dynamic>);
+      return response;
     } catch (e) {
-      print("error in adding new vehicle: $e");
-      throw Exception("Failed to Add New Vehicle");
+      print("error in adding transaction consumables: $e");
+      throw Exception("Failed to Create a transaction consumable");
     }
   }
 
-  Future<void> update_consumables_quantity(
-      {required Map<String, dynamic> body, required int consumableId}) async {
+  Future<void> updateConsumablesQuantity(
+      {required Map<String, dynamic> body,
+      required String consumableId}) async {
     try {
       print("update_consumables_quantity body: $body");
       var response =
-          await client.from('consumables').insert(body).eq('id', consumableId);
+          await client.from('consumables').update(body).eq('id', consumableId);
 
       print("update_consumables_quantity response: $response");
 
