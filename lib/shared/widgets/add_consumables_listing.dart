@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_cart.dart';
 import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
 import 'package:fuel_pro_360/shared/constants/app_constants.dart';
 import 'package:fuel_pro_360/shared/providers/providers.dart';

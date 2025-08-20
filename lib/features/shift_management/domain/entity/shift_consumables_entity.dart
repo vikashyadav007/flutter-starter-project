@@ -9,9 +9,13 @@ part 'shift_consumables_entity.freezed.dart';
 class ShiftConsumablesEntity with _$ShiftConsumablesEntity {
   const factory ShiftConsumablesEntity({
     String? id,
+    String? shiftId,
     int? quantityAllocated,
     dynamic quantityReturned,
     String? consumableId,
     ConsumablesEntity? consumables,
+    String? status,
+    String? createdAt,
+    String? updatedAt,
   }) = _ShiftConsumablesEntity;
 }

@@ -47,12 +47,7 @@ class EndShiftConsumablesReconciliation extends ConsumerWidget {
                 children: [
                   const ConsumablesReconciliationEditor(),
                   Consumer(builder: (consumer, ref, context) {
-                    final consumablesReconciliation =
-                        ref.watch(consumablesReconciliationProvider);
-                    double totalSold = 0;
-                    for (var consumable in consumablesReconciliation) {
-                      totalSold += (consumable.soldPrice ?? 0);
-                    }
+                    final totalSold = ref.watch(totalConsumablesSoldProvider);
 
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

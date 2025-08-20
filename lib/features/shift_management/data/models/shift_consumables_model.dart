@@ -12,10 +12,14 @@ abstract class ShiftConsumablesModel with _$ShiftConsumablesModel {
   const ShiftConsumablesModel._();
   const factory ShiftConsumablesModel({
     @JsonKey(name: "id") String? id,
+    @JsonKey(name: "shift_id") String? shiftId,
     @JsonKey(name: "quantity_allocated") int? quantityAllocated,
     @JsonKey(name: "quantity_returned") dynamic quantityReturned,
     @JsonKey(name: "consumable_id") String? consumableId,
     @JsonKey(name: "consumables") ConsumablesModel? consumables,
+    @JsonKey(name: "status") String? status,
+    @JsonKey(name: "created_at") String? createdAt,
+    @JsonKey(name: "updated_at") String? updatedAt,
   }) = _ShiftConsumablesModel;
 
   factory ShiftConsumablesModel.fromJson(Map<String, dynamic> json) =>
@@ -28,6 +32,10 @@ abstract class ShiftConsumablesModel with _$ShiftConsumablesModel {
       quantityReturned: quantityReturned,
       consumableId: consumableId,
       consumables: consumables?.toEntity(),
+      shiftId: shiftId,
+      status: status,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fuel_pro_360/features/record_indent/domain/entity/fuel_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_transaction_consumables_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_transaction_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/data/data_sources/shift_management_data_source.dart';
 import 'package:fuel_pro_360/features/shift_management/data/respositories/shift_management_respository_impl.dart';
@@ -20,8 +21,10 @@ import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_r
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_shift_consumables_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_shift_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_active_shifts_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_allocated_returned_shifts_consumables_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_consumables_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_indent_sales_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_pump_readings_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_pump_settings_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_readings_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_shifts_consumables_usecase.dart';
@@ -29,6 +32,7 @@ import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_staf
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_transactions_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/reconcilize_shift_consumables_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/update_reading_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/update_transaction_usecase.dart';
 import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 
 final shiftManagementRepositoryProvider =
@@ -371,4 +375,134 @@ final updateReadingUsecaseProvider = Provider<UpdateReadingUsecase>((ref) {
   final shiftManagementRepository =
       ref.watch(shiftManagementRepositoryProvider);
   return UpdateReadingUsecase(shiftManagementRepository);
+});
+
+final totalConsumablesSoldProvider = Provider<double>((ref) {
+  final consumablesReconciliation =
+      ref.watch(consumablesReconciliationProvider);
+  double total = 0;
+  for (var consumable in consumablesReconciliation) {
+    total += (consumable.soldPrice ?? 0);
+  }
+  return total;
+});
+
+final createTransactionUsecaseProviderShiftManagement =
+    Provider<CreateTransactionUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return CreateTransactionUsecase(shiftManagementRepository);
+});
+
+final createTransactionConsumablesUsecaseProvider =
+    Provider<CreateTransactionConsumablesUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return CreateTransactionConsumablesUsecase(shiftManagementRepository);
+});
+
+final updateTransactionUsecaseProvider =
+    Provider<UpdateTransactionUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return UpdateTransactionUsecase(shiftManagementRepository);
+});
+
+final getPumpReadingsUseCaseProvider = Provider<GetPumpReadingsUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return GetPumpReadingsUsecase(shiftManagementRepository);
+});
+
+final getAllocatedReturnedShiftsConsumablesUsecaseProvider =
+    Provider<GetAllocatedReturnedShiftsConsumablesUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return GetAllocatedReturnedShiftsConsumablesUsecase(
+      shiftManagementRepository);
+});
+
+final pumpReadingProvider = FutureProvider<List<ReadingEntity>>((ref) async {
+  final getPumpReadingsUseCase = ref.watch(getPumpReadingsUseCaseProvider);
+  final fuelPump = ref.watch(selectedFuelPumpProvider);
+  final pump = ref.watch(selectedPumpProvider);
+
+  if (fuelPump == null || pump == null) {
+    return [];
+  }
+  final result = await getPumpReadingsUseCase.execute(
+    fuelPumpId: fuelPump.id,
+    pumpId: pump.pumpNumber ?? "",
+  );
+  return result.fold(
+    (failure) => throw Exception(failure.message),
+    (readings) => readings,
+  );
+});
+
+final preFillSelectedPumpReadingsListener = Provider<void>((ref) {
+  final pump = ref.watch(selectedPumpProvider);
+  if (pump == null) return;
+
+  ref.listen<AsyncValue<List<ReadingEntity>>>(pumpReadingProvider,
+      (prev, next) {
+    next.whenData((pumpReadings) {
+      List<PumpNozzleReadings> pumpNozzleReadings = [];
+
+      for (String fuelType in pump.fuelTypes) {
+        if (pumpReadings.isEmpty) {
+          pumpNozzleReadings.add(PumpNozzleReadings(
+            fuelType: fuelType,
+            currentReading: '',
+          ));
+        } else {
+          for (ReadingEntity pumpReading in pumpReadings) {
+            if (pumpReading.fuelType == fuelType) {
+              pumpNozzleReadings.add(PumpNozzleReadings(
+                fuelType: fuelType,
+                currentReading: pumpReading.closingReading.toString(),
+              ));
+              break;
+            }
+          }
+        }
+      }
+
+      // Update the entire state here (allowed inside listener)
+      ref.read(pumpNozzleReadingsProvider.notifier).state = pumpNozzleReadings;
+    });
+  });
+});
+
+final autoAdjustShiftConsumablesListener = FutureProvider<void>((ref) async {
+  final getAllocatedReturnedShiftsConsumablesUsecase =
+      ref.watch(getAllocatedReturnedShiftsConsumablesUsecaseProvider);
+  ref.listen<AsyncValue<List<ReadingEntity>>>(pumpReadingProvider,
+      (prev, next) {
+    next.whenData((pumpReadings) async {
+      if (pumpReadings.isEmpty) {
+        ref.read(consumablesCartProvider.notifier).state = [];
+        return;
+      }
+
+      final result = await getAllocatedReturnedShiftsConsumablesUsecase.execute(
+          shiftId: pumpReadings[0].shiftId ?? "");
+
+      result.fold((failure) => throw Exception(failure.message),
+          (shiftConsumables) {
+        if (shiftConsumables.isEmpty) return;
+        List<ConsumablesCart> consumablesCarts = [];
+        for (ShiftConsumablesEntity shiftConsumable in shiftConsumables) {
+          consumablesCarts.add(
+            ConsumablesCart(
+              consumables: shiftConsumable.consumables ?? ConsumablesEntity(),
+              quantity: shiftConsumable.quantityReturned,
+            ),
+          );
+        }
+
+        ref.read(consumablesCartProvider.notifier).state = consumablesCarts;
+      });
+    });
+  });
 });

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fuel_pro_360/features/shift_management/domain/entity/pump_nozzle_readings.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/pump_setting_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
 import 'package:fuel_pro_360/shared/widgets/custom_dropdown.dart';
@@ -13,7 +12,9 @@ class PumpDropdown extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pumpProviderState = ref.watch(pumpSettingsProvider);
     final selectedPumpState = ref.watch(selectedPumpProvider.notifier);
-    final pumpNozzleReadings = ref.watch(pumpNozzleReadingsProvider.notifier);
+    final preFillSelectedPump = ref.watch(preFillSelectedPumpReadingsListener);
+    final autoAdjustShiftConsumables =
+        ref.watch(autoAdjustShiftConsumablesListener);
 
     return pumpProviderState.when(
       data: (pumpList) {
@@ -31,15 +32,6 @@ class PumpDropdown extends ConsumerWidget {
               hintText: 'Select Pump',
               onChanged: (p0) {
                 selectedPumpState.state = p0 as PumpSettingEntity;
-                pumpNozzleReadings.state = [];
-                List<PumpNozzleReadings> readings = [];
-                for (String fuelType in p0.fuelTypes) {
-                  readings.add(PumpNozzleReadings(
-                    fuelType: fuelType,
-                    currentReading: '',
-                  ));
-                }
-                pumpNozzleReadings.state = readings;
               },
             ),
           ],

@@ -61,4 +61,27 @@ abstract class ShiftManagementRepository {
     required Map<String, dynamic> body,
     required String id,
   });
+
+  Future<Either<Failure, void>> createTransaction({
+    required Map<String, dynamic> body,
+  });
+
+  Future<Either<Failure, void>> createConsumablesTransaction({
+    required List<Map<String, dynamic>> body,
+  });
+
+  Future<Either<Failure, void>> updateTransaction({
+    required Map<String, dynamic> body,
+    required String shiftConsumableId,
+  });
+
+  Future<Either<Failure, List<ShiftConsumablesEntity>>>
+      getAllocatedReturnedShiftConsumables({
+    required String shiftId,
+  });
+
+  Future<Either<Failure, List<ReadingEntity>>> getPumpReadings({
+    required String pumpId,
+    required String fuelPumpId,
+  });
 }

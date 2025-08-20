@@ -1,13 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:fuel_pro_360/features/home/domain/entity/fuel_pump_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_reconciliation.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/pump_closing_readings.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/shift_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/complete_shift_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_transaction_consumables_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_transaction_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/reconcilize_shift_consumables_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/update_reading_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/update_transaction_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
 import 'package:fuel_pro_360/features/shift_management/presentation/widgets/end_shift_success_popup.dart';
+import 'package:fuel_pro_360/shared/providers/selected_fuel_pump.dart';
 
 part 'end_shift_provider.freezed.dart';
 
@@ -39,8 +44,20 @@ final endShiftProvider =
 
   final cashCount = ref.watch(cashCountProvider);
 
+  final totalConsumablesSold = ref.watch(totalConsumablesSoldProvider);
+
   final consumablesReconciliation =
       ref.watch(consumablesReconciliationProvider);
+
+  final fuelPumpEntity = ref.watch(selectedFuelPumpProvider);
+
+  final createTransactionUsecase =
+      ref.watch(createTransactionUsecaseProviderShiftManagement);
+
+  final createConsumablesTransactionsUsecase =
+      ref.watch(createTransactionConsumablesUsecaseProvider);
+
+  final updateTransactionUsecase = ref.watch(updateTransactionUsecaseProvider);
 
   return EndShiftNotifier(
     completeShiftUsecase: completeShiftUsecase,
@@ -56,6 +73,11 @@ final endShiftProvider =
     otherExpenses: otherExpenses,
     cashCount: cashCount,
     consumablesReconciliation: consumablesReconciliation,
+    totalConsumablesSold: totalConsumablesSold,
+    fuelPumpEntity: fuelPumpEntity,
+    createTransactionUsecase: createTransactionUsecase,
+    createConsumablesTransactionsUsecase: createConsumablesTransactionsUsecase,
+    updateTransactionUsecase: updateTransactionUsecase,
   );
 });
 
@@ -63,6 +85,10 @@ class EndShiftNotifier extends StateNotifier<EndShiftState> {
   final CompleteShiftUsecase completeShiftUsecase;
   final ReconcilizeShiftConsumablesUsecase reconcilizeShiftConsumablesUsecase;
   final UpdateReadingUsecase updateReadingUsecase;
+  final CreateTransactionUsecase createTransactionUsecase;
+  final CreateTransactionConsumablesUsecase
+      createConsumablesTransactionsUsecase;
+  final UpdateTransactionUsecase updateTransactionUsecase;
 
   final ShiftEntity? shiftEntity;
   final List<PumpClosingReadings> pumpClosingReadings;
@@ -76,6 +102,9 @@ class EndShiftNotifier extends StateNotifier<EndShiftState> {
   final String cashCount;
 
   final String otherExpenses;
+  final double totalConsumablesSold;
+
+  final FuelPumpEntity? fuelPumpEntity;
 
   final List<ConsumablesReconciliation> consumablesReconciliation;
   double cashDifference = 0;
@@ -94,6 +123,11 @@ class EndShiftNotifier extends StateNotifier<EndShiftState> {
     required this.otherExpenses,
     required this.cashCount,
     required this.consumablesReconciliation,
+    required this.totalConsumablesSold,
+    required this.fuelPumpEntity,
+    required this.createTransactionUsecase,
+    required this.createConsumablesTransactionsUsecase,
+    required this.updateTransactionUsecase,
   }) : super(const EndShiftState.initial());
 
   Future<void> endShift() async {
@@ -136,14 +170,15 @@ class EndShiftNotifier extends StateNotifier<EndShiftState> {
     for (var reading in pumpClosingReadings) {
       final body = {
         'card_sales': cardSales.isEmpty ? '0' : cardSales,
+        'cash_remaining': cashDifference,
         'cash_sales': cashSales.isEmpty ? '0' : cashSales,
+        'closing_reading':
+            reading.closingReading.isEmpty ? '0' : reading.closingReading,
+        'consumable_expenses': totalConsumablesSold.toString(),
+        'expenses': otherExpenses.isEmpty ? '0' : otherExpenses,
         'upi_sales': upiSales.isEmpty ? '0' : upiSales,
         'others_sales': otherSales.isEmpty ? '0' : otherSales,
         'indent_sales': indentSales.isEmpty ? '0' : indentSales,
-        'cash_remaining': cashDifference,
-        'closing_reading':
-            reading.closingReading.isEmpty ? '0' : reading.closingReading,
-        'expenses': otherExpenses.isEmpty ? '0' : otherExpenses,
         'testing_fuel': reading.testingFuelReading.isEmpty
             ? '0'
             : reading.testingFuelReading,
@@ -181,7 +216,82 @@ class EndShiftNotifier extends StateNotifier<EndShiftState> {
         await reconcilizeShiftConsumablesUsecase.execute(body: body, id: id);
     result.fold(
       (failure) => state = EndShiftState.error(failure.message),
-      (success) {},
+      (success) {
+        CreateConsumablesTransaction();
+      },
     );
+  }
+
+  String shiftConsumableTransactionId = "";
+
+  Future<void> CreateConsumablesTransaction() async {
+    shiftConsumableTransactionId = "SHIFT-CONSUMABLE-${shiftEntity?.id}";
+    final body = {
+      "id": shiftConsumableTransactionId,
+      "date": DateTime.now().toString(),
+      "fuel_type": "CONSUMABLES",
+      "amount": 0,
+      "quantity": 0,
+      "payment_method": "cash",
+      "source": "shift_closure",
+      "approval_status": "approved",
+      "fuel_pump_id": fuelPumpEntity?.id,
+      "staff_id": shiftEntity?.staff?.id,
+    };
+
+    final result = await createTransactionUsecase.execute(body: body);
+    result.fold((failure) => state = EndShiftState.error(failure.message),
+        (success) {
+      createTransactionConsumables();
+    });
+  }
+
+  Future<void> createTransactionConsumables() async {
+    List<Map<String, dynamic>> body = [];
+    for (ConsumablesReconciliation consumable in consumablesReconciliation) {
+      int quantitySold = (consumable.shiftConsumables.quantityAllocated ?? 0) -
+          consumable.returns.length;
+      double perUnitPrice =
+          consumable.shiftConsumables.consumables?.pricePerUnit ?? 0;
+
+      final consumableData = {
+        "transaction_id": shiftConsumableTransactionId,
+        "consumable_id": consumable.shiftConsumables.id,
+        "quantity_sold": quantitySold,
+        "unit_price": perUnitPrice,
+        "total_amount": perUnitPrice * quantitySold,
+        "fuel_pump_id": fuelPumpEntity?.id,
+      };
+
+      body.add(consumableData);
+    }
+
+    final result =
+        await createConsumablesTransactionsUsecase.execute(body: body);
+    result.fold((failure) => state = EndShiftState.error(failure.message),
+        (success) {
+      updateTransactionConsumables();
+    });
+  }
+
+  Future<void> updateTransactionConsumables() async {
+    int quantity = 0;
+    for (ConsumablesReconciliation consumable in consumablesReconciliation) {
+      quantity += (consumable.shiftConsumables.quantityAllocated ?? 0) -
+          consumable.returns.length;
+    }
+
+    final body = {
+      "amount": totalConsumablesSold.toString(),
+      "consumables_amount": totalConsumablesSold.toString(),
+      "quantity": quantity,
+    };
+
+    final result = await updateTransactionUsecase.execute(
+      body: body,
+      shiftConsumableId: shiftConsumableTransactionId,
+    );
+    result.fold((failure) => state = EndShiftState.error(failure.message),
+        (success) {});
   }
 }

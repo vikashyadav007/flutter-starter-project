@@ -20,10 +20,10 @@ class ConsumablesDropdown extends ConsumerWidget {
         final selected =
             consumablesCartState.map((cart) => cart.consumables).toSet();
 
-        final availableConsumables =
-            consumablesList.where((item) => !selected.contains(item)).toList();
-
-        print("availableConsumables: $availableConsumables");
+        final availableConsumables = consumablesList
+            .where(
+                (item) => !selected.contains(item) && (item.quantity ?? 0) > 0)
+            .toList();
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
