@@ -1,13 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:fuel_pro_360/core/api/api_client.dart';
 import 'package:fuel_pro_360/core/api/dio_refetch_client.dart';
-import 'package:fuel_pro_360/core/config/app_config.dart';
 import 'package:fuel_pro_360/features/auth/presentation/providers/auth_provider.dart';
 import 'package:fuel_pro_360/features/auth/presentation/providers/providers.dart';
 import 'package:fuel_pro_360/shared/constants/api_constants.dart';
 import 'package:fuel_pro_360/shared/providers/auth_credential_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class AuthInterceptor extends Interceptor {
   final Ref _ref;
@@ -52,6 +50,7 @@ class AuthInterceptor extends Interceptor {
       final apiClient = ApiClient(dioRefetchClient);
 
       final String? refreshToken = await authLocalDataSource.getRefreshToken();
+      print("refreshToken: $refreshToken");
 
       if (refreshToken != null) {
         try {
@@ -61,13 +60,13 @@ class AuthInterceptor extends Interceptor {
 
           await authLocalDataSource.cacheToken(response.access);
 
-          final retryRequest =
-              err.requestOptions
-                ..headers['Authorization'] = 'Bearer ${response.access}';
+          final retryRequest = err.requestOptions
+            ..headers['Authorization'] = 'Bearer ${response.access}';
 
           handler.resolve(await dioRefetchClient.fetch(retryRequest));
           return;
         } catch (e) {
+          print("Error refreshing token: $e");
           _ref.read(authProvider.notifier).logout();
 
           handler.reject(

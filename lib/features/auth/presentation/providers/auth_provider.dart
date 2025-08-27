@@ -77,14 +77,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = const AuthState.checkingSavedAuth();
     Session? session = await getSessionUseCase.execute();
 
-    if (session != null) {
-      globalAuth.setToken(session);
-      state = AuthState.completed(session);
-      authCredentialNotifier.setCredentials(session?.accessToken ?? "");
-      router.goNamed(AppPath.home.name);
-    } else {
-      state = const AuthState.initial();
-    }
+    await Supabase.instance.client.auth.onAuthStateChange.listen((event) {
+      if (event.session != null && !event.session!.isExpired) {
+        globalAuth.setToken(event.session!);
+        state = AuthState.completed(event.session!);
+        authCredentialNotifier.setCredentials(session?.accessToken ?? "");
+      } else {
+        state = const AuthState.initial();
+      }
+    });
   }
 
   Future<bool> login(String username, String password) async {
