@@ -3,7 +3,7 @@ description: "Fuel Pro 360"
 
 publish_to: "none"
 
-version: 1.0.9+10
+version: 1.0.10+11
 
 environment:
   sdk: ^3.5.3
