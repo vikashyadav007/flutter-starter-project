@@ -26,5 +26,6 @@ class ReadingEntity with _$ReadingEntity {
     String? fuelType,
     double? indentSales,
     double? othersSales,
+    int? nozzleNumber,
   }) = _ReadingEntity;
 }

@@ -12,10 +12,8 @@ class PumpDropdown extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pumpProviderState = ref.watch(pumpSettingsProvider);
     final selectedPumpState = ref.watch(selectedPumpProvider.notifier);
-    final preFillSelectedPump = ref.watch(preFillSelectedPumpReadingsListener);
-    final autoAdjustShiftConsumables =
-        ref.watch(autoAdjustShiftConsumablesListener);
 
+    final listener = ref.watch(autoAdjustShiftConsumablesListener);
     return pumpProviderState.when(
       data: (pumpList) {
         return Column(
@@ -31,6 +29,7 @@ class PumpDropdown extends ConsumerWidget {
               type: 'Pump',
               hintText: 'Select Pump',
               onChanged: (p0) {
+                ref.watch(preFillSelectedPumpReadingsListener);
                 selectedPumpState.state = p0 as PumpSettingEntity;
               },
             ),

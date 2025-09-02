@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:fuel_pro_360/core/api/failure.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/nozzle_setting_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/pump_setting_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/reading_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/shift_consumables_entity.dart';
@@ -81,6 +82,11 @@ abstract class ShiftManagementRepository {
   });
 
   Future<Either<Failure, List<ReadingEntity>>> getPumpReadings({
+    required String pumpId,
+    required String fuelPumpId,
+  });
+
+  Future<Either<Failure, List<NozzleSettingEntity>>> getNozzleSettings({
     required String pumpId,
     required String fuelPumpId,
   });

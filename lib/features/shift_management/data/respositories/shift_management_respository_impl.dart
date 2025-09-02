@@ -4,6 +4,7 @@ import 'package:fuel_pro_360/core/api/failure.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/data/data_sources/shift_management_data_source.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/consumables_entity.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/nozzle_setting_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/pump_setting_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/reading_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/entity/shift_consumables_entity.dart';
@@ -266,6 +267,21 @@ class ShiftManagementRespositoryImpl extends ShiftManagementRepository {
         fuelPumpId: fuelPumpId,
       );
       return Right(readings.map<ReadingEntity>((e) => e.toEntity()).toList());
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<NozzleSettingEntity>>> getNozzleSettings(
+      {required String pumpId, required String fuelPumpId}) async {
+    try {
+      final readings = await _shiftManagementDataSource.getNozzleSetting(
+        pumpId: pumpId,
+        fuelPumpId: fuelPumpId,
+      );
+      return Right(
+          readings.map<NozzleSettingEntity>((e) => e.toEntity()).toList());
     } catch (e) {
       return Left(ErrorHandler.handle(e).failure);
     }

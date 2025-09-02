@@ -27,7 +27,7 @@ class _OpeningReadingsState extends ConsumerState<OpeningReadings> {
   void _syncControllers(List<PumpNozzleReadings> readings) {
     // Create or update controllers
     for (var reading in readings) {
-      final key = reading.fuelType;
+      final key = reading.nozzle.id ?? "";
       if (_controllers.containsKey(key)) {
         if (_controllers[key]!.text != reading.currentReading) {
           _controllers[key]!.text = reading.currentReading;
@@ -38,7 +38,7 @@ class _OpeningReadingsState extends ConsumerState<OpeningReadings> {
     }
 
     // Remove controllers for deleted nozzles
-    final currentKeys = readings.map((r) => r.fuelType).toSet();
+    final currentKeys = readings.map((r) => r.nozzle.id ?? "").toSet();
     final keysToRemove =
         _controllers.keys.where((k) => !currentKeys.contains(k)).toList();
     for (final key in keysToRemove) {
@@ -48,7 +48,7 @@ class _OpeningReadingsState extends ConsumerState<OpeningReadings> {
   }
 
   Widget nozzleInputField(PumpNozzleReadings reading, int index) {
-    final controller = _controllers[reading.fuelType]!;
+    final controller = _controllers[reading.nozzle.id ?? ""]!;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
@@ -56,7 +56,7 @@ class _OpeningReadingsState extends ConsumerState<OpeningReadings> {
         children: [
           Expanded(
             child: Text(
-              '${reading.fuelType} (Nozzle ${index + 1})',
+              '${reading.nozzle.nozzleName != null && reading.nozzle.nozzleName!.isNotEmpty ? reading.nozzle.nozzleName : '(Nozzle ${index + 1})'} (${reading.nozzle.fuelType})',
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
             ),
           ),
@@ -74,7 +74,7 @@ class _OpeningReadingsState extends ConsumerState<OpeningReadings> {
                   onChanged: (value) {
                     final state = ref.read(pumpNozzleReadingsProvider);
                     final index = state.indexWhere(
-                      (r) => r.fuelType == reading.fuelType,
+                      (r) => r.nozzle.id == reading.nozzle.id,
                     );
                     if (index == -1) return;
 
@@ -101,7 +101,9 @@ class _OpeningReadingsState extends ConsumerState<OpeningReadings> {
   @override
   Widget build(BuildContext context) {
     final selectedPumpProviderState = ref.watch(selectedPumpProvider);
+
     final readings = ref.watch(pumpNozzleReadingsProvider);
+    print(readings);
 
     _syncControllers(readings); // keep controllers in sync with state
 

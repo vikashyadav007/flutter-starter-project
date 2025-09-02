@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/entity/nozzle_setting_entity.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_transaction_consumables_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/create_transaction_usecase.dart';
 import 'package:fuel_pro_360/features/record_indent/domain/entity/indent_entity.dart';
@@ -24,6 +25,7 @@ import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_acti
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_allocated_returned_shifts_consumables_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_consumables_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_indent_sales_usecase.dart';
+import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_nozzle_setting_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_pump_readings_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_pump_settings_usecase.dart';
 import 'package:fuel_pro_360/features/shift_management/domain/use_cases/get_readings_usecase.dart';
@@ -423,6 +425,7 @@ final getAllocatedReturnedShiftsConsumablesUsecaseProvider =
 });
 
 final pumpReadingProvider = FutureProvider<List<ReadingEntity>>((ref) async {
+  print("pump Reading provider is called");
   final getPumpReadingsUseCase = ref.watch(getPumpReadingsUseCaseProvider);
   final fuelPump = ref.watch(selectedFuelPumpProvider);
   final pump = ref.watch(selectedPumpProvider);
@@ -440,69 +443,141 @@ final pumpReadingProvider = FutureProvider<List<ReadingEntity>>((ref) async {
   );
 });
 
+final getNozzleSettingUsecaseProvider =
+    Provider<GetNozzleSettingUsecase>((ref) {
+  final shiftManagementRepository =
+      ref.watch(shiftManagementRepositoryProvider);
+  return GetNozzleSettingUsecase(shiftManagementRepository);
+});
+
+final nozzleSettingsProvider =
+    FutureProvider<List<NozzleSettingEntity>>((ref) async {
+  final getNozzleSettingUsecase = ref.watch(getNozzleSettingUsecaseProvider);
+  final pump = ref.watch(selectedPumpProvider);
+  final fuelPump = ref.watch(selectedFuelPumpProvider);
+
+  if (pump == null) return [];
+
+  final result = await getNozzleSettingUsecase.execute(
+    fuelPumpId: fuelPump?.id ?? "",
+    pumpId: pump?.id ?? "",
+  );
+  return result.fold(
+    (failure) => throw Exception(failure.message),
+    (nozzleSettings) => nozzleSettings,
+  );
+});
+
+final lastClosedShiftIdForPumpProvider = StateProvider<String?>((ref) => null);
+
 final preFillSelectedPumpReadingsListener = Provider<void>((ref) {
   final pump = ref.watch(selectedPumpProvider);
+  final nozzleSettingState = ref.watch(nozzleSettingsProvider);
+  print("preFillSelectedPumpReadingsListener called");
+
   if (pump == null) return;
 
-  ref.listen<AsyncValue<List<ReadingEntity>>>(pumpReadingProvider,
-      (prev, next) {
-    next.whenData((pumpReadings) {
-      List<PumpNozzleReadings> pumpNozzleReadings = [];
+  nozzleSettingState.when(
+    data: (nozzles) {
+      print("nozzles.isEmpty: ${nozzles.isEmpty}");
+      if (nozzles.isEmpty) {
+        ref.listen<AsyncValue<List<ReadingEntity>>>(pumpReadingProvider,
+            (prev, next) {
+          next.whenData((pumpReadings) {
+            List<PumpNozzleReadings> pumpNozzleReadings = [];
 
-      for (String fuelType in pump.fuelTypes) {
-        if (pumpReadings.isEmpty) {
-          pumpNozzleReadings.add(PumpNozzleReadings(
-            fuelType: fuelType,
-            currentReading: '',
-          ));
-        } else {
-          for (ReadingEntity pumpReading in pumpReadings) {
-            if (pumpReading.fuelType == fuelType) {
-              pumpNozzleReadings.add(PumpNozzleReadings(
-                fuelType: fuelType,
-                currentReading: pumpReading.closingReading.toString(),
-              ));
-              break;
+            for (String fuelType in pump.fuelTypes) {
+              if (pumpReadings.isEmpty) {
+                pumpNozzleReadings.add(PumpNozzleReadings(
+                  nozzle: NozzleSettingEntity(fuelType: fuelType),
+                  currentReading: '',
+                ));
+              } else {
+                ref.read(lastClosedShiftIdForPumpProvider.notifier).state =
+                    pumpReadings[0].shiftId;
+
+                for (ReadingEntity pumpReading in pumpReadings) {
+                  if (pumpReading.fuelType == fuelType) {
+                    pumpNozzleReadings.add(PumpNozzleReadings(
+                      nozzle: NozzleSettingEntity(fuelType: fuelType),
+                      currentReading: pumpReading.closingReading.toString(),
+                    ));
+                    break;
+                  }
+                }
+              }
             }
-          }
-        }
-      }
 
-      // Update the entire state here (allowed inside listener)
-      ref.read(pumpNozzleReadingsProvider.notifier).state = pumpNozzleReadings;
-    });
-  });
+            ref.read(pumpNozzleReadingsProvider.notifier).state =
+                pumpNozzleReadings;
+          });
+        });
+      } else {
+        ref.listen<AsyncValue<List<ReadingEntity>>>(pumpReadingProvider,
+            (prev, next) {
+          print("this comes herererer");
+          next.whenData((pumpReadings) {
+            print("pumpReadings.isEmpty: ${pumpReadings.isEmpty}");
+            List<PumpNozzleReadings> pumpNozzleReadings = [];
+
+            for (NozzleSettingEntity nozzle in nozzles) {
+              if (pumpReadings.isEmpty) {
+                pumpNozzleReadings.add(PumpNozzleReadings(
+                  nozzle: nozzle,
+                  currentReading: '',
+                ));
+              } else {
+                ref.read(lastClosedShiftIdForPumpProvider.notifier).state =
+                    pumpReadings[0].shiftId;
+                for (ReadingEntity pumpReading in pumpReadings) {
+                  if (pumpReading.nozzleNumber == nozzle.nozzleNumber) {
+                    pumpNozzleReadings.add(PumpNozzleReadings(
+                      nozzle: nozzle,
+                      currentReading: pumpReading.closingReading.toString(),
+                    ));
+                    break;
+                  }
+                }
+              }
+            }
+
+            // Update the entire state here (allowed inside listener)
+            ref.read(pumpNozzleReadingsProvider.notifier).state =
+                pumpNozzleReadings;
+          });
+        });
+      }
+    },
+    error: (Object error, StackTrace stackTrace) {},
+    loading: () {},
+  );
 });
 
 final autoAdjustShiftConsumablesListener = FutureProvider<void>((ref) async {
+  print("autoAdjustShiftConsumablesListener");
   final getAllocatedReturnedShiftsConsumablesUsecase =
       ref.watch(getAllocatedReturnedShiftsConsumablesUsecaseProvider);
-  ref.listen<AsyncValue<List<ReadingEntity>>>(pumpReadingProvider,
-      (prev, next) {
-    next.whenData((pumpReadings) async {
-      if (pumpReadings.isEmpty) {
-        ref.read(consumablesCartProvider.notifier).state = [];
-        return;
-      }
 
-      final result = await getAllocatedReturnedShiftsConsumablesUsecase.execute(
-          shiftId: pumpReadings[0].shiftId ?? "");
+  final lastClosedShiftIdForPump = ref.watch(lastClosedShiftIdForPumpProvider);
 
-      result.fold((failure) => throw Exception(failure.message),
-          (shiftConsumables) {
-        if (shiftConsumables.isEmpty) return;
-        List<ConsumablesCart> consumablesCarts = [];
-        for (ShiftConsumablesEntity shiftConsumable in shiftConsumables) {
-          consumablesCarts.add(
-            ConsumablesCart(
-              consumables: shiftConsumable.consumables ?? ConsumablesEntity(),
-              quantity: shiftConsumable.quantityReturned,
-            ),
-          );
-        }
+  if (lastClosedShiftIdForPump == null) return;
 
-        ref.read(consumablesCartProvider.notifier).state = consumablesCarts;
-      });
-    });
+  final result = await getAllocatedReturnedShiftsConsumablesUsecase.execute(
+      shiftId: lastClosedShiftIdForPump ?? "");
+
+  result.fold((failure) => throw Exception(failure.message),
+      (shiftConsumables) {
+    if (shiftConsumables.isEmpty) return;
+    List<ConsumablesCart> consumablesCarts = [];
+    for (ShiftConsumablesEntity shiftConsumable in shiftConsumables) {
+      consumablesCarts.add(
+        ConsumablesCart(
+          consumables: shiftConsumable.consumables ?? ConsumablesEntity(),
+          quantity: shiftConsumable.quantityReturned,
+        ),
+      );
+    }
+
+    ref.read(consumablesCartProvider.notifier).state = consumablesCarts;
   });
 });

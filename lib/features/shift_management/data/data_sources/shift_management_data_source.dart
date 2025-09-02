@@ -1,5 +1,6 @@
 import 'package:fuel_pro_360/features/record_indent/data/models/indent_model.dart';
 import 'package:fuel_pro_360/features/shift_management/data/models/consumables_model.dart';
+import 'package:fuel_pro_360/features/shift_management/data/models/nozzle_setting_model.dart';
 import 'package:fuel_pro_360/features/shift_management/data/models/pump_setting_model.dart';
 import 'package:fuel_pro_360/features/shift_management/data/models/reading_model.dart';
 import 'package:fuel_pro_360/features/shift_management/data/models/shift_consumables_model.dart';
@@ -85,7 +86,7 @@ class ShiftManagementDataSource {
       var query =
           client.from('staff').select('*').eq('fuel_pump_id', fuelPumpId);
       var response = await query;
-      print("Response from getReadings: $response");
+      print("Response from getStaffs: $response");
       return (response as List)
           .map((item) => StaffModel.fromJson(item))
           .toList();
@@ -369,6 +370,29 @@ class ShiftManagementDataSource {
     } catch (e) {
       print("error in updating reading: $e");
       throw Exception("Failed to update reading");
+    }
+  }
+
+  Future<List<NozzleSettingModel>> getNozzleSetting(
+      {required String pumpId, required String fuelPumpId}) async {
+    print("pumpId: $pumpId, fuelPumpId: $fuelPumpId");
+
+    try {
+      var query = client
+          .from('nozzle_settings')
+          .select('*')
+          .eq('pump_id', pumpId)
+          .eq('fuel_pump_id', fuelPumpId)
+          .eq("is_active", true)
+          .order('nozzle_number', ascending: true);
+      var response = await query;
+      print("Response from getNozzleSetting: $response");
+      return (response as List)
+          .map((item) => NozzleSettingModel.fromJson(item))
+          .toList();
+    } catch (e) {
+      print('Error fetching nozzle: $e');
+      throw Exception("Failed to fetch nozzles: $e");
     }
   }
 }

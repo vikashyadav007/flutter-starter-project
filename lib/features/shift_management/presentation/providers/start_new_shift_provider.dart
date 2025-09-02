@@ -116,7 +116,7 @@ class StartNewShiftNotifier extends StateNotifier<StartNewShiftState> {
       "pump_id": selectedPump?.pumpNumber ?? "",
       "opening_reading": reading.currentReading ?? "",
       "date": DateTime.now().toIso8601String(),
-      "fuel_type": reading.fuelType,
+      "fuel_type": reading.nozzle.fuelType,
       "cash_given": startingCashAmount,
       "fuel_pump_id": selectedFuelPump?.id ?? "",
     };

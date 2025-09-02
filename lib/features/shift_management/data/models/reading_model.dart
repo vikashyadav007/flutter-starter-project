@@ -34,6 +34,7 @@ abstract class ReadingModel with _$ReadingModel {
     @JsonKey(name: "fuel_type") String? fuelType,
     @JsonKey(name: "indent_sales") double? indentSales,
     @JsonKey(name: "others_sales") double? othersSales,
+    @JsonKey(name: "nozzle_number") int? nozzleNumber,
   }) = _ReadingModel;
 
   factory ReadingModel.fromJson(Map<String, dynamic> json) =>
@@ -61,6 +62,7 @@ abstract class ReadingModel with _$ReadingModel {
       fuelType: fuelType,
       indentSales: indentSales,
       othersSales: othersSales,
+      nozzleNumber: nozzleNumber,
     );
   }
 }
