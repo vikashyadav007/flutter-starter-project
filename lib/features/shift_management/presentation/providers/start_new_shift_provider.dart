@@ -82,7 +82,7 @@ class StartNewShiftNotifier extends StateNotifier<StartNewShiftState> {
       "start_time": DateTime.now().toIso8601String(),
       "status": "active",
       "shift_type": "Day",
-      "cash_remaining": startingCashAmount,
+      if (startingCashAmount.isNotEmpty) "cash_remaining": startingCashAmount,
       "fuel_pump_id": selectedFuelPump?.id ?? "",
     };
 
@@ -117,7 +117,7 @@ class StartNewShiftNotifier extends StateNotifier<StartNewShiftState> {
       "opening_reading": reading.currentReading ?? "",
       "date": DateTime.now().toIso8601String(),
       "fuel_type": reading.nozzle.fuelType,
-      "cash_given": startingCashAmount,
+      if (startingCashAmount.isNotEmpty) "cash_given": startingCashAmount,
       "fuel_pump_id": selectedFuelPump?.id ?? "",
     };
 

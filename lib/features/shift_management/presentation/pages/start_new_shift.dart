@@ -91,7 +91,8 @@ class StartNewShift extends ConsumerWidget {
                               height: 48,
                               child: OutlinedButton(
                                 onPressed: () {
-                                  // Handle cancel action
+                                  invalidateActiveShifts(ref: ref);
+                                  Navigator.of(context).pop();
                                 },
                                 style: OutlinedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(
@@ -119,9 +120,6 @@ class StartNewShift extends ConsumerWidget {
                               final selectedPump =
                                   ref.watch(selectedPumpProvider);
 
-                              final startCashAmount =
-                                  ref.watch(startingCashAmountProvider);
-
                               return SizedBox(
                                 height: 48,
                                 width: 50,
@@ -135,7 +133,6 @@ class StartNewShift extends ConsumerWidget {
                                   ),
                                   onPressed: selectedStaff == null ||
                                           selectedPump == null ||
-                                          startCashAmount.isEmpty ||
                                           checkInitialReadings(ref) == false
                                       ? null
                                       : () {
