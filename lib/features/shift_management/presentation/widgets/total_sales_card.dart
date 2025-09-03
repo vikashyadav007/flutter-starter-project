@@ -26,44 +26,116 @@ class TotalSalesCard extends ConsumerWidget {
       double fuelPrice =
           fuletypeMap[pumpClosingReading.reading.fuelType]?.currentPrice ?? 0;
 
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+      double dispensed = double.tryParse(pumpClosingReading.totalLiters) ?? 0.0;
+      double testing =
+          double.tryParse(pumpClosingReading.testingFuelReading) ?? 0.0;
+      double netSold = dispensed - testing;
+
+      return Container(
+        decoration: BoxDecoration(
+          color: UiColors.white,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        padding: const EdgeInsets.all(10.0),
+        margin: const EdgeInsets.only(bottom: 10.0),
+        child: Column(
           children: [
-            Expanded(
-              child: Text(
-                '${pumpClosingReading.reading.fuelType} sales:',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    '${pumpClosingReading.reading.fuelType}',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                  ),
+                ),
+                Expanded(
+                    child: Text(
+                  '₹${getCommaSeperatedNumberDouble(number: (netSold) * fuelPrice).toString()}',
+                  textAlign: TextAlign.end,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                )),
+              ],
             ),
-            Expanded(
-              child: Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    'Dispensed: ',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                        ),
+                  ),
+                ),
+                Expanded(
+                    child: Text(
+                  '${dispensed}L',
+                  textAlign: TextAlign.end,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                      ),
+                )),
+              ],
+            ),
+            if (testing > 0)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${pumpClosingReading.totalLiters} L',
+                  Expanded(
+                    child: Text(
+                      'Testing: ',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          )),
-                  if (pumpClosingReading.testingFuelReading.isNotEmpty)
-                    Text(
-                        '(testing: ${pumpClosingReading.testingFuelReading} L)',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w600, color: UiColors.gray)),
+                            fontWeight: FontWeight.w500,
+                            color: Colors.orange,
+                            fontSize: 12,
+                          ),
+                    ),
+                  ),
+                  Expanded(
+                      child: Text(
+                    '-${testing}L',
+                    textAlign: TextAlign.end,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.orange,
+                          fontSize: 12,
+                        ),
+                  )),
                 ],
               ),
-            ),
-            Expanded(
-                child: Text(
-              '₹${getCommaSeperatedNumberDouble(number: (double.tryParse(pumpClosingReading.totalLiters) ?? 0.0) * fuelPrice).toString()}',
-              textAlign: TextAlign.end,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+            divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    'Net Sold:',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                   ),
-            )),
+                ),
+                Expanded(
+                    child: Text(
+                  '${netSold}L x ₹${getCommaSeperatedNumberDouble(number: fuelPrice).toString()}',
+                  textAlign: TextAlign.end,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                )),
+              ],
+            ),
           ],
         ),
       );
@@ -87,7 +159,9 @@ class TotalSalesCard extends ConsumerWidget {
     for (var reading in pumpClosingReadings) {
       if (reading.closingReading.isNotEmpty) {
         totalLitersSold += double.tryParse(reading.totalLiters) ?? 0.0;
-        totalSales += ((double.tryParse(reading.totalLiters) ?? 0.0) *
+        totalLitersSold -= double.tryParse(reading.testingFuelReading) ?? 0.0;
+        totalSales += (((double.tryParse(reading.totalLiters) ?? 0.0) -
+                (double.tryParse(reading.testingFuelReading) ?? 0.0)) *
             (fuelTypesMap[reading.reading.fuelType]?.currentPrice ?? 0.0));
       }
     }
@@ -164,7 +238,7 @@ class TotalSalesCard extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Calculated Total:',
+                'Total Expected:',
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               Text(
