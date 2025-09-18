@@ -27,6 +27,10 @@ void invalidateRecordIndentProviders({required WidgetRef ref}) {
   ref.invalidate(meterReadingImageProvider);
   ref.invalidate(selectedConsumableProvider);
   ref.invalidate(noIndentCheckboxProvider);
+  ref.invalidate(consumablesCartProvider);
+  ref.invalidate(consumablesProvider);
+  ref.invalidate(activeStaffProvider);
+  ref.invalidate(selectedActiveStaffProvider);
 }
 
 void invalidateActiveShifts({required WidgetRef ref}) {

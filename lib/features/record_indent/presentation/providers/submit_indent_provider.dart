@@ -167,8 +167,10 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
     }
   }
 
+  String indentId = "";
+
   Future<void> createNewIndent() async {
-    var indentId = new Uuid().v4();
+    indentId = const Uuid().v4();
 
     var body = {
       "id": indentId,
@@ -195,37 +197,58 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
     result.fold(
       (failure) => state = SubmitIndentState.error(failure.message),
       (success) {
-        state = SubmitIndentState.submitted(true);
-       
-        createIndentSuccessPopup();
+        processConsumablesTransaction();
       },
     );
   }
 
-  // Future<void> processConsumables() async {
+  Future<void> processConsumablesTransaction() async {
+    var consumablesInserts = consumablesCart.map((consumable) {
+      return {
+        "indent_id": indentId,
+        "consumable_id": consumable.consumables.id ?? "",
+        "quantity_sold": consumable.quantity,
+        "unit_price": consumable.consumables.pricePerUnit,
+        "total_amount":
+            ((consumable.consumables.pricePerUnit ?? 0) * consumable.quantity),
+        "fuel_pump_id": selectedFuelPump?.id ?? "",
+      };
+    }).toList();
 
-  //   var consumablesInserts = consumablesCart.map((consumable) {
-  //     return {
-  //       "id": consumable.id,
-  //       "name": consumable.name,
-  //       "quantity": consumable.quantity,
-  //       "price": consumable.price,
-  //     };
-  //   }).toList();
+    final result = await createConsumablesTransactionsUsecase.execute(
+      body: consumablesInserts,
+    );
+    result.fold(
+      (failure) => state = SubmitIndentState.error(failure.message),
+      (success) {
+        processConsumables();
+      },
+    );
+  }
 
-  //   for (var consumable in consumablesCart) {
-  //     final result = await updateConsumablesUsecase.execute(
-  //       body: consumable.toJson(),
-  //       consumableId: consumable.id,
-  //     );
-  //     result.fold(
-  //       (failure) => state = SubmitIndentState.error(failure.message),
-  //       (success) {
-  //         // Handle success
-  //       },
-  //     );
-  //   }
-  // }
+  Future<void> processConsumables() async {
+    int index = 0;
+    for (var consumable in consumablesCart) {
+      final result = await updateConsumablesUsecase.execute(
+        body: {
+          "quantity":
+              (consumable.consumables.quantity ?? 0) - consumable.quantity
+        },
+        consumableId: consumable.consumables.id ?? "",
+      );
+      result.fold(
+        (failure) => state = SubmitIndentState.error(failure.message),
+        (success) {
+          if (index == consumablesCart.length - 1) {
+            state = const SubmitIndentState.submitted(true);
+            createIndentSuccessPopup();
+          
+          }
+        },
+      );
+      index++;
+    }
+  }
 
   void reset() {
     state = const SubmitIndentState.initial();
