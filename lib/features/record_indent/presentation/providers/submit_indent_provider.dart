@@ -172,13 +172,25 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
   Future<void> createNewIndent() async {
     indentId = const Uuid().v4();
 
+    String fuelType = "";
+    if (selectedFuelType != null &&
+        selectedFuelType?.fuelType?.isNotEmpty == true &&
+        amount.isNotEmpty &&
+        quantity.isNotEmpty) {
+      fuelType = selectedFuelType?.fuelType ?? "";
+    } else {
+      fuelType = "CONSUMABLE_ONLY";
+    }
+
     var body = {
       "id": indentId,
       "customer_id": selectedCustomer?.id ?? "",
       "vehicle_id": selectedVehicle?.id ?? "",
-      "fuel_type": selectedFuelType?.fuelType ?? "",
-      "amount": amount,
-      "quantity": quantity,
+      "fuel_type": fuelType,
+      "amount": amount.isNotEmpty
+          ? (double.parse(amount) ?? 0)
+          : 0 + totalConsumablesCost ?? 0,
+      "quantity": quantity.isEmpty ? 0 : quantity,
       "discount_amount": 0,
       if (!noIndentCheckbox) "indent_number": indentNumber,
       if (!noIndentCheckbox) "booklet_id": selectedIndentBooklet?.id ?? "",
@@ -197,7 +209,12 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
     result.fold(
       (failure) => state = SubmitIndentState.error(failure.message),
       (success) {
-        processConsumablesTransaction();
+        if (consumablesCart.isEmpty) {
+          state = const SubmitIndentState.submitted(true);
+          createIndentSuccessPopup();
+        } else {
+          processConsumablesTransaction();
+        }
       },
     );
   }
@@ -242,7 +259,6 @@ class SubmitIndentNotifier extends StateNotifier<SubmitIndentState> {
           if (index == consumablesCart.length - 1) {
             state = const SubmitIndentState.submitted(true);
             createIndentSuccessPopup();
-          
           }
         },
       );

@@ -6,6 +6,7 @@ import 'package:fuel_pro_360/features/record_indent/presentation/widgets/active_
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/bill_number_container.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/indent_date_container.dart';
 import 'package:fuel_pro_360/features/record_indent/presentation/widgets/meter_reading_image.dart';
+import 'package:fuel_pro_360/features/shift_management/presentation/providers/provider.dart';
 import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
 import 'package:fuel_pro_360/shared/widgets/consumables_listings.dart';
 
@@ -52,6 +53,7 @@ class RecordIndentBottom extends ConsumerWidget {
           bool isIndentNumberVerified = ref.watch(indentNumberVerifiedProvider);
           bool noIndentCheckbox = ref.watch(noIndentCheckboxProvider);
           final selectedStaff = ref.watch(selectedActiveStaffProvider);
+          final consumablesCart = ref.watch(consumablesCartProvider);
 
           return SizedBox(
             width: double.infinity,
@@ -65,9 +67,11 @@ class RecordIndentBottom extends ConsumerWidget {
               ),
               onPressed: selectedCustomer == null ||
                       selectedVehicle == null ||
-                      selectedFuelType == null ||
-                      amount.isEmpty ||
-                      quantity.isEmpty ||
+                      (consumablesCart.isEmpty
+                          ? (amount.isEmpty ||
+                              quantity.isEmpty ||
+                              selectedFuelType == null)
+                          : false) ||
                       selectedStaff == null ||
                       (!noIndentCheckbox &&
                           (selectedIndentBooket == null ||
