@@ -30,6 +30,16 @@ class HomeScreen extends ConsumerWidget {
               Row(
                 children: [
                   HomeItemTile(
+                    icon: Icons.dashboard,
+                    title: "Dashboard",
+                    subtitle: "Analytics",
+                    onTap: () {
+                      context.push('/${AppPath.dashboard.name}');
+                    },
+                    iconColor: Colors.deepPurple,
+                  ),
+                  const SizedBox(width: 10),
+                  HomeItemTile(
                     icon: Icons.credit_card,
                     title: "Indent",
                     subtitle: "Record",
@@ -38,7 +48,12 @@ class HomeScreen extends ConsumerWidget {
                     },
                     iconColor: Theme.of(context).colorScheme.primary,
                   ),
-                  const SizedBox(width: 10),
+                ],
+              ),
+              const SizedBox(height: 10),
+
+              Row(
+                children: [
                   HomeItemTile(
                     icon: Icons.calendar_today,
                     onTap: () {
@@ -48,11 +63,7 @@ class HomeScreen extends ConsumerWidget {
                     subtitle: "Log",
                     iconColor: Colors.lightGreen,
                   ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
+                  const SizedBox(width: 10),
                   HomeItemTile(
                     icon: Icons.person,
                     title: "Client",
@@ -62,7 +73,11 @@ class HomeScreen extends ConsumerWidget {
                       context.push('/${AppPath.customers.name}');
                     },
                   ),
-                  const SizedBox(width: 10),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
                   HomeItemTile(
                     icon: Icons.note_sharp,
                     title: "Draft",
@@ -71,6 +86,10 @@ class HomeScreen extends ConsumerWidget {
                     onTap: () {
                       context.push('/${AppPath.draftIndents.name}');
                     },
+                  ),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: SizedBox(),
                   ),
                 ],
               )

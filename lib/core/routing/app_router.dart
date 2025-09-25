@@ -1,6 +1,7 @@
 import 'package:fuel_pro_360/features/auth/presentation/pages/auth_page.dart';
 import 'package:fuel_pro_360/features/auth/presentation/providers/global_auth_provider.dart';
 import 'package:fuel_pro_360/features/customers/presentation/pages/customer_screen.dart';
+import 'package:fuel_pro_360/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:fuel_pro_360/features/draft_indents/presentation/pages/complete_draft_indent_screen.dart';
 import 'package:fuel_pro_360/features/draft_indents/presentation/pages/draft_indents_screen.dart';
 import 'package:fuel_pro_360/features/home/presentation/pages/home_screen.dart';
@@ -27,6 +28,7 @@ enum AppPath {
   startNewShift,
   endShift,
   completeIndent,
+  dashboard,
 }
 
 @riverpod
@@ -145,6 +147,11 @@ GoRouter router(Ref ref) {
         path: '/${AppPath.completeIndent.name}',
         name: AppPath.completeIndent.name,
         builder: (context, state) => CompleteDraftIndentScreen(),
+      ),
+      GoRoute(
+        path: '/${AppPath.dashboard.name}',
+        name: AppPath.dashboard.name,
+        builder: (context, state) => const DashboardPage(),
       ),
     ],
     redirect: (context, state) {
