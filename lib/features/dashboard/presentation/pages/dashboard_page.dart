@@ -229,6 +229,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
           fuelVolumeByType: dashboardData.fuelVolumeByType ?? {},
           icon: Icons.local_gas_station,
         ),
+        const SizedBox(height: 12),
 
         // 2x2 Grid for main metrics
         GridView.count(
