@@ -27,12 +27,15 @@ lib/
 ## Critical Development Workflows
 
 ### Code Generation
+
 Always run after modifying `@freezed`, `@JsonSerializable`, or `@riverpod` annotations:
+
 ```bash
 dart run build_runner build --delete-conflicting-outputs
 ```
 
 ### Feature Development Pattern
+
 When adding new features, follow this exact structure:
 
 1. **Data Layer**: Create models with `@freezed` and `toEntity()` method
@@ -40,6 +43,7 @@ When adding new features, follow this exact structure:
 3. **Presentation Layer**: Build providers with `StateNotifier`, then UI components
 
 Example provider pattern:
+
 ```dart
 @freezed
 class FeatureState with _$FeatureState {
@@ -55,11 +59,13 @@ final featureProvider = StateNotifierProvider<FeatureNotifier, FeatureState>((re
 ```
 
 ### Supabase Integration
+
 - Use RPC calls for complex queries: `Supabase.instance.client.rpc('function_name', params: {})`
 - Always handle auth state: `Supabase.instance.client.auth.currentUser`
 - Wrap Supabase calls in data sources, never directly in UI
 
 ### Error Handling
+
 - Repository layer returns `Either<Failure, Data>`
 - Use `ErrorHandler.handle(e).failure` for consistent error mapping
 - Providers handle `Either` results with `.fold()` method
@@ -67,21 +73,26 @@ final featureProvider = StateNotifierProvider<FeatureNotifier, FeatureState>((re
 ## Project-Specific Conventions
 
 ### File Naming
+
 - Models: `*_model.dart` with `toEntity()` method
 - Entities: `*_entity.dart` (pure domain objects)
 - Providers: `*_provider.dart` with state classes
 - Pages: `*_screen.dart` or `*_page.dart`
 
 ### Import Organization
+
 - Core imports first, then features, then shared
 - Use `import_sorter` package for consistency
 
 ### Code Generation Dependencies
+
 Key files that trigger regeneration:
+
 - Any file with `@freezed`, `@JsonSerializable`, `@riverpod`
 - Files ending in `.g.dart` or `.freezed.dart` are generated
 
 ### Environment Configuration
+
 - Environment variables in `lib/env.dart` as static constants
 - Supabase credentials exposed (development project)
 
@@ -94,7 +105,7 @@ flutter test
 # Build for Android
 flutter build apk
 
-# Build for iOS  
+# Build for iOS
 flutter build ios
 
 # Run code generation

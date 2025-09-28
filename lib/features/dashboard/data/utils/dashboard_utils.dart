@@ -23,19 +23,13 @@ class DashboardUtils {
 
   static double parseFormattedVolume(String volume) {
     // Remove 'L' and commas, then parse
-    final cleanVolume = volume
-        .replaceAll('L', '')
-        .replaceAll(',', '')
-        .trim();
+    final cleanVolume = volume.replaceAll('L', '').replaceAll(',', '').trim();
     return double.tryParse(cleanVolume) ?? 0.0;
   }
 
   static double parseFormattedAmount(String amount) {
     // Remove '₹' symbol and commas, then parse
-    final cleanAmount = amount
-        .replaceAll('₹', '')
-        .replaceAll(',', '')
-        .trim();
+    final cleanAmount = amount.replaceAll('₹', '').replaceAll(',', '').trim();
     return double.tryParse(cleanAmount) ?? 0.0;
   }
 
@@ -57,7 +51,8 @@ class DashboardUtils {
     return fuelType.toLowerCase().trim();
   }
 
-  static String? matchFuelType(String readingFuelType, List<String> configuredTypes) {
+  static String? matchFuelType(
+      String readingFuelType, List<String> configuredTypes) {
     // Exact match first
     for (String configuredType in configuredTypes) {
       if (configuredType == readingFuelType) {

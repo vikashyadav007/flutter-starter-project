@@ -11,17 +11,17 @@ class FuelPumpUtils {
       }
 
       // Query fuel pump by email
-      final response = await Supabase.instance.client
-          .rpc('get_fuel_pump_by_email', params: {
-        'email_param': currentUser!.email
-      });
+      final response = await Supabase.instance.client.rpc(
+          'get_fuel_pump_by_email',
+          params: {'email_param': currentUser!.email});
 
       if (response != null && response is List && response.isNotEmpty) {
         final fuelPumpData = response[0] as Map<String, dynamic>;
         return fuelPumpData['id'] as String?;
       }
 
-      print('getCurrentFuelPumpId: No fuel pump found for user ${currentUser.email}');
+      print(
+          'getCurrentFuelPumpId: No fuel pump found for user ${currentUser.email}');
       return null;
     } catch (e) {
       print('getCurrentFuelPumpId: Error fetching fuel pump ID: $e');

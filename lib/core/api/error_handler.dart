@@ -7,10 +7,9 @@ import 'package:fuel_pro_360/shared/constants/app_constants.dart';
 class ErrorHandler implements Exception {
   late final Failure failure;
   ErrorHandler.handle(dynamic error) {
-    failure =
-        error is DioException
-            ? _handleDioException(error)
-            : DataSource.defaultError.getFailure();
+    failure = error is DioException
+        ? _handleDioException(error)
+        : DataSource.defaultError.getFailure();
   }
 
   Failure _handleDioException(DioException error) {

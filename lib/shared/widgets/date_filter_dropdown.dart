@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fuel_pro_360/shared/utils/utils.dart';
 
 enum DateFilterOption {
   today,
@@ -33,7 +34,8 @@ class DateFilterDropdown extends ConsumerStatefulWidget {
 }
 
 class _DateFilterDropdownState extends ConsumerState<DateFilterDropdown> {
-  String _getDateFilterDisplayText(DateFilterOption option, DateRange? customRange) {
+  String _getDateFilterDisplayText(
+      DateFilterOption option, DateRange? customRange) {
     switch (option) {
       case DateFilterOption.today:
         return 'Today';
@@ -47,14 +49,10 @@ class _DateFilterDropdownState extends ConsumerState<DateFilterDropdown> {
         if (customRange?.from != null) {
           final from = customRange!.from!;
           final to = customRange.to ?? customRange.from!;
-          return '${_formatDate(from)} - ${_formatDate(to)}';
+          return '${formatDate(dateTimeString: from.toString(), dateFormat: 'MMM dd, yyyy')} - ${formatDate(dateTimeString: to.toString(), dateFormat: 'MMM dd, yyyy')}';
         }
         return 'Custom Range';
     }
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
   }
 
   Future<void> _selectCustomDateRange() async {

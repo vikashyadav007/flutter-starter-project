@@ -22,3 +22,11 @@ class AppStrings {
   static const String strCacheError = "cache_error";
   static const String strNoInternetError = "no_internet_error";
 }
+
+class DashboardPeriod {
+  static const String today = 'today';
+  static const String yesterday = 'yesterday';
+  static const String last7Days = 'last7days';
+  static const String monthToDate = 'monthtodate';
+  static const String custom = 'custom';
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fuel_pro_360/features/dashboard/domain/entities/dashboard_data_entity.dart';
 import 'package:fuel_pro_360/features/dashboard/presentation/providers/dashboard_analytics_provider.dart';
 import 'package:fuel_pro_360/shared/constants/app_constants.dart';
 import 'package:fuel_pro_360/shared/constants/ui_constants.dart';
@@ -25,57 +26,31 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
   @override
   void initState() {
     super.initState();
-    // Load initial dashboard data
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final selectedFuelPump = ref.read(selectedFuelPumpProvider);
-      print(
-          'Dashboard initState: Current selected fuel pump: ${selectedFuelPump?.id}');
-      // Always fetch dashboard data - the data source will return mock data if no fuel pump is selected
       _fetchDashboardData();
     });
   }
 
   void _fetchDashboardData() {
-    final dateRange = _getDateRange(selectedPeriod, customDateRange);
-    final startDateFormatted = DashboardUtils.formatDate(dateRange.startDate);
-    final endDateFormatted = DashboardUtils.formatDate(dateRange.endDate);
-    print(
-        'Dashboard: Fetching data for date range: $startDateFormatted to $endDateFormatted');
-    ref.read(dashboardAnalyticsProvider.notifier).loadDashboardData(
-          startDateFormatted,
-          endDateFormatted,
-        );
-  }
+    Map<String, dynamic> dateRangeMap = {};
+    if (selectedPeriod == DateFilterOption.custom &&
+        customDateRange != null &&
+        customDateRange?.from != null) {
+      final startDate = customDateRange!.from!;
+      final endDate = customDateRange?.to ?? customDateRange!.from!;
 
-  ({DateTime startDate, DateTime endDate}) _getDateRange(
-      DateFilterOption period, DateRange? customRange) {
-    final today = DateTime.now();
+      final startDateFormatted = DashboardUtils.formatDate(startDate);
+      final endDateFormatted = DashboardUtils.formatDate(endDate);
 
-    switch (period) {
-      case DateFilterOption.today:
-        return (startDate: today, endDate: today);
-      case DateFilterOption.yesterday:
-        final yesterday = today.subtract(const Duration(days: 1));
-        return (startDate: yesterday, endDate: yesterday);
-      case DateFilterOption.last7days:
-        return (
-          startDate: today.subtract(const Duration(days: 6)),
-          endDate: today
-        );
-      case DateFilterOption.monthtodate:
-        return (
-          startDate: DateTime(today.year, today.month, 1),
-          endDate: today
-        );
-      case DateFilterOption.custom:
-        if (customRange?.from != null) {
-          return (
-            startDate: customRange!.from!,
-            endDate: customRange.to ?? customRange.from!
-          );
-        }
-        return (startDate: today, endDate: today);
+      dateRangeMap = {
+        'from': startDateFormatted,
+        'to': endDateFormatted,
+      };
     }
+    ref.read(dashboardAnalyticsProvider.notifier).loadDashboardData(
+          selectedPeriod.toString().split('.').last,
+          dateRangeMap,
+        );
   }
 
   void _handleDateFilterChange(DateFilterOption option, DateRange? dateRange) {
@@ -92,38 +67,11 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
     return '${Currency.rupee}${getCommaSeperatedNumberDouble(number: amount)}';
   }
 
-  String _formatVolume(double volume) {
-    return '${getCommaSeperatedNumberDouble(number: volume)}L';
-  }
-
-  double _parseCurrencyAmount(String amount) {
-    // Remove currency symbol and commas, then parse
-    final cleanAmount =
-        amount.replaceAll(Currency.rupee, '').replaceAll(',', '').trim();
-    return double.tryParse(cleanAmount) ?? 0.0;
-  }
-
-  double _parseVolumeAmount(String volume) {
-    // Remove 'L' and commas, then parse
-    final cleanVolume = volume.replaceAll('L', '').replaceAll(',', '').trim();
-    return double.tryParse(cleanVolume) ?? 0.0;
-  }
-
   @override
   Widget build(BuildContext context) {
     final dashboardState = ref.watch(dashboardAnalyticsProvider);
-    final selectedFuelPump = ref.watch(selectedFuelPumpProvider);
 
-    // Debug logging to see the current state
-    print(
-        'Dashboard: Current selectedFuelPump: ${selectedFuelPump?.id} (${selectedFuelPump?.name})');
-    print('Dashboard: Current dashboardState: ${dashboardState.runtimeType}');
-
-    // Listen to selected fuel pump changes and refresh dashboard data
     ref.listen<FuelPumpEntity?>(selectedFuelPumpProvider, (previous, next) {
-      print(
-          'Dashboard: Selected fuel pump changed from ${previous?.id} to ${next?.id}');
-      // Always fetch data when fuel pump changes, including when it gets selected for the first time
       _fetchDashboardData();
     });
 
@@ -156,7 +104,6 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
               Expanded(
                 child: dashboardState.when(
                   initial: () {
-                    print('Dashboard: State is initial');
                     return const Center(
                       child: Text(
                         'Welcome to Dashboard Analytics',
@@ -168,7 +115,6 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                     );
                   },
                   loading: () {
-                    print('Dashboard: State is loading');
                     return const Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -185,14 +131,10 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                       ),
                     );
                   },
-                  loaded: (salesData, fuelVolumeData, metrics,
-                      recentTransactions, todaysSummary, fuelLevels) {
-                    print('Dashboard: State is loaded with data');
-                    print('Dashboard: todaysSummary = $todaysSummary');
-                    return _buildDashboardContent(metrics, todaysSummary);
+                  loaded: (dashBoardData) {
+                    return _buildDashboardContent(dashBoardData);
                   },
                   error: (failure) {
-                    print('Dashboard: State is error - ${failure.message}');
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -238,99 +180,55 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
   }
 
   Widget _buildDashboardContent(
-    dynamic metrics,
-    dynamic todaysSummary,
+    DashboardDataEntity? dashboardData,
   ) {
-    print('Dashboard: Building content with todaysSummary: $todaysSummary');
-
-    // Handle case where todaysSummary might be null or incomplete
-    if (todaysSummary == null) {
-      print('Dashboard: todaysSummary is null, showing fallback data');
+    if (dashboardData == null) {
       return _buildFallbackContent();
     }
 
     try {
-      // Extract metrics from todaysSummary since that contains the actual dashboard data
-      // Parse the total amount from currency string
-      final String totalAmountStr = todaysSummary.total?.amount ?? '₹0';
-      final double totalSales = _parseCurrencyAmount(totalAmountStr);
-
-      // Calculate fuel volume from fuel type sales
-      double fuelVolume = 0.0;
-      final Map<String, double> fuelVolumeByType = {};
-
-      todaysSummary.fuelTypeSales?.forEach((fuelType, salesData) {
-        final double volume = _parseVolumeAmount(salesData.volume ?? '0 L');
-        fuelVolumeByType[fuelType] = volume;
-        fuelVolume += volume;
-      });
-
-      final double indentSales =
-          _parseCurrencyAmount(todaysSummary.indentSales?.amount ?? '₹0');
-      final double customerPayments =
-          0.0; // This would come from a separate call
-      final double consumablesSales =
-          _parseCurrencyAmount(todaysSummary.consumablesSales?.amount ?? '₹0');
-      final int activeShifts = 0; // This would come from metrics
-      final int pendingApprovals = 0; // This would come from metrics
-      final int transactionCount = todaysSummary.total?.count ?? 0;
-
-      // Convert fuel volume by type to formatted strings
-      final Map<String, String> formattedFuelVolume = fuelVolumeByType.map(
-        (key, value) => MapEntry(key, _formatVolume(value)),
-      );
-
       return _buildDashboardGrid(
-        totalSales: totalSales,
-        fuelVolume: fuelVolume,
-        formattedFuelVolume: formattedFuelVolume,
-        indentSales: indentSales,
-        customerPayments: customerPayments,
-        consumablesSales: consumablesSales,
-        activeShifts: activeShifts,
-        pendingApprovals: pendingApprovals,
-        transactionCount: transactionCount,
+        dashboardData: dashboardData,
       );
     } catch (e) {
-      print('Dashboard: Error building content: $e');
       return _buildFallbackContent();
     }
   }
 
   Widget _buildFallbackContent() {
-    return _buildDashboardGrid(
-      totalSales: 0.0,
-      fuelVolume: 0.0,
-      formattedFuelVolume: {},
-      indentSales: 0.0,
-      customerPayments: 0.0,
-      consumablesSales: 0.0,
-      activeShifts: 0,
-      pendingApprovals: 0,
-      transactionCount: 0,
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: const Center(
+        child: Text(
+          'No dashboard data available',
+          style: TextStyle(
+            fontSize: 16,
+            color: UiColors.gray,
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildDashboardGrid({
-    required double totalSales,
-    required double fuelVolume,
-    required Map<String, String> formattedFuelVolume,
-    required double indentSales,
-    required double customerPayments,
-    required double consumablesSales,
-    required int activeShifts,
-    required int pendingApprovals,
-    required int transactionCount,
+    required DashboardDataEntity dashboardData,
   }) {
     return ListView(
       children: [
         // Hero Card - Total Sales
         HeroCard(
           title: 'Total Sales',
-          value: _formatCurrency(totalSales),
+          value: dashboardData.salesAmount ?? _formatCurrency(0),
           icon: Icons.trending_up,
         ),
         const SizedBox(height: 16),
+
+        FuelVolumeCard(
+          title: 'Total Fuel Volume',
+          totalVolume: dashboardData.fuelVolume ?? "0",
+          fuelVolumeByType: dashboardData.fuelVolumeByType ?? {},
+          icon: Icons.local_gas_station,
+        ),
 
         // 2x2 Grid for main metrics
         GridView.count(
@@ -341,27 +239,10 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
           children: [
-            // Fuel Volume - Special card with breakdown
-            formattedFuelVolume.isNotEmpty
-                ? FuelVolumeCard(
-                    title: 'Fuel Volume',
-                    totalVolume: _formatVolume(fuelVolume),
-                    fuelVolumeByType: formattedFuelVolume,
-                    icon: Icons.local_gas_station,
-                    iconColor: Colors.blue,
-                  )
-                : MetricCard(
-                    title: 'Fuel Volume',
-                    value: _formatVolume(fuelVolume),
-                    icon: Icons.local_gas_station,
-                    gradient: 'blue',
-                    iconColor: Colors.blue,
-                  ),
-
             // Indent Sales
             MetricCard(
               title: 'Indent Sales',
-              value: _formatCurrency(indentSales),
+              value: dashboardData.indentSalesAmount ?? _formatCurrency(0),
               icon: Icons.credit_card,
               gradient: 'blue',
               iconColor: Colors.blue,
@@ -370,7 +251,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
             // Customer Payments
             MetricCard(
               title: 'Customer Payments',
-              value: _formatCurrency(customerPayments),
+              value: dashboardData.customerPayments ?? _formatCurrency(0),
               icon: Icons.account_balance_wallet,
               gradient: 'purple',
               iconColor: Colors.purple,
@@ -379,7 +260,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
             // Consumables Sales
             MetricCard(
               title: 'Consumables Sales',
-              value: _formatCurrency(consumablesSales),
+              value: dashboardData.consumablesSales ?? _formatCurrency(0),
               icon: Icons.shopping_cart,
               gradient: 'orange',
               iconColor: Colors.orange,
@@ -388,11 +269,11 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
             // Active Shifts & Pending Approvals
             DualMetricCard(
               title1: 'Active Shifts',
-              value1: activeShifts.toString(),
+              value1: dashboardData.activeShifts?.toString() ?? "0",
               icon1: Icons.people,
               iconColor1: Colors.green,
               title2: 'Pending Approvals',
-              value2: pendingApprovals.toString(),
+              value2: dashboardData.pendingApprovals?.toString() ?? "0",
               icon2: Icons.schedule,
               iconColor2: Colors.orange,
             ),
@@ -400,7 +281,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
             // Transaction Count
             MetricCard(
               title: 'Total Transactions',
-              value: transactionCount.toString(),
+              value: dashboardData.transactionCount?.toString() ?? "0",
               icon: Icons.receipt_long,
               gradient: 'indigo',
               iconColor: Colors.indigo,
