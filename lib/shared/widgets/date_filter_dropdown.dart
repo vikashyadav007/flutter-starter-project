@@ -46,34 +46,7 @@ class _DateFilterDropdownState extends ConsumerState<DateFilterDropdown> {
       case DateFilterOption.monthtodate:
         return 'Month to Date';
       case DateFilterOption.custom:
-        if (customRange?.from != null) {
-          final from = customRange!.from!;
-          final to = customRange.to ?? customRange.from!;
-          return '${formatDate(dateTimeString: from.toString(), dateFormat: 'MMM dd, yyyy')} - ${formatDate(dateTimeString: to.toString(), dateFormat: 'MMM dd, yyyy')}';
-        }
         return 'Custom Range';
-    }
-  }
-
-  Future<void> _selectCustomDateRange() async {
-    final DateTimeRange? dateRange = await showDateRangePicker(
-      context: context,
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
-      initialDateRange: widget.customDateRange != null
-          ? DateTimeRange(
-              start: widget.customDateRange!.from ?? DateTime.now(),
-              end: widget.customDateRange!.to ?? DateTime.now(),
-            )
-          : null,
-    );
-
-    if (dateRange != null) {
-      final customRange = DateRange(
-        from: dateRange.start,
-        to: dateRange.end,
-      );
-      widget.onChange(DateFilterOption.custom, customRange);
     }
   }
 
@@ -109,7 +82,10 @@ class _DateFilterDropdownState extends ConsumerState<DateFilterDropdown> {
           onChanged: (DateFilterOption? newValue) {
             if (newValue != null) {
               if (newValue == DateFilterOption.custom) {
-                _selectCustomDateRange();
+                selectCustomDateRange(
+                    context: context,
+                    onChange: widget.onChange,
+                    customDateRange: widget.customDateRange);
               } else {
                 widget.onChange(newValue, null);
               }

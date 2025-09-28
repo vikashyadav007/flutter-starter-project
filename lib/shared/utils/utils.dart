@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:fuel_pro_360/shared/widgets/date_filter_dropdown.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
@@ -110,4 +112,30 @@ bool isInRange({
 
   // Invalid or unsupported format — not in range
   return false;
+}
+
+Future<void> selectCustomDateRange({
+  required BuildContext context,
+  required Function(DateFilterOption, DateRange?) onChange,
+  DateRange? customDateRange,
+}) async {
+  final DateTimeRange? dateRange = await showDateRangePicker(
+    context: context,
+    firstDate: DateTime(2020),
+    lastDate: DateTime.now(),
+    initialDateRange: customDateRange != null
+        ? DateTimeRange(
+            start: customDateRange!.from ?? DateTime.now(),
+            end: customDateRange!.to ?? DateTime.now(),
+          )
+        : null,
+  );
+
+  if (dateRange != null) {
+    final customRange = DateRange(
+      from: dateRange.start,
+      to: dateRange.end,
+    );
+    onChange(DateFilterOption.custom, customRange);
+  }
 }

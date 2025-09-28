@@ -58,6 +58,8 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
       selectedPeriod = option;
       if (option == DateFilterOption.custom && dateRange != null) {
         customDateRange = dateRange;
+      } else {
+        customDateRange = null;
       }
     });
     _fetchDashboardData();
@@ -65,6 +67,21 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
 
   String _formatCurrency(double amount) {
     return '${Currency.rupee}${getCommaSeperatedNumberDouble(number: amount)}';
+  }
+
+  String _formatCustomDateRange() {
+    if (customDateRange?.from != null) {
+      final startDate =
+          DashboardUtils.formatDate(customDateRange!.from!, 'dd MMM yyyy');
+      if (customDateRange!.to != null) {
+        final endDate =
+            DashboardUtils.formatDate(customDateRange!.to!, 'dd MMM yyyy');
+        return '$startDate - $endDate';
+      } else {
+        return startDate;
+      }
+    }
+    return 'No date selected';
   }
 
   @override
@@ -98,6 +115,48 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                 onChange: _handleDateFilterChange,
                 customDateRange: customDateRange,
               ),
+
+              // Show custom date range when selected
+              if (selectedPeriod == DateFilterOption.custom &&
+                  customDateRange != null)
+                InkWell(
+                  onTap: () {
+                    selectCustomDateRange(
+                      context: context,
+                      onChange: _handleDateFilterChange,
+                      customDateRange: customDateRange,
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.date_range,
+                          size: 16,
+                          color: Colors.grey.shade600,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          _formatCustomDateRange(),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade700,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               const SizedBox(height: 20),
 
               // Dashboard Content
