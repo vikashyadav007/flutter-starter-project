@@ -1,5 +1,6 @@
 import 'package:fuel_pro_360/core/api/failure.dart';
 import 'package:fuel_pro_360/core/routing/app_router.dart';
+import 'package:fuel_pro_360/features/auth/data/data_sources/auth_local_data_source.dart';
 import 'package:fuel_pro_360/features/auth/domain/use_cases/clear_token_use_case.dart';
 import 'package:fuel_pro_360/features/auth/domain/use_cases/get_session.dart';
 import 'package:fuel_pro_360/features/auth/domain/use_cases/login_use_case.dart';
@@ -39,6 +40,7 @@ final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   final saveAuthDataUseCase = ref.watch(saveAuthDataUseCaseProvider);
   final globalAuth = ref.watch(globalAuthProvider.notifier);
   final clearTokenUseCase = ref.watch(clearTokenUseCaseProvider);
+  final authLocalDataSource = ref.watch(authLocalDataSourceProvider);
 
   final router = ref.watch(routerProvider);
 
@@ -49,6 +51,7 @@ final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
     getSessionUseCase: getSessionUseCase,
     saveAuthDataUseCase: saveAuthDataUseCase,
     clearTokenUseCase: clearTokenUseCase,
+    authLocalDataSource: authLocalDataSource,
     router: router,
   );
 });
@@ -60,6 +63,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final AuthCredentialNotifier authCredentialNotifier;
   final GlobalAuth globalAuth;
   final ClearTokenUseCase clearTokenUseCase;
+  final AuthLocalDataSource authLocalDataSource;
   final GoRouter router;
   AuthNotifier({
     required this.loginUseCase,
@@ -68,6 +72,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required this.getSessionUseCase,
     required this.saveAuthDataUseCase,
     required this.clearTokenUseCase,
+    required this.authLocalDataSource,
     required this.router,
   }) : super(const AuthState.initial()) {
     _checkSavedAuth();
@@ -76,6 +81,30 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> _checkSavedAuth() async {
     state = const AuthState.checkingSavedAuth();
     Session? session = await getSessionUseCase.execute();
+
+    // Check for saved credentials if no active session
+    if (session == null || session.isExpired) {
+      final hasRememberCredentials = await authLocalDataSource.hasRememberCredentials();
+      if (hasRememberCredentials) {
+        final savedCredentials = await authLocalDataSource.getRememberCredentials();
+        if (savedCredentials != null) {
+          // Attempt auto-login with saved credentials
+          try {
+            final success = await login(
+              savedCredentials['username']!,
+              savedCredentials['password']!,
+              true, // Keep remember me true
+            );
+            if (success) {
+              return; // Auto-login successful, no need to continue
+            }
+          } catch (e) {
+            // Auto-login failed, clear saved credentials
+            await authLocalDataSource.clearRememberCredentials();
+          }
+        }
+      }
+    }
 
     await Supabase.instance.client.auth.onAuthStateChange.listen((event) {
       if (event.session != null && !event.session!.isExpired) {
@@ -88,7 +117,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     });
   }
 
-  Future<bool> login(String username, String password) async {
+  Future<bool> login(String username, String password, [bool rememberMe = false]) async {
     state = const AuthState.loggingIn();
     bool status = false;
 
@@ -97,27 +126,35 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       late AuthResponse authResponse;
 
-      state = loginResult.fold(
-        (failure) {
-          return AuthState.error(mapLoginFailure(failure));
+      await loginResult.fold(
+        (failure) async {
+          state = AuthState.error(mapLoginFailure(failure));
         },
-        (response) {
+        (response) async {
           authResponse = response;
           if (authResponse.session != null) {
-            saveAuthDataUseCase.execute(authResponse);
+            await saveAuthDataUseCase.execute(authResponse);
+            
+            // Save credentials if remember me is enabled
+            if (rememberMe) {
+              await _saveRememberCredentials(username, password);
+            } else {
+              await _clearRememberCredentials();
+            }
+            
             globalAuth.setToken(authResponse.session!);
             authCredentialNotifier
                 .setCredentials(authResponse.session?.accessToken ?? '');
             status = true;
-            return AuthState.loggedIn(authResponse.session!);
+            state = AuthState.loggedIn(authResponse.session!);
+          } else {
+            state = AuthState.error(
+              handleException(
+                exception: Exception("Login failed, no session returned."),
+                message: "Login failed, please try again.",
+              ),
+            );
           }
-
-          return AuthState.error(
-            handleException(
-              exception: Exception("Login failed, no session returned."),
-              message: "Login failed, please try again.",
-            ),
-          );
         },
       );
 
@@ -133,6 +170,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       state = const AuthState.loggingOut();
       await clearTokenUseCase.execute();
+      await authLocalDataSource.clearRememberCredentials(); // Clear remembered credentials on logout
       authCredentialNotifier.clearCredentials();
       globalAuth.clearAuth();
 
@@ -145,5 +183,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
         ),
       );
     }
+  }
+
+  Future<void> _saveRememberCredentials(String username, String password) async {
+    await authLocalDataSource.saveRememberCredentials(username, password);
+  }
+
+  Future<void> _clearRememberCredentials() async {
+    await authLocalDataSource.clearRememberCredentials();
   }
 }

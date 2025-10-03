@@ -14,6 +14,7 @@ class LoginForm extends ConsumerStatefulWidget {
 class _LoginFormState extends ConsumerState<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
+  bool _rememberMe = false;
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
@@ -35,9 +36,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
 
   void _onLogin() async {
     if (_formKey.currentState?.validate() ?? false) {
-      bool status = await ref
+      await ref
           .read(authProvider.notifier)
-          .login(_usernameController.text, _passwordController.text);
+          .login(_usernameController.text, _passwordController.text, _rememberMe);
     }
   }
 
@@ -70,6 +71,28 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             validator: Validators.validatePassword,
           ),
           const SizedBox(height: 12),
+
+          // Remember Me Checkbox
+          Row(
+            children: [
+              Checkbox(
+                value: _rememberMe,
+                onChanged: (value) {
+                  setState(() {
+                    _rememberMe = value ?? false;
+                  });
+                },
+                activeColor: Theme.of(context).colorScheme.primary,
+              ),
+              const Text(
+                'Remember me',
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
 
           const SizedBox(height: 16),
           // Sign In Button

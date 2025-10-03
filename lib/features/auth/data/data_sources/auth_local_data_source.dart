@@ -8,6 +8,9 @@ class AuthLocalDataSource {
 
   static const String _token = 'token';
   static const String _refreshToken = 'refresh_token';
+  static const String _rememberCredentials = 'remember_credentials';
+  static const String _savedUsername = 'saved_username';
+  static const String _savedPassword = 'saved_password';
 
   AuthLocalDataSource(this._storage);
 
@@ -55,8 +58,42 @@ class AuthLocalDataSource {
     return null;
   }
 
-  Future<void> clear() async {
+  Future<void> clearToken() async {
     await _storage.delete(key: _token);
     await _storage.delete(key: _refreshToken);
+  }
+
+  // Remember credentials functionality
+  Future<void> saveRememberCredentials(String username, String password) async {
+    await _storage.write(key: _rememberCredentials, value: 'true');
+    await _storage.write(key: _savedUsername, value: json.encode(username));
+    await _storage.write(key: _savedPassword, value: json.encode(password));
+  }
+
+  Future<void> clearRememberCredentials() async {
+    await _storage.delete(key: _rememberCredentials);
+    await _storage.delete(key: _savedUsername);
+    await _storage.delete(key: _savedPassword);
+  }
+
+  Future<bool> hasRememberCredentials() async {
+    final remember = await _storage.read(key: _rememberCredentials);
+    return remember == 'true';
+  }
+
+  Future<Map<String, String>?> getRememberCredentials() async {
+    final hasRemember = await hasRememberCredentials();
+    if (!hasRemember) return null;
+
+    final usernameStr = await _storage.read(key: _savedUsername);
+    final passwordStr = await _storage.read(key: _savedPassword);
+
+    if (usernameStr != null && passwordStr != null) {
+      final username = json.decode(usernameStr);
+      final password = json.decode(passwordStr);
+      return {'username': username, 'password': password};
+    }
+
+    return null;
   }
 }
