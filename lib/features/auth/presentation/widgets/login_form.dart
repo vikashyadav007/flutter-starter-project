@@ -36,9 +36,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
 
   void _onLogin() async {
     if (_formKey.currentState?.validate() ?? false) {
-      await ref
-          .read(authProvider.notifier)
-          .login(_usernameController.text, _passwordController.text, _rememberMe);
+      await ref.read(authProvider.notifier).login(
+          _usernameController.text, _passwordController.text, _rememberMe);
     }
   }
 

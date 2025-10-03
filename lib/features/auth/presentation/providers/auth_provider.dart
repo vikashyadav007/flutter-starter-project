@@ -84,9 +84,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     // Check for saved credentials if no active session
     if (session == null || session.isExpired) {
-      final hasRememberCredentials = await authLocalDataSource.hasRememberCredentials();
+      final hasRememberCredentials =
+          await authLocalDataSource.hasRememberCredentials();
       if (hasRememberCredentials) {
-        final savedCredentials = await authLocalDataSource.getRememberCredentials();
+        final savedCredentials =
+            await authLocalDataSource.getRememberCredentials();
         if (savedCredentials != null) {
           // Attempt auto-login with saved credentials
           try {
@@ -117,7 +119,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     });
   }
 
-  Future<bool> login(String username, String password, [bool rememberMe = false]) async {
+  Future<bool> login(String username, String password,
+      [bool rememberMe = false]) async {
     state = const AuthState.loggingIn();
     bool status = false;
 
@@ -134,14 +137,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
           authResponse = response;
           if (authResponse.session != null) {
             await saveAuthDataUseCase.execute(authResponse);
-            
+
             // Save credentials if remember me is enabled
             if (rememberMe) {
               await _saveRememberCredentials(username, password);
             } else {
               await _clearRememberCredentials();
             }
-            
+
             globalAuth.setToken(authResponse.session!);
             authCredentialNotifier
                 .setCredentials(authResponse.session?.accessToken ?? '');
@@ -170,7 +173,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       state = const AuthState.loggingOut();
       await clearTokenUseCase.execute();
-      await authLocalDataSource.clearRememberCredentials(); // Clear remembered credentials on logout
+      await authLocalDataSource
+          .clearRememberCredentials(); // Clear remembered credentials on logout
       authCredentialNotifier.clearCredentials();
       globalAuth.clearAuth();
 
@@ -185,7 +189,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> _saveRememberCredentials(String username, String password) async {
+  Future<void> _saveRememberCredentials(
+      String username, String password) async {
     await authLocalDataSource.saveRememberCredentials(username, password);
   }
 
