@@ -16,5 +16,10 @@ class DashboardDataEntity with _$DashboardDataEntity {
     int? transactionCount,
     String? period,
     String? dateRange,
+    String? cashSales,
+    String? cardSales,
+    String? upiSales,
+    String? otherSales,
+    String? totalExpenses,
   }) = _DashboardDataEntity;
 }

@@ -20,6 +20,11 @@ abstract class DashboardDataModel with _$DashboardDataModel {
     @JsonKey(name: "transactionCount") int? transactionCount,
     @JsonKey(name: "period") String? period,
     @JsonKey(name: "dateRange") String? dateRange,
+    @JsonKey(name: "cashSales") String? cashSales,
+    @JsonKey(name: "cardSales") String? cardSales,
+    @JsonKey(name: "upiSales") String? upiSales,
+    @JsonKey(name: "otherSales") String? otherSales,
+    @JsonKey(name: "totalExpenses") String? totalExpenses,
   }) = _DashboardDataModel;
 
   factory DashboardDataModel.fromJson(Map<String, dynamic> json) =>
@@ -27,17 +32,22 @@ abstract class DashboardDataModel with _$DashboardDataModel {
 
   DashboardDataEntity toEntity() {
     return DashboardDataEntity(
-      salesAmount: salesAmount,
-      fuelVolume: fuelVolume,
+      salesAmount: salesAmount ?? '0',
+      fuelVolume: fuelVolume ?? '0',
       fuelVolumeByType: fuelVolumeByType,
-      indentSalesAmount: indentSalesAmount,
-      customerPayments: customerPayments,
-      consumablesSales: consumablesSales,
-      activeShifts: activeShifts,
-      pendingApprovals: pendingApprovals,
-      transactionCount: transactionCount,
-      period: period,
-      dateRange: dateRange,
+      indentSalesAmount: indentSalesAmount ?? '0',
+      customerPayments: customerPayments ?? '0',
+      consumablesSales: consumablesSales ?? '0',
+      activeShifts: activeShifts ?? 0,
+      pendingApprovals: pendingApprovals ?? 0,
+      transactionCount: transactionCount ?? 0,
+      period: period ?? '',
+      dateRange: dateRange ?? '',
+      cashSales: cashSales ?? '0',
+      cardSales: cardSales ?? '0',
+      upiSales: upiSales ?? '0',
+      otherSales: otherSales ?? '0',
+      totalExpenses: totalExpenses ?? '0',
     );
   }
 }
