@@ -12,7 +12,7 @@ class DashboardDataSource {
     try {
       print("period: $period, dateRange: $dateRange");
       var response = await client.functions.invoke(
-        'get-mobile-dashboard-metrics',
+        'get-mobile-dashboard-web-compatible',
         body: {
           "period": period,
           if (dateRange.isNotEmpty) "customDateRange": dateRange,

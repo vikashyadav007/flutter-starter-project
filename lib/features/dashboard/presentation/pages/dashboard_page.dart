@@ -282,15 +282,17 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
         ),
         const SizedBox(height: 16),
 
+        // Fuel Volume Card - Full width
         FuelVolumeCard(
           title: 'Total Fuel Volume',
           totalVolume: dashboardData.fuelVolume ?? "0",
           fuelVolumeByType: dashboardData.fuelVolumeByType ?? {},
           icon: Icons.local_gas_station,
         ),
-        const SizedBox(height: 12),
 
-        // 2x2 Grid for main metrics
+        const SizedBox(height: 16),
+
+        // 2x2 Grid for main business metrics
         GridView.count(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -325,8 +327,92 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
               gradient: 'orange',
               iconColor: Colors.orange,
             ),
+          ],
+        ),
 
-            // Active Shifts & Pending Approvals
+        const SizedBox(height: 16),
+
+        // Payment Methods Section
+        Container(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Payment Methods',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey.shade600,
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+
+        GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 2,
+          childAspectRatio: 1.2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          children: [
+            // Cash Sales
+            MetricCard(
+              title: 'Cash',
+              value: dashboardData.cashSales ?? _formatCurrency(0),
+              icon: Icons.money,
+              gradient: 'green',
+              iconColor: Colors.green.shade600,
+            ),
+
+            // UPI Sales
+            MetricCard(
+              title: 'UPI',
+              value: dashboardData.upiSales ?? _formatCurrency(0),
+              icon: Icons.smartphone,
+              gradient: 'blue',
+              iconColor: Colors.blue.shade600,
+            ),
+
+            // Card Sales
+            MetricCard(
+              title: 'Card',
+              value: dashboardData.cardSales ?? _formatCurrency(0),
+              icon: Icons.credit_card,
+              gradient: 'purple',
+              iconColor: Colors.purple.shade600,
+            ),
+
+            // Other Sales
+            MetricCard(
+              title: 'Others',
+              value: dashboardData.otherSales ?? _formatCurrency(0),
+              icon: Icons.account_balance_wallet,
+              gradient: 'gray',
+              iconColor: Colors.grey.shade600,
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 16),
+
+        // Operations Section
+        GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 2,
+          childAspectRatio: 1.2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          children: [
+            // Total Expenses
+            MetricCard(
+              title: 'Total Expenses',
+              value: dashboardData.totalExpenses ?? _formatCurrency(0),
+              icon: Icons.receipt,
+              gradient: 'red',
+              iconColor: Colors.red.shade600,
+            ),
+
+            // Active Shifts & Pending Approvals - Combined Card
             DualMetricCard(
               title1: 'Active Shifts',
               value1: dashboardData.activeShifts?.toString() ?? "0",

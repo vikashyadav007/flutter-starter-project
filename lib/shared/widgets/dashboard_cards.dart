@@ -29,6 +29,10 @@ class MetricCard extends StatelessWidget {
         return Colors.green.withOpacity(0.1);
       case 'indigo':
         return Colors.indigo.withOpacity(0.1);
+      case 'red':
+        return Colors.red.withOpacity(0.1);
+      case 'gray':
+        return Colors.grey.withOpacity(0.1);
       default:
         return UiColors.blue.withOpacity(0.1);
     }
@@ -46,6 +50,10 @@ class MetricCard extends StatelessWidget {
         return Colors.green.withOpacity(0.05);
       case 'indigo':
         return Colors.indigo.withOpacity(0.05);
+      case 'red':
+        return Colors.red.withOpacity(0.05);
+      case 'gray':
+        return Colors.grey.withOpacity(0.05);
       default:
         return UiColors.blue.withOpacity(0.05);
     }
